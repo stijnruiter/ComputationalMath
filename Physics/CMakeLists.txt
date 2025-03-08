@@ -7,5 +7,5 @@ target_link_libraries(Physics ComputationalMath)
 target_compile_definitions(Physics PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 
 if( MSVC )
-	set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PhysicsOneOne )
+	set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Physics )
 endif()

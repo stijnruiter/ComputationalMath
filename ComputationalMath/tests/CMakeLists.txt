@@ -12,7 +12,7 @@ add_executable(
     ComputationalMathTests
     "Geometry/RectangleTests.cpp"
     "LinearAlgebra/ColumnVectorTests.cpp"
-    )
+     )
 
 target_link_libraries(ComputationalMathTests
   PRIVATE
