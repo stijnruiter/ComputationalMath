@@ -3,21 +3,13 @@
 #include <algorithm>
 #include <stdexcept>
 
-template<typename T, size_t N, size_t M>
-class Matrix;
-
-template <typename T, size_t N>
-using ColumnVector = Matrix<T, N, 1>;
-
-template <typename T, size_t M>
-using RowVector = Matrix<T, 1, M>;
-
-template<typename T, size_t N, size_t M>
+template<typename T>
 class Matrix
 {
 public:
 	Matrix();
-	Matrix(const T* data);
+	Matrix(size_t rowCount, size_t columnCount);
+	Matrix(size_t rowCount, size_t columnCount, const T* data);
 
 	T& GetValue(size_t row, size_t column) const;
 	void SetValue(size_t row, size_t column, const T& value);
@@ -25,129 +17,144 @@ public:
 	size_t GetRowCount() const;
 	size_t GetColumnCount() const;
 
-	bool ElementwiseEquals(const Matrix<T, N, M>& mat) const;
-	bool ElementwiseCompare(const Matrix<T, N, M>& mat, float epsilon) const;
+	bool ElementwiseEquals(const Matrix<T>& mat) const;
+	bool ElementwiseCompare(const Matrix<T>& mat, float epsilon) const;
 
 	T& operator()(size_t row, size_t column) const;
-	Matrix<T, N, M> operator+(const Matrix<T, N, M>& mat) const;
-	Matrix<T, N, M> operator-(const Matrix<T, N, M>& mat) const;
+	Matrix<T> operator+(const Matrix<T>& mat) const;
+	Matrix<T> operator-(const Matrix<T>& mat) const;
 
-	template<size_t K>
-	Matrix<T, N, K> operator*(const Matrix<T, M, K>& mat) const;
+	Matrix<T> operator*(const Matrix<T>& mat) const;
 
 private:
 	void ThrowIfOutOfRange(size_t row, size_t column) const;
 	void ThrowIfRowOutOfRange(size_t row) const;
 	void ThrowIfColumnOutOfRange(size_t column) const;
+	void AssertNoOverflow() const;
 
 private:
-	static constexpr std::size_t m_length		= N * M;
-	static constexpr std::size_t m_rowCount		= N;
-	static constexpr std::size_t m_columnCount	= M;
-	
-	static_assert(M == 0 || m_length / M == N, "N*M overflow");
+	size_t m_length;
+	size_t m_rowCount;
+	size_t m_columnCount;
 
 	std::shared_ptr<T[]> m_storage;
 };
 
-template<typename T, size_t N, size_t M>
-inline Matrix<T, N, M>::Matrix()
+template<typename T>
+inline Matrix<T>::Matrix() : m_rowCount(0), m_columnCount(0), m_length(0)
 {
+	m_storage.reset();
+}
+
+template<typename T>
+inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount) 
+	:m_rowCount(rowCount), m_columnCount(columnCount), m_length(rowCount * columnCount)
+{
+	AssertNoOverflow();
 	m_storage.reset(new T[m_length]);
 }
 
-template<typename T, size_t N, size_t M>
-inline Matrix<T, N, M>::Matrix(const T* data) : Matrix<T, N, M>()
+template<typename T>
+inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, const T* data)
+	: Matrix<T>(rowCount, columnCount)
 {
 	T* destination = m_storage.get();
 	std::copy(data, data + m_length, destination);
 }
 
-template<typename T, size_t N, size_t M>
-inline T& Matrix<T, N, M>::GetValue(size_t row, size_t column) const
+template<typename T>
+inline T& Matrix<T>::GetValue(size_t row, size_t column) const
 {
 	ThrowIfOutOfRange(row, column);
 	return m_storage.get()[row * m_columnCount + column];
 }
 
-template<typename T, size_t N, size_t M>
-inline void Matrix<T, N, M>::SetValue(size_t row, size_t column, const T& value)
+template<typename T>
+inline void Matrix<T>::SetValue(size_t row, size_t column, const T& value)
 {
 	ThrowIfOutOfRange(row, column);
 	m_storage.get()[row * m_columnCount + column] = value;
 }
 
-template<typename T, size_t N, size_t M>
-inline size_t Matrix<T, N, M>::GetRowCount() const
+template<typename T>
+inline size_t Matrix<T>::GetRowCount() const
 {
 	return m_rowCount;
 }
 
-template<typename T, size_t N, size_t M>
-inline size_t Matrix<T, N, M>::GetColumnCount() const
+template<typename T>
+inline size_t Matrix<T>::GetColumnCount() const
 {
 	return m_columnCount;
 }
 
-template<typename T, size_t N, size_t M>
-inline bool Matrix<T, N, M>::ElementwiseEquals(const Matrix<T, N, M>& mat) const
+template<typename T>
+inline bool Matrix<T>::ElementwiseEquals(const Matrix<T>& mat) const
 {
 	T* lhs = m_storage.get();
 	T* rhs = mat.m_storage.get();
 	return std::equal(lhs, lhs + m_length, rhs);
 }
 
-template<typename T, size_t N, size_t M>
-inline bool Matrix<T, N, M>::ElementwiseCompare(const Matrix<T, N, M>& mat, float epsilon) const
+template<typename T>
+inline bool Matrix<T>::ElementwiseCompare(const Matrix<T>& mat, float epsilon) const
 {
 	T* lhs = m_storage.get();
 	T* rhs = mat.m_storage.get();
 	return std::equal(lhs, lhs + m_length, rhs, [epsilon](T& left, T& right) { return std::abs(left - right) < epsilon; });
 }
 
-template<typename T, size_t N, size_t M>
-inline T& Matrix<T, N, M>::operator()(size_t row, size_t column) const
+template<typename T>
+inline T& Matrix<T>::operator()(size_t row, size_t column) const
 {
 	return GetValue(row, column);
 }
 
-template<typename T, size_t N, size_t M>
-inline Matrix<T, N, M> Matrix<T, N, M>::operator+(const Matrix<T, N, M>& mat) const
+template<typename T>
+inline Matrix<T> Matrix<T>::operator+(const Matrix<T>& mat) const
 {
+	if (m_columnCount != mat.m_columnCount || m_rowCount != mat.m_rowCount)
+		throw std::invalid_argument("Dimensions mismatch");
+
 	// TODO: SIMD
 	T* lhs = m_storage.get();
 	T* rhs = mat.m_storage.get();
-	Matrix<T, N, M> sum;
+	Matrix<T> sum(m_rowCount, m_columnCount);
 	T* sumPointer = sum.m_storage.get();
 	std::transform(lhs, lhs + m_length, rhs, sumPointer, [](T& left, T& right) {return left + right; });
 	return sum;
 }
 
-template<typename T, size_t N, size_t M>
-inline Matrix<T, N, M> Matrix<T, N, M>::operator-(const Matrix<T, N, M>& mat) const
+template<typename T>
+inline Matrix<T> Matrix<T>::operator-(const Matrix<T>& mat) const
 {
+	if (m_columnCount != mat.m_columnCount || m_rowCount != mat.m_rowCount)
+		throw std::invalid_argument("Dimensions mismatch");
+
 	// TODO: SIMD
 	T* lhs = m_storage.get();
 	T* rhs = mat.m_storage.get();
 
-	Matrix<T, N, M> subtract;
+	Matrix<T> subtract(m_rowCount, m_columnCount);
 	T* subtractPointer = subtract.m_storage.get();
 	std::transform(lhs, lhs + m_length, rhs, subtractPointer, [](T& left, T& right) {return left - right; });
 	return subtract;
 }
 
-template<typename T, size_t N, size_t M>
-template<size_t K>
-inline Matrix<T, N, K> Matrix<T, N, M>::operator*(const Matrix<T, M, K>& mat) const
+template<typename T>
+inline Matrix<T> Matrix<T>::operator*(const Matrix<T>& mat) const
 {
+	if (m_columnCount != mat.m_rowCount)
+		throw std::invalid_argument("Matrix mismatch");
+
 	// TODO: SIMD
-	Matrix<T, N, K> product;
-	for (size_t i = 0; i < N; i++)
+	Matrix<T> product(m_rowCount, mat.m_columnCount);
+	for (size_t i = 0; i < m_rowCount; i++)
 	{
-		for (size_t j = 0; j < K; j++)
+		for (size_t j = 0; j < mat.m_columnCount; j++)
 		{
 			T dotProduct = 0;
-			for (size_t k = 0; k < M; k++)
+			for (size_t k = 0; k < m_columnCount; k++)
 			{
 				dotProduct += GetValue(i, k) * mat.GetValue(k, j);
 			}
@@ -157,23 +164,30 @@ inline Matrix<T, N, K> Matrix<T, N, M>::operator*(const Matrix<T, M, K>& mat) co
 	return product;
 }
 
-template<typename T, size_t N, size_t M>
-inline void Matrix<T, N, M>::ThrowIfOutOfRange(size_t row, size_t column) const
+template<typename T>
+inline void Matrix<T>::ThrowIfOutOfRange(size_t row, size_t column) const
 {
 	if (row >= m_rowCount || column >= m_columnCount)
 		throw std::out_of_range("Index out of range");
 }
 
-template<typename T, size_t N, size_t M>
-inline void Matrix<T, N, M>::ThrowIfRowOutOfRange(size_t row) const
+template<typename T>
+inline void Matrix<T>::ThrowIfRowOutOfRange(size_t row) const
 {
 	if (row >= m_rowCount)
 		throw std::out_of_range("Row out of range");
 }
 
-template<typename T, size_t N, size_t M>
-inline void Matrix<T, N, M>::ThrowIfColumnOutOfRange(size_t column) const
+template<typename T>
+inline void Matrix<T>::ThrowIfColumnOutOfRange(size_t column) const
 {
 	if (column >= m_columnCount)
 		throw std::out_of_range("Column out of range");
+}
+
+template<typename T>
+inline void Matrix<T>::AssertNoOverflow() const
+{
+	if (m_columnCount != 0 && m_length / m_columnCount != m_rowCount)
+		throw std::overflow_error("");
 }

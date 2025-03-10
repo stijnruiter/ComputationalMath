@@ -5,14 +5,14 @@
 namespace LinearAlgebra
 {
 	TEST(MatrixTests, Constructor_WhenDefaultArgument_ShouldBeEmpty) {
-		Matrix<int, 0, 0> matrix;
+		Matrix<int> matrix;
 		EXPECT_EQ(matrix.GetRowCount(), 0);
 		EXPECT_EQ(matrix.GetColumnCount(), 0);
 		EXPECT_THROW(matrix.GetValue(0, 0), std::out_of_range);
 	}
 
 	TEST(MatrixTests, Constructor_WhenSizeIsGiven_ShouldCreateCorrectSize) {
-		Matrix<int, 5, 3> matrix;
+		Matrix<int> matrix(5, 3);
 		EXPECT_EQ(matrix.GetRowCount(), 5);
 		EXPECT_EQ(matrix.GetColumnCount(), 3);
 		EXPECT_THROW(matrix.GetValue(5, 1), std::out_of_range);
@@ -20,7 +20,7 @@ namespace LinearAlgebra
 	}
 
 	TEST(MatrixTests, Constructor_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues) {
-		Matrix<int, 3, 5> matrix(new int[15]
+		Matrix<int> matrix(3, 5, new int[15]
 			{
 				 1,  2,  3,  4,  5, 
 				 6,  7,  8,  9, 10, 
@@ -49,21 +49,21 @@ namespace LinearAlgebra
 	}
 
 	TEST(MatrixTests, Sum_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues) {
-		Matrix<int, 3, 5> matrix(new int[15]
+		Matrix<int> matrix(3, 5, new int[15]
 			{
 				1, 2, 3, 4, 5,
 				6, 7, 8, 9, 10,
 				11, 12, 13, 14, 15,
 			});
 
-		Matrix<int, 3, 5> matrix2(new int[15]
+		Matrix<int> matrix2(3, 5, new int[15]
 			{
 				1, 2, 3, 4, 5,
 				6, 7, 8, 9, 10,
 				11, 12, 13, 14, 15,
 			});
-		Matrix<int, 3, 5> result = matrix + matrix2;
-		Matrix<int, 3, 5> expect(new int[15] 
+		Matrix<int> result = matrix + matrix2;
+		Matrix<int> expect(3, 5, new int[15] 
 			{
 				 2,  4,  6,  8, 10,
 				12, 14, 16, 18, 20,
@@ -74,33 +74,33 @@ namespace LinearAlgebra
 	}
 
 	TEST(MatrixTests, Subtract_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues) {
-		Matrix<int, 4, 2> matrix(new int[8] {1, 2, 3, 4, 5, 6, 7, 8});
-		Matrix<int, 4, 2> matrix2(new int[8] {7, 3, 5, 4, 10, 2, 12, 6});
-		Matrix<int, 4, 2> result1 = matrix - matrix;
-		Matrix<int, 4, 2> result2 = matrix - matrix2;
-		Matrix<int, 4, 2> result3 = matrix2 - matrix;
+		Matrix<int> matrix(4, 2, new int[8] {1, 2, 3, 4, 5, 6, 7, 8});
+		Matrix<int> matrix2(4, 2, new int[8] {7, 3, 5, 4, 10, 2, 12, 6});
+		Matrix<int> result1 = matrix - matrix;
+		Matrix<int> result2 = matrix - matrix2;
+		Matrix<int> result3 = matrix2 - matrix;
 
-		EXPECT_EQ(result1.ElementwiseEquals(Matrix<int, 4, 2>(new int[8] {0, 0, 0, 0, 0, 0, 0, 0})), true);
-		EXPECT_EQ(result2.ElementwiseEquals(Matrix<int, 4, 2>(new int[8] {-6, -1, -2, 0, -5, 4, -5, 2})), true);
-		EXPECT_EQ(result3.ElementwiseEquals(Matrix<int, 4, 2>(new int[8] {
+		EXPECT_EQ(result1.ElementwiseEquals(Matrix<int>(4, 2, new int[8] {0, 0, 0, 0, 0, 0, 0, 0})), true);
+		EXPECT_EQ(result2.ElementwiseEquals(Matrix<int>(4, 2, new int[8] {-6, -1, -2, 0, -5, 4, -5, 2})), true);
+		EXPECT_EQ(result3.ElementwiseEquals(Matrix<int>(4, 2, new int[8] {
 			6, 1, 2, 0, 5, -4, 5, -2})), true);
 	}
 
 	TEST(MatrixTests, Product_WhenInteger_ShouldBeElementEquals) {
-		Matrix<int, 3, 5> matrix(new int[15] {
+		Matrix<int> matrix(3, 5, new int[15] {
 				1, 2, 3, 4, 5,
 				6, 7, 8, 9, 10,
 				11, 12, 13, 14, 15});
 
-		Matrix<int, 5, 2> matrix2(new int[15] {
+		Matrix<int> matrix2(5, 2, new int[15] {
 				1, 2, 
 				3, 4,
 				5, 6,
 				7, 8,
 				9, 10});
 
-		Matrix<int, 3, 2> result = matrix * matrix2;
-		EXPECT_EQ(result.ElementwiseEquals(Matrix<int, 3, 2>(new int[6] {
+		Matrix<int> result = matrix * matrix2;
+		EXPECT_EQ(result.ElementwiseEquals(Matrix<int>(3, 2, new int[6] {
 			 95, 110, 
 			220, 260, 
 			345, 410 })), true);
@@ -108,20 +108,20 @@ namespace LinearAlgebra
 
 
 	TEST(MatrixTests, Product_WhenFloat_ShouldApproximatelyEquals) {
-		Matrix<float, 3, 5> matrix(new float[15] {
+		Matrix<float> matrix(3, 5, new float[15] {
 			1, 2, 3, 4, 5,
 			6, 7, 8, 9, 10,
 			11, 12, 13, 14, 15});
 
-		Matrix<float, 5, 2> matrix2(new float[15] {
+		Matrix<float> matrix2(5, 2, new float[15] {
 			1, 2,
 			3, 4,
 			5, 6,
 			7, 8,
 			9, 10});
 
-		Matrix<float, 3, 2> result = matrix * matrix2;
-		EXPECT_EQ(result.ElementwiseCompare(Matrix<float, 3, 2>(new float[6] {
+		Matrix<float> result = matrix * matrix2;
+		EXPECT_EQ(result.ElementwiseCompare(Matrix<float>(3, 2, new float[6] {
 			95.0f, 110.0f,
 				220, 260,
 				345, 410 }), 1e-5f), true);

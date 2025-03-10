@@ -6,7 +6,7 @@
 int main()
 {
 	Rectangle rectangle;
-	ColumnVector<int, 5> vector;
+	Matrix<int> vector(5, 1);
 	std::cout << "Vector Row: " << vector.GetRowCount() << std::endl;
 	std::cout << "Vector Column: " << vector.GetColumnCount() << std::endl;
 	rectangle.Bottom = 1.0f;
