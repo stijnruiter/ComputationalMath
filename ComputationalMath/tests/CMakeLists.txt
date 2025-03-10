@@ -11,8 +11,7 @@ FetchContent_MakeAvailable(gtest)
 add_executable(
     ComputationalMathTests
     "Geometry/RectangleTests.cpp"
-    "LinearAlgebra/ColumnVectorTests.cpp"
-     )
+    "LinearAlgebra/MatrixTests.cpp" )
 
 target_link_libraries(ComputationalMathTests
   PRIVATE
