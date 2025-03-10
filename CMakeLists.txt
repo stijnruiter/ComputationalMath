@@ -9,7 +9,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
 enable_testing()
 
-project(ComputationalMath VERSION 0.1)
-
 add_subdirectory ("ComputationalMath")
 add_subdirectory ("Physics")

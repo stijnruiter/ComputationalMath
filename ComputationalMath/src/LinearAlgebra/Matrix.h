@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <algorithm>
+#include <stdexcept>
 
 template<typename T, size_t N, size_t M>
 class Matrix;
