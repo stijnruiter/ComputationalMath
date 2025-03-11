@@ -48,7 +48,7 @@ namespace LinearAlgebra
 		EXPECT_EQ(matrix(2, 4), 15);
 	}
 
-	TEST(MatrixTests, Sum_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues) {
+	TEST(MatrixTests, Sum_WhenDataIsInteger_ShouldCreateMatrixWithCorrectValues) {
 		Matrix<int> matrix(3, 5, new int[15]
 			{
 				1, 2, 3, 4, 5,
@@ -71,6 +71,31 @@ namespace LinearAlgebra
 			});
 
 		EXPECT_EQ(result.ElementwiseEquals(expect), true);
+	}
+
+	TEST(MatrixTests, Sum_WhenDataIsFloat_ShouldCreateMatrixWithCorrectValues) {
+		Matrix<float> matrix(3, 5, new float[15]
+			{
+				1, 2, 3, 4, 5,
+					6, 7, 8, 9, 10,
+					11, 12, 13, 14, 15,
+			});
+
+		Matrix<float> matrix2(3, 5, new float[15]
+			{
+				1, 2, 3, 4, 5,
+					6, 7, 8, 9, 10,
+					11, 12, 13, 14, 15,
+			});
+		Matrix<float> result = matrix + matrix2;
+		Matrix<float> expect(3, 5, new float[15]
+			{
+				2, 4, 6, 8, 10,
+					12, 14, 16, 18, 20,
+					22, 24, 26, 28, 30,
+			});
+
+		EXPECT_EQ(result.ElementwiseCompare(expect, 1e-5f), true);
 	}
 
 	TEST(MatrixTests, Subtract_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues) {

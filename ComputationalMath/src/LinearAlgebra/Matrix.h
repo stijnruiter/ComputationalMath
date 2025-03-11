@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+#define SIMD_ACCELERATION
+
 template<typename T>
 class Matrix
 {
@@ -110,13 +112,26 @@ inline T& Matrix<T>::operator()(size_t row, size_t column) const
 	return GetValue(row, column);
 }
 
+#ifdef SIMD_ACCELERATION
+#include "SimdOps.h"
+template <>
+inline Matrix<int> Matrix<int>::operator+(const Matrix<int>& mat) const
+{
+	if (m_columnCount != mat.m_columnCount || m_rowCount != mat.m_rowCount)
+		throw std::invalid_argument("Dimensions mismatch");
+	
+	Matrix<int> result(m_rowCount, m_columnCount);
+	LinearAlgebra::SimdOps::Sum(m_storage.get(), mat.m_storage.get(), m_length, result.m_storage.get());
+	return result;
+}
+#endif
+
 template<typename T>
 inline Matrix<T> Matrix<T>::operator+(const Matrix<T>& mat) const
 {
 	if (m_columnCount != mat.m_columnCount || m_rowCount != mat.m_rowCount)
 		throw std::invalid_argument("Dimensions mismatch");
 
-	// TODO: SIMD
 	T* lhs = m_storage.get();
 	T* rhs = mat.m_storage.get();
 	Matrix<T> sum(m_rowCount, m_columnCount);

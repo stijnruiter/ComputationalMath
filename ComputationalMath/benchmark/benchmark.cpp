@@ -7,10 +7,10 @@ static void BM_MatrixSum(benchmark::State& state)
     for (auto stat : state)
     {
         state.PauseTiming();
-        size_t size = state.range();
-        Matrix<float> mat1(size, size);
-        Matrix<float> mat2(size, size);
-        Matrix<float> mat3;
+        size_t size = state.range(); 
+        Matrix<int> mat1(size, size); // TODO: properly initialize
+        Matrix<int> mat2(size, size);
+        Matrix<int> mat3;
         state.ResumeTiming();
 
         benchmark::DoNotOptimize(mat3 = mat1 + mat2);
@@ -19,7 +19,7 @@ static void BM_MatrixSum(benchmark::State& state)
 }
 
 BENCHMARK(BM_MatrixSum)
-->RangeMultiplier(2)
-->Range(1 << 5, 1 << 15)
-->Complexity();
+    ->RangeMultiplier(2)g
+    ->Range(1 << 5, 1 << 15)
+    ->Complexity();
 BENCHMARK_MAIN();

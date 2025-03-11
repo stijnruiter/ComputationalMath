@@ -6,7 +6,7 @@ include(../cmake/GoogleTest.cmake)
 add_executable(
     ComputationalMathTests
     "Geometry/RectangleTests.cpp"
-    "LinearAlgebra/MatrixTests.cpp" )
+    "LinearAlgebra/MatrixTests.cpp"  "LinearAlgebra/SimdTests.cpp")
 
 target_link_libraries(ComputationalMathTests
   PRIVATE
