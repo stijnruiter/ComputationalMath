@@ -1,4 +1,4 @@
-﻿project(ComputationalMath VERSION 0.1)
+﻿project(ComputationalMath VERSION 0.1 LANGUAGES CXX)
 
 add_subdirectory(src)
 

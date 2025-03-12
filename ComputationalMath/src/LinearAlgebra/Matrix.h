@@ -2,8 +2,11 @@
 #include <memory>
 #include <algorithm>
 #include <stdexcept>
+#include <iostream>
 
-#define SIMD_ACCELERATION
+#include "VectorBase.h"
+
+// #define SIMD_ACCELERATION
 
 template<typename T>
 class Matrix
@@ -12,9 +15,16 @@ public:
 	Matrix();
 	Matrix(size_t rowCount, size_t columnCount);
 	Matrix(size_t rowCount, size_t columnCount, const T* data);
+	Matrix(const Matrix& mat);
 
 	T& GetValue(size_t row, size_t column) const;
 	void SetValue(size_t row, size_t column, const T& value);
+
+	RowVector<T> GetRow(size_t row) const;
+	ColumnVector<T> GetColumn(size_t column) const;
+
+	T* Data();
+	const T* Data() const;
 
 	size_t GetRowCount() const;
 	size_t GetColumnCount() const;
@@ -22,12 +32,18 @@ public:
 	bool ElementwiseEquals(const Matrix<T>& mat) const;
 	bool ElementwiseCompare(const Matrix<T>& mat, float epsilon) const;
 
+	void SwapRows(size_t row1, size_t row2);
+
+	Matrix<T> Inverse() const;
+
+public:
 	T& operator()(size_t row, size_t column) const;
 	Matrix<T> operator+(const Matrix<T>& mat) const;
 	Matrix<T> operator-(const Matrix<T>& mat) const;
 
 	Matrix<T> operator*(const Matrix<T>& mat) const;
-
+	ColumnVector<T> operator*(const ColumnVector<T>& vector) const;
+	Matrix<T> operator*(const T& scalar) const;
 private:
 	void ThrowIfOutOfRange(size_t row, size_t column) const;
 	void ThrowIfRowOutOfRange(size_t row) const;
@@ -64,6 +80,12 @@ inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, const T* data)
 	std::copy(data, data + m_length, destination);
 }
 
+template <typename T>
+inline Matrix<T>::Matrix(const Matrix &mat) 
+	: Matrix(mat.m_rowCount, mat.m_columnCount, mat.m_storage.get())
+{
+}
+
 template<typename T>
 inline T& Matrix<T>::GetValue(size_t row, size_t column) const
 {
@@ -76,6 +98,41 @@ inline void Matrix<T>::SetValue(size_t row, size_t column, const T& value)
 {
 	ThrowIfOutOfRange(row, column);
 	m_storage.get()[row * m_columnCount + column] = value;
+}
+
+template<typename T>
+inline RowVector<T> Matrix<T>::GetRow(size_t row) const
+{
+	// TODO: implement view to avoid copies
+	ThrowIfRowOutOfRange(row);
+	T* start = m_storage.get() + row * m_columnCount;
+	return RowVector<T>(m_columnCount, start);
+}
+
+template<typename T>
+inline ColumnVector<T> Matrix<T>::GetColumn(size_t column) const
+{
+	// TODO: implement view to avoid copies
+	ThrowIfColumnOutOfRange(column);
+	ColumnVector<T> result(m_rowCount);
+	T* start = m_storage.get() + column;
+	for (size_t i = 0; i < m_rowCount; i++)
+	{
+		result[i] = start[i * m_columnCount];
+	}
+	return result;
+}
+
+template <typename T>
+inline T* Matrix<T>::Data()
+{
+	return m_storage.get();
+}
+
+template <typename T>
+inline const T *Matrix<T>::Data() const
+{
+	return m_storage.get();
 }
 
 template<typename T>
@@ -106,10 +163,48 @@ inline bool Matrix<T>::ElementwiseCompare(const Matrix<T>& mat, float epsilon) c
 	return std::equal(lhs, lhs + m_length, rhs, [epsilon](T& left, T& right) { return std::abs(left - right) < epsilon; });
 }
 
+template <typename T>
+inline void Matrix<T>::SwapRows(size_t row1, size_t row2)
+{
+	ThrowIfRowOutOfRange(row1);
+	ThrowIfRowOutOfRange(row2);
+
+	T* data = m_storage.get();
+	size_t row1Start = row1 * m_columnCount;
+	size_t row1End = row1Start + m_columnCount;
+	size_t row2Start = row2 * m_columnCount;
+	std::swap_ranges(data + row1Start, data + row1End, data + row2Start);
+}
+
 template<typename T>
 inline T& Matrix<T>::operator()(size_t row, size_t column) const
 {
 	return GetValue(row, column);
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream &out, const Matrix<T> &e)
+{
+	out << "Mat" << e.GetRowCount() << "x" << e.GetColumnCount() ;
+	if (e.GetColumnCount() == 0 || e.GetRowCount() == 0)
+		return out << "[]";
+	
+	out << std::endl << '[';
+
+	for (size_t i = 0; i < e.GetRowCount(); i++)
+	{
+		if (i > 0)
+		{
+			out << std::endl;
+		}
+		out << '[';
+		for (size_t j = 0; j < e.GetColumnCount(); j++)
+		{
+			out << (j == 0 ? "" : ", ") << e(i,j);
+		}
+		out << ']';
+	}
+	return out << ']';
 }
 
 #ifdef SIMD_ACCELERATION
@@ -120,7 +215,8 @@ inline Matrix<int> Matrix<int>::operator+(const Matrix<int>& mat) const
 	if (m_columnCount != mat.m_columnCount || m_rowCount != mat.m_rowCount)
 		throw std::invalid_argument("Dimensions mismatch");
 	
-	Matrix<int> result(m_rowCount, m_columnCount);
+	// Note, this operation is very simple, thus almost no time difference
+	Matrix<int> result(m_rowCount, m_columnCount); 
 	LinearAlgebra::SimdOps::Sum(m_storage.get(), mat.m_storage.get(), m_length, result.m_storage.get());
 	return result;
 }
@@ -178,6 +274,62 @@ inline Matrix<T> Matrix<T>::operator*(const Matrix<T>& mat) const
 	}
 	return product;
 }
+
+template<typename T>
+inline RowVector<T> operator*(const RowVector<T>& vector, const Matrix<T>& matrix)
+{
+	if (vector.GetLength() != matrix.GetRowCount())
+		throw std::invalid_argument("Row Matrix multiplication mismatch");
+
+	RowVector<T> result(matrix.GetColumnCount());
+	for (size_t i = 0; i < matrix.GetColumnCount(); i++)
+	{
+		result[i] = 0;
+		for (size_t k = 0; k < matrix.GetRowCount(); k++)
+		{
+			result[i] += vector.GetValue(k) * matrix(k, i);
+		}
+	}
+	return result;
+}
+
+template<typename T>
+inline ColumnVector<T> Matrix<T>::operator*(const ColumnVector<T>& vector) const
+{
+	if (m_columnCount != vector.GetLength())
+		throw std::invalid_argument("Matrix Column multiplication mismatch");
+
+	ColumnVector<T> result(m_rowCount);
+	for (size_t i = 0; i < m_rowCount; i++)
+	{
+		result[i] = 0;
+		for (size_t k = 0; k < m_columnCount; k++)
+		{
+			result[i] += this->GetValue(i, k) * vector.GetValue(k);
+		}
+	}
+	return result;
+}
+
+template<typename T>
+inline Matrix<T> Matrix<T>::operator*(const T& scalar) const
+{
+	Matrix<T> result(m_rowCount, m_columnCount);
+	T* source = m_storage.get();
+	T* destination = result.m_storage.get();
+	std::transform(source, source + m_length, destination, [scalar](T& sourceElement)
+		{
+			return scalar * sourceElement;
+		});
+	return result;
+}
+
+template <typename T>
+Matrix<T> operator*(const T& scalar, const Matrix<T>& mat)
+{
+	return mat * scalar;
+}
+
 
 template<typename T>
 inline void Matrix<T>::ThrowIfOutOfRange(size_t row, size_t column) const

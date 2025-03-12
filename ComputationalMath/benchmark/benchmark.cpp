@@ -19,7 +19,6 @@ static void BM_MatrixSum(benchmark::State& state)
 }
 
 BENCHMARK(BM_MatrixSum)
-    ->RangeMultiplier(2)g
-    ->Range(1 << 5, 1 << 15)
-    ->Complexity();
+    ->RangeMultiplier(2)
+    ->Range(1 << 5, 1 << 15);
 BENCHMARK_MAIN();
