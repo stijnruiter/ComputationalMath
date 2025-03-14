@@ -25,12 +25,12 @@ namespace Geometry
         m_edgeCount += 3;
     }
 
-    TriangleElement HalfEdgeTriangulation::GetTriangleVertices(size_t elementIndex) const
+    TriangleElement HalfEdgeTriangulation::GetTriangleElement(size_t elementIndex) const
     {
-        return GetTriangleVerticesFromEdge(m_triangles[elementIndex]);
+        return GetTriangleElementFromEdge(m_triangles[elementIndex]);
     }
 
-    TriangleElement HalfEdgeTriangulation::GetTriangleVerticesFromEdge(size_t edgeIndex) const
+    TriangleElement HalfEdgeTriangulation::GetTriangleElementFromEdge(size_t edgeIndex) const
     {
         HalfEdge edge = m_edges[edgeIndex];
         return TriangleElement(edge.V1, edge.V2, m_edges[edge.NextEdge].V2);

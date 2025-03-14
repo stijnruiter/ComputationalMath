@@ -7,11 +7,13 @@ add_executable(
     ComputationalMathTests
     "Geometry/Structures/RectangleTests.cpp"
     "Geometry/DelaunayTests.cpp"
+    "Geometry/RefinedDelaunayTests.cpp"
     "LinearAlgebra/MatrixTests.cpp"  
     "LinearAlgebra/VectorBaseTests.cpp"  
     "LinearAlgebra/FactorizationLuTests.cpp"  
     "LinearAlgebra/SimdTests.cpp"
     
+    "TestHelper.cpp"
     "TestHelper.h")
 
 target_include_directories(ComputationalMathTests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

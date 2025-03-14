@@ -14,6 +14,7 @@ namespace Geometry
         Vertex2F operator-(Vertex2F rhs) const;
         Vertex2F operator*(float scalar) const;
         friend Vertex2F operator*(float scalar, Vertex2F rhs);
+        bool operator==(Vertex2F other) const;
 
         float Length() const;
         float LengthSquared() const;
@@ -22,6 +23,8 @@ namespace Geometry
         Vertex2F Normalized() const;
 
         static float DotProduct(Vertex2F lhs, Vertex2F rhs);
+        static float Distance(Vertex2F lhs, Vertex2F rhs);
+        float DistanceTo(Vertex2F other) const;
     };
 
     struct Vertex3F

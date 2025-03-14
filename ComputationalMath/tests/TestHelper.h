@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
-#include <unordered_map>
 #include <functional>
 #include <algorithm>
 #include <list>
 #include <typeinfo>
 #include <gtest/gtest.h>
+#include <Geometry/Structures/SimplexElements.h>
+#include <Geometry/Structures/Vertex.h>
 
 namespace TestHelper
 {
@@ -72,6 +73,11 @@ namespace TestHelper
         stream << typeid(t).name();
         return stream.str();
     }
+    template<typename T>
+    testing::AssertionResult AreEquivalent(const std::vector<T>& actual, const std::vector<T>& expected)
+    {
+        return AreEquivalent(actual, expected, [](const T& lhs, const T& rhs) { return lhs == rhs; });
+    }
 
     template<typename T, class Comparer>
     testing::AssertionResult AreEquivalent(const std::vector<T>& actual, const std::vector<T>& expected, Comparer comparer)
@@ -108,7 +114,16 @@ namespace TestHelper
             return result << std::endl;
         }
     };
+
+    bool TriangleElementCyclicalEqual(Geometry::TriangleElement element1, Geometry::TriangleElement element2);
+
+    bool LineElementCyclicalEqual(Geometry::LineElement element1, Geometry::LineElement element2);
+
+    bool Vertex2FNearlyEqual(Geometry::Vertex2F vertex1, Geometry::Vertex2F vertex2);
 }
+
+#define EXPECT_EQUIVALENT(a, b) EXPECT_TRUE(TestHelper::AreEquivalent(a, b))
+#define EXPECT_EQUIVALENT_USING(a, b, c) EXPECT_TRUE(TestHelper::AreEquivalent(a, b, c))
 
 namespace std
 {

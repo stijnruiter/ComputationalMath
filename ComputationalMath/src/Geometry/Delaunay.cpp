@@ -4,6 +4,11 @@
 
 namespace Geometry
 {
+    inline Triangle Delaunay::GetTriangle(TriangleElement element) const
+    {
+        return Triangle(m_vertices[element.I], m_vertices[element.J], m_vertices[element.K]);
+    }
+
     Delaunay::Delaunay(Triangle boundingTriangle, int nVertexCapacity)
         : m_vertices(0), 
         m_triangulation(2 * nVertexCapacity + 7) // 2 * nTriangles + 1 = 2 * (nVertexCapacity + 3) + 1
@@ -39,6 +44,17 @@ namespace Geometry
     Mesh2D Delaunay::ToMesh() const
     {
         Mesh2D mesh = m_triangulation.ToMesh();
+
+        size_t vertexCount = m_vertices.size();
+        mesh.Vertices.clear();
+        mesh.Vertices.reserve(vertexCount - 3);
+        for(size_t i = 3; i < vertexCount; i++)
+        {
+            mesh.Vertices.push_back(m_vertices[i]);
+        }
+        
+        std::copy(m_vertices.begin() + 3, m_vertices.end(), mesh.Vertices.begin());
+
         mesh.Boundary.clear();
         size_t initialSize = mesh.Interior.size();
         for (size_t i = initialSize - 1; i <= initialSize; i--) // Break on overflow
@@ -73,11 +89,38 @@ namespace Geometry
         return mesh;
     }
 
+    Triangle Delaunay::GetSmallestAngleTriangle() const
+    {
+        size_t triangleCount = m_triangulation.GetElementCount();
+        if(triangleCount == 0)
+            std::invalid_argument("Triangulation is empty");
+
+        Triangle smallestAngleTriangle;
+        float smallestAngle = std::numeric_limits<float>::max();
+        for (size_t i = 0; i < triangleCount; i++)
+        {
+            TriangleElement element = m_triangulation.GetTriangleElement(i);
+            if (element.I < 3 || element.J < 3 || element.K < 3)
+                continue;
+            
+            Triangle triangle = GetTriangle(element);
+            float angle = triangle.GetSmallestAngle();
+
+            if (angle < smallestAngle)
+            {
+                smallestAngle = angle;
+                smallestAngleTriangle = triangle;
+            }
+        }
+        return smallestAngleTriangle;
+    }
+
+
     size_t Delaunay::FindElement(Vertex2F point) const
     {
         for (size_t i = 0; i < m_triangulation.GetElementCount(); i++)
         {
-            TriangleElement indices = m_triangulation.GetTriangleVertices(i);
+            TriangleElement indices = m_triangulation.GetTriangleElement(i);
             if (Triangle::ContainsVertex(point, m_vertices[indices.I], m_vertices[indices.J], m_vertices[indices.K]))
                 return i;
         }
@@ -105,12 +148,12 @@ namespace Geometry
         FlipTest(twinEdge.PrevEdge);
     }
 
-    bool Delaunay::InCircle(size_t ai, size_t bi, size_t ci, size_t di) const
+    inline bool Delaunay::InCircle(size_t ai, size_t bi, size_t ci, size_t di) const
     {
         return InCircleDeterminant(m_vertices[ai], m_vertices[bi], m_vertices[ci], m_vertices[di]) > 0;
     }
 
-    float Delaunay::InCircleDeterminant(Vertex2F a, Vertex2F b, Vertex2F c, Vertex2F d)
+    inline float Delaunay::InCircleDeterminant(Vertex2F a, Vertex2F b, Vertex2F c, Vertex2F d)
     {
         /**
          * For triangle abc (order counter clockwise), the point d is inside circumcircle if det M > 0

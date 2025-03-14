@@ -5,7 +5,6 @@
 
 namespace Geometry 
 {
-    
     static auto DelaunayDataSets = ::testing::Values(
         std::make_tuple(
             std::vector<Vertex2F>({
@@ -116,27 +115,14 @@ namespace Geometry
         std::vector<TriangleElement>,
         std::vector<LineElement>>> {};
 
-    bool AreTrianglesCyclicalIdentical(const TriangleElement& element1, const TriangleElement& element2)
-    {
-        return (element1.I == element2.I && element1.J == element2.J && element1.K == element2.K) ||
-                (element1.I == element2.J && element1.J == element2.K && element1.K == element2.I) ||
-                (element1.I == element2.K && element1.J == element2.I && element1.K == element2.J);
-    }
-
-    bool AreLinesCyclicalIdentical(const LineElement& element1, const LineElement& element2)
-    {
-        return (element1.I == element2.I && element1.J == element2.J) ||
-               (element1.I == element2.J && element1.J == element2.I);
-    }
-
     TEST_P(DelaunayTriangulationByInsertionTests, CreateTriangulation_WhenVerticesCorrect_ShouldComputeDelaunayTriangulation) {
         std::vector<Vertex2F> vertices = std::get<0>(GetParam());
         std::vector<TriangleElement> expectedInterior = std::get<1>(GetParam());
         std::vector<LineElement> expectedBoundary = std::get<2>(GetParam());
 
         Mesh2D triangulation = Delaunay::CreateTriangulation(vertices).ToMesh();
-        EXPECT_TRUE(TestHelper::AreEquivalent(triangulation.Interior, expectedInterior, AreTrianglesCyclicalIdentical));
-        EXPECT_TRUE(TestHelper::AreEquivalent(triangulation.Boundary, expectedBoundary, AreLinesCyclicalIdentical));
+        EXPECT_TRUE(TestHelper::AreEquivalent(triangulation.Interior, expectedInterior, TestHelper::TriangleElementCyclicalEqual));
+        EXPECT_TRUE(TestHelper::AreEquivalent(triangulation.Boundary, expectedBoundary, TestHelper::LineElementCyclicalEqual));
     }
     INSTANTIATE_TEST_CASE_P(CreateTriangulation_WhenVerticesCorrect_ShouldComputeDelaunayTriangulation, 
         DelaunayTriangulationByInsertionTests, DelaunayDataSets);

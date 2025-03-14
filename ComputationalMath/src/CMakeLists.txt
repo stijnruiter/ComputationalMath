@@ -10,6 +10,7 @@ target_sources(ComputationalMath
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/FactorizationLU.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/Matrix.cpp
@@ -26,6 +27,7 @@ target_sources(ComputationalMath
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/FactorizationLU.h
     ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/Matrix.h

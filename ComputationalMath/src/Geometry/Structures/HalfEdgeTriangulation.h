@@ -16,8 +16,8 @@ namespace Geometry
         TriangleElement RefineTriangle(size_t triangleIndex, size_t newVertexIndex);
         void FlipEdge(size_t edgeIndex);
 
-        TriangleElement GetTriangleVertices(size_t elementIndex) const;
-        TriangleElement GetTriangleVerticesFromEdge(size_t edgeIndex) const;
+        TriangleElement GetTriangleElement(size_t elementIndex) const;
+        TriangleElement GetTriangleElementFromEdge(size_t edgeIndex) const;
 
         const HalfEdge& GetEdge(size_t edgeIndex) const;
 

@@ -8,8 +8,8 @@ namespace Geometry
 
     Vertex2F Vertex2F::operator+(Vertex2F rhs) const
     {
-        rhs.X + X;
-        rhs.Y + Y;
+        rhs.X += X;
+        rhs.Y += Y;
         return rhs;
     }
 
@@ -56,6 +56,16 @@ namespace Geometry
     float Vertex2F::DotProduct(Vertex2F lhs, Vertex2F rhs)
     {
         return lhs.X * rhs.X + lhs.Y * rhs.Y;
+    }
+
+    float Vertex2F::Distance(Vertex2F lhs, Vertex2F rhs)
+    {
+        return (lhs - rhs).Length();
+    }
+
+    float Vertex2F::DistanceTo(Vertex2F other) const
+    {
+        return Vertex2F(X - other.X, Y - other.Y).Length();
     }
 
     Vertex3F::Vertex3F() 

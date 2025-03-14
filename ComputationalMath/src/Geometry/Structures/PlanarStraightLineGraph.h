@@ -22,6 +22,13 @@ namespace Geometry
         
         void SplitLineSegment(int lineSegmentIndex, float alpha = 0.5f);
 
+        size_t GetVertexCount() const;
+
+        const std::vector<Vertex2F>& GetVertices() const;
+        const std::vector<LineElement>& GetLineSegments() const;
+
+        bool AnyVertexWithinRange(Vertex2F vertex, float distance) const;
+
     private:
         std::vector<Vertex2F> m_vertices;
         std::vector<LineElement> m_segments;

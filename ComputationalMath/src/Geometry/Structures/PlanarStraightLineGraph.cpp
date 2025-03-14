@@ -61,4 +61,29 @@ namespace Geometry
         m_segments.push_back(LineElement(lineSegment.I, splitVertexIndex));
         m_segments.push_back(LineElement(splitVertexIndex, lineSegment.J));
     }
+
+    size_t PlanarStraightLineGraph::GetVertexCount() const
+    {
+        return m_vertices.size();
+    }
+
+    const std::vector<Vertex2F> &PlanarStraightLineGraph::GetVertices() const
+    {
+        return m_vertices;
+    }
+    
+    const std::vector<LineElement> &PlanarStraightLineGraph::GetLineSegments() const
+    {
+        return m_segments;
+    }
+    
+    bool PlanarStraightLineGraph::AnyVertexWithinRange(Vertex2F vertex, float distance) const
+    {
+        for (const Vertex2F& p : m_vertices)
+        {
+            if (vertex.DistanceTo(p) < distance)
+                return true;
+        }
+        return false;
+    }
 }
