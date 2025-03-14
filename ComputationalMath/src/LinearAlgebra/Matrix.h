@@ -36,6 +36,13 @@ public:
 
 	Matrix<T> Inverse() const;
 
+	static T Determinant(const T& m11, const T& m12,
+						 const T& m21, const T& m22);
+						 
+    static T Determinant(const T& m11, const T& m12, const T& m13,
+						 const T& m21, const T& m22, const T& m23,
+						 const T& m31, const T& m32, const T& m33);
+
 public:
 	T& operator()(size_t row, size_t column) const;
 	Matrix<T> operator+(const Matrix<T>& mat) const;
@@ -174,6 +181,23 @@ inline void Matrix<T>::SwapRows(size_t row1, size_t row2)
 	size_t row1End = row1Start + m_columnCount;
 	size_t row2Start = row2 * m_columnCount;
 	std::swap_ranges(data + row1Start, data + row1End, data + row2Start);
+}
+
+template <typename T>
+inline T Matrix<T>::Determinant(const T &m11, const T &m12, 
+								const T &m21, const T &m22)
+{
+	return m11 * m22 - m21 * m12;
+}
+
+template <typename T>
+inline T Matrix<T>::Determinant(const T &m11, const T &m12, const T &m13, 
+								const T &m21, const T &m22, const T &m23, 
+								const T &m31, const T &m32, const T &m33)
+{
+	return m11 * Determinant(m22, m23, m32, m33)
+		 - m12 * Determinant(m21, m23, m31, m33)
+		 + m13 * Determinant(m21, m22, m31, m32);
 }
 
 template<typename T>
@@ -356,5 +380,5 @@ template<typename T>
 inline void Matrix<T>::AssertNoOverflow() const
 {
 	if (m_columnCount != 0 && m_length / m_columnCount != m_rowCount)
-		throw std::overflow_error("");
+		throw std::overflow_error("NxM count size overflow");
 }

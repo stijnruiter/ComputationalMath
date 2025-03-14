@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include <Geometry/Rectangle.h>
+#include <Geometry/Structures/Rectangle.h>
 
-namespace Geometry {
-
+namespace Geometry 
+{
 	TEST(RectangleTests, Constructor_WhenUsingDefault_ShouldBeZeroValued) {
 		Rectangle rectangle;
 		ASSERT_NEAR(rectangle.Left, 0.0f, FLT_EPSILON);

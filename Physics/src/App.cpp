@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Geometry/Rectangle.h>
 #include <LinearAlgebra/VectorBase.h>
 #include <LinearAlgebra/Matrix.h>
 

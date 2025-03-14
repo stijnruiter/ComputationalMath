@@ -5,11 +5,16 @@ include(../cmake/GoogleTest.cmake)
 ## ComputationalMathTests
 add_executable(
     ComputationalMathTests
-    "Geometry/RectangleTests.cpp"
+    "Geometry/Structures/RectangleTests.cpp"
+    "Geometry/DelaunayTests.cpp"
     "LinearAlgebra/MatrixTests.cpp"  
     "LinearAlgebra/VectorBaseTests.cpp"  
     "LinearAlgebra/FactorizationLuTests.cpp"  
-    "LinearAlgebra/SimdTests.cpp")
+    "LinearAlgebra/SimdTests.cpp"
+    
+    "TestHelper.h")
+
+target_include_directories(ComputationalMathTests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(ComputationalMathTests
   PRIVATE
