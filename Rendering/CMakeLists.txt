@@ -9,7 +9,7 @@ set( GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only" )
 set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
 
 add_subdirectory(lib/glfw)
-add_subdirectory( lib/glm )
+add_subdirectory(lib/glm)
 
 include_directories(lib/glad/include)
 add_library(glad STATIC lib/glad/src/glad.c)
