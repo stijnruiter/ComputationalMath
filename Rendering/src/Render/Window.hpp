@@ -4,6 +4,9 @@
 #include <GLFW\glfw3.h>
 #include <string>
 #include "Event.hpp"
+#include "Render/Drawable/ObjectScene.hpp"
+#include <vector>
+#include <memory>
 
 class Window
 {
@@ -13,6 +16,9 @@ private:
 	int m_width;
 	int m_height;
 	std::string m_title;
+
+	std::vector<std::unique_ptr<SceneBase>> m_scenes;
+	int m_currentScene;
 
 private:
 	bool InitializeGLFW();
@@ -32,6 +38,8 @@ public:
 	bool ShouldClose();
 	void SwapBuffers();
 
+	void AddScene(std::unique_ptr<SceneBase> scene);
+
 	void Close();
 
 	void SetCallbackOnFrameBufferResize(const FrameBufferResizeEventCallback& callback) { m_callbackFrameBuffer = callback; }
@@ -44,5 +52,6 @@ public:
 	int GetHeight() const { return m_height; }
 
 	float GetAspectRatio() const { return m_height == 0 ? 1.0f : (float)m_width / m_height; } // Window is probably hidden, stop rendering;
-
+	
+	void Run();
 };

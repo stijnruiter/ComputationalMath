@@ -5,6 +5,9 @@
 #include <string>
 #include "Debug/Logger.hpp"
 
+#include "Core/Renderer.hpp"
+#include "PlotCamera.hpp"
+
 bool Window::InitializeGLFW()
 {
     int success = glfwInit();
@@ -35,7 +38,7 @@ bool Window::InitializeGlad()
 }
 
 Window::Window(int width, int height, std::string title) : 
-    m_width(width), m_height(height), m_title(title)
+    m_width(width), m_height(height), m_title(title), m_currentScene(-1), m_scenes(0)
 {
     if (!InitializeGLFW())
         return;
@@ -55,6 +58,7 @@ Window::Window(int width, int height, std::string title) :
 
 Window::~Window() 
 {
+    m_currentScene = -1;
     glfwDestroyWindow(m_window);
     m_window = nullptr;
 
@@ -120,6 +124,14 @@ void Window::SwapBuffers()
     glfwSwapBuffers(m_window);
 }
 
+void Window::AddScene(std::unique_ptr<SceneBase> scene)
+{
+    m_scenes.push_back(std::move(scene));
+    if (m_currentScene < 0)
+    {
+        m_currentScene = 0;
+    }
+}
 void Window::Close()
 {
     glfwSetWindowShouldClose(m_window, true);
@@ -128,4 +140,36 @@ void Window::Close()
 bool Window::IsKeyPressed(int key) const
 {
     return glfwGetKey(m_window, key) == GLFW_PRESS;
+}
+
+void Window::Run()
+{
+    PlotCamera camera(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0));
+    Renderer renderer;
+    renderer.SetClearColor(0.0f, 0.0f, 0.0f);
+    camera.Apply(renderer);
+
+    double deltaTime = 0.0;
+    double lastFrame = 0.0;
+    while (!ShouldClose())
+    {
+        double currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        camera.Rotate(deltaTime);
+        camera.Apply(renderer);
+
+        if (IsKeyPressed(GLFW_KEY_ESCAPE))
+        {
+            Close();
+        }
+        renderer.Clear();
+        if (m_currentScene >= 0)
+        {
+            m_scenes[m_currentScene]->Update(deltaTime);
+            m_scenes[m_currentScene]->Draw(renderer);
+        }
+        SwapBuffers();
+        glfwPollEvents();
+    }
 }

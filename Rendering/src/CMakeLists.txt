@@ -11,18 +11,30 @@ target_sources(Rendering
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Debug/gl_debug.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Debug/Logger.cpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Drawable/ObjectScene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/PlotCamera.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Window.cpp
 
   PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/CameraTransformation.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/IndexBuffer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/Renderer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/ShaderProgram.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/VertexArrayObject.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/VertexBuffer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/CameraTransformation.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Debug/gl_debug.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Debug/Logger.hpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Shader/SolidColorShader.hpp
+    
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Drawable/SceneBase.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Drawable/ObjectScene.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Drawable/DrawableObject.hpp
+    
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/PlotCamera.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Event.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Window.hpp
 )
