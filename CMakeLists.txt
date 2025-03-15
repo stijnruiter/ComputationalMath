@@ -22,5 +22,6 @@ endif()
 
 enable_testing()
 
-add_subdirectory ("ComputationalMath")
-add_subdirectory ("Physics")
+add_subdirectory (ComputationalMath)
+add_subdirectory (Rendering)
+add_subdirectory (Physics)
