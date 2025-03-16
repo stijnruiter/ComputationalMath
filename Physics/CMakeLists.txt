@@ -4,7 +4,8 @@ add_executable(Physics)
 
 target_sources(Physics
 	PRIVATE
-	  ${CMAKE_CURRENT_SOURCE_DIR}/src/App.cpp
+	  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+	  
 	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Axis.cpp
 	  ${CMAKE_CURRENT_SOURCE_DIR}/src/DrawableMesh.cpp
 	  ${CMAKE_CURRENT_SOURCE_DIR}/src/DrawableGraph.cpp

@@ -17,8 +17,7 @@ private:
 public:
     PlotCamera();
     PlotCamera(glm::vec3 initialPosition, glm::vec3 up, float rotationSpeed = 1.0f);
-
+    const CameraTransformation& GetTransformation() const { return m_camera; }
     void Rotate(float delta);
     void Reset();
-    void Apply(Renderer& renderer);
 };

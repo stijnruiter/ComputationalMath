@@ -12,7 +12,6 @@
 #include "DrawableMesh.h"
 #include "DrawableGraph.h"
 
-// settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -60,7 +59,7 @@ int main()
         Geometry::Vertex2F(-0.3f, 0.3f)}));
 
     Geometry::RefinedDelaunay delaunayMesh = Geometry::RefinedDelaunay::CreateTriangulation(graph);
-    delaunayMesh.Refine(20);
+    delaunayMesh.Refine(25);
 
     std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>();
     scene->AddObject(std::make_unique<Axis>());

@@ -147,7 +147,7 @@ void Window::Run()
     PlotCamera camera(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0));
     Renderer renderer;
     renderer.SetClearColor(0.0f, 0.0f, 0.0f);
-    camera.Apply(renderer);
+    renderer.UpdateCamera(camera.GetTransformation());
 
     double deltaTime = 0.0;
     double lastFrame = 0.0;
@@ -157,7 +157,7 @@ void Window::Run()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         camera.Rotate(deltaTime);
-        camera.Apply(renderer);
+        renderer.UpdateCamera(camera.GetTransformation());
 
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {

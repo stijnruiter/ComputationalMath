@@ -46,9 +46,9 @@ void Renderer::DrawElements(const IndexBuffer &elements)
 
 void Renderer::UpdateCamera(const CameraTransformation &transformation)
 {
-    m_solidColorShader.SetUniformMatrix4("model", transformation.Model);
-    m_solidColorShader.SetUniformMatrix4("view", transformation.View);
-    m_solidColorShader.SetUniformMatrix4("projection", transformation.Projection);
+    m_solidColorShader.SetUniformMatrix4("model", transformation.Model, true);
+    m_solidColorShader.SetUniformMatrix4("view", transformation.View, true);
+    m_solidColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
 }
 
 void Renderer::SetLineWidth(float width)

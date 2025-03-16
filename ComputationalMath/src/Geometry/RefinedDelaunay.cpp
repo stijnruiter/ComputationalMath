@@ -19,7 +19,6 @@ namespace Geometry
     void RefinedDelaunay::Refine(float alphaDegrees)
     {
         float alphaRadians = alphaDegrees * M_PI / 180;
-        size_t tmp = 0;
         while(true)
         {
             const std::vector<LineElement>& segments = graph.GetLineSegments();
