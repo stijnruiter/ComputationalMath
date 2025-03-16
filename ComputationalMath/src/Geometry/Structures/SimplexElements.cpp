@@ -7,7 +7,7 @@ namespace Geometry
     { 
     }
 
-    LineElement::LineElement(size_t i, size_t j)
+    LineElement::LineElement(unsigned int i, unsigned int j)
         : I(i), J(j) 
     {
     }
@@ -22,7 +22,7 @@ namespace Geometry
     {
     }
 
-    TriangleElement::TriangleElement(size_t i, size_t j, size_t k) 
+    TriangleElement::TriangleElement(unsigned int i, unsigned int j, unsigned int k) 
         : I(i), J(j), K(k) 
     {
     }

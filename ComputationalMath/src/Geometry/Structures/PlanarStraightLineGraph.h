@@ -18,11 +18,11 @@ namespace Geometry
         
         void AddClosedLineSegments(std::vector<Vertex2F> polygon);
         
-        void RemoveLineSegment(size_t lineSegmentIndex);
+        void RemoveLineSegment(unsigned int lineSegmentIndex);
         
         void SplitLineSegment(int lineSegmentIndex, float alpha = 0.5f);
 
-        size_t GetVertexCount() const;
+        unsigned int GetVertexCount() const;
 
         const std::vector<Vertex2F>& GetVertices() const;
         const std::vector<LineElement>& GetLineSegments() const;

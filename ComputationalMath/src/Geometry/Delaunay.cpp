@@ -115,10 +115,9 @@ namespace Geometry
         return smallestAngleTriangle;
     }
 
-
-    size_t Delaunay::FindElement(Vertex2F point) const
+    unsigned int Delaunay::FindElement(Vertex2F point) const
     {
-        for (size_t i = 0; i < m_triangulation.GetElementCount(); i++)
+        for (unsigned int i = 0; i < m_triangulation.GetElementCount(); i++)
         {
             TriangleElement indices = m_triangulation.GetTriangleElement(i);
             if (Triangle::ContainsVertex(point, m_vertices[indices.I], m_vertices[indices.J], m_vertices[indices.K]))
@@ -148,7 +147,7 @@ namespace Geometry
         FlipTest(twinEdge.PrevEdge);
     }
 
-    inline bool Delaunay::InCircle(size_t ai, size_t bi, size_t ci, size_t di) const
+    inline bool Delaunay::InCircle(unsigned int ai, unsigned int bi, unsigned int ci, unsigned int di) const
     {
         return InCircleDeterminant(m_vertices[ai], m_vertices[bi], m_vertices[ci], m_vertices[di]) > 0;
     }

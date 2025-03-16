@@ -2,6 +2,8 @@
 
 namespace Geometry
 {
+    struct Vertex3F;
+    
     struct Vertex2F
     {
         float X;
@@ -25,6 +27,8 @@ namespace Geometry
         static float DotProduct(Vertex2F lhs, Vertex2F rhs);
         static float Distance(Vertex2F lhs, Vertex2F rhs);
         float DistanceTo(Vertex2F other) const;
+
+        Vertex3F XY0() const;
     };
 
     struct Vertex3F
@@ -35,5 +39,6 @@ namespace Geometry
 
         Vertex3F();
         Vertex3F(float x, float y, float z);
+        Vertex3F(Vertex2F vertex2, float z);
     };
 }

@@ -3,6 +3,7 @@ add_library(ComputationalMath)
 target_sources(ComputationalMath
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/HalfEdgeTriangulation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Mesh2D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/PlanarStraightLineGraph.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Rectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/SimplexElements.cpp

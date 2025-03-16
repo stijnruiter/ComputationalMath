@@ -1,9 +1,10 @@
 #include "PlanarStraightLineGraph.h"
 #include <stdexcept>
+#include <cassert>
+#include <climits>
 
 namespace Geometry
 {
-
     PlanarStraightLineGraph::PlanarStraightLineGraph() { }
 
     void PlanarStraightLineGraph::AddLineSegment(Vertex2F start, Vertex2F end)
@@ -15,12 +16,14 @@ namespace Geometry
 
     void PlanarStraightLineGraph::AddLineSegments(std::vector<Vertex2F> polygon)
     {
-        size_t polygonLength = polygon.size();
+        assert(polygon.size() < UINT_MAX);
+        assert(m_vertices.size() + polygon.size() < UINT_MAX);
+        unsigned int polygonLength = polygon.size();
         if (polygonLength <= 1)
             throw std::invalid_argument("The polygon must have at least two vertices.");
 
-        size_t currentLength = m_vertices.size();
-        for(size_t i = currentLength; i < currentLength + polygonLength - 1; i++)
+        unsigned int currentLength = m_vertices.size();
+        for(unsigned int i = currentLength; i < currentLength + polygonLength - 1; i++)
         {
             m_segments.push_back(LineElement(i, i + 1));
         }
@@ -35,10 +38,11 @@ namespace Geometry
     {
         AddLineSegments(polygon);
         // Connect the last vertex to the first vertex to close the polygon loop
+        assert(m_vertices.size() < UINT_MAX);
         m_segments.push_back(LineElement(m_vertices.size() - 1, m_vertices.size() - polygon.size()));
     }
 
-    void PlanarStraightLineGraph::RemoveLineSegment(size_t lineSegmentIndex)
+    void PlanarStraightLineGraph::RemoveLineSegment(unsigned int lineSegmentIndex)
     {
         if (lineSegmentIndex >= m_segments.size())
             throw std::out_of_range("Index out of range");
@@ -62,8 +66,9 @@ namespace Geometry
         m_segments.push_back(LineElement(splitVertexIndex, lineSegment.J));
     }
 
-    size_t PlanarStraightLineGraph::GetVertexCount() const
+    unsigned int PlanarStraightLineGraph::GetVertexCount() const
     {
+        assert(m_vertices.size() < UINT_MAX);
         return m_vertices.size();
     }
 

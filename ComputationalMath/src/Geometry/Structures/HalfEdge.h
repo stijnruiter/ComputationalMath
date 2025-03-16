@@ -1,18 +1,18 @@
 #pragma once
-#include <cstdint>
+#include <climits>
 
 namespace Geometry
 {
     struct HalfEdge
     {
-        size_t V1;
-        size_t V2;
-        size_t PrevEdge;
-        size_t NextEdge;
-        size_t TwinEdge;
-        size_t ElementIndex;
+        unsigned int V1;
+        unsigned int V2;
+        unsigned int PrevEdge;
+        unsigned int NextEdge;
+        unsigned int TwinEdge;
+        unsigned int ElementIndex;
 
-        HalfEdge() : V1(SIZE_MAX), V2(SIZE_MAX), PrevEdge(SIZE_MAX), NextEdge(SIZE_MAX), TwinEdge(SIZE_MAX), ElementIndex(SIZE_MAX)
+        HalfEdge() : V1(UINT_MAX), V2(UINT_MAX), PrevEdge(UINT_MAX), NextEdge(UINT_MAX), TwinEdge(UINT_MAX), ElementIndex(UINT_MAX)
         {
         }
 

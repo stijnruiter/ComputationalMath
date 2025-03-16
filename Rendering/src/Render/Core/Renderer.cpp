@@ -25,24 +25,6 @@ void Renderer::Clear()
 	GLCHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
-void Renderer::Draw(const VertexArrayObject& vao, const IndexBuffer& elements, const ShaderProgram& program)
-{
-    program.Use();
-    vao.Bind();
-    GLCHECK(glDrawElements(GL_TRIANGLES, (GLsizei)elements.GetCount(), GL_UNSIGNED_INT, NULL));
-}
-
-void Renderer::DrawLines(const IndexBuffer &elements)
-{
-    elements.Bind();
-    GLCHECK(glDrawElements(GL_LINES, elements.GetCount(), GL_UNSIGNED_INT, NULL));
-}
-
-void Renderer::DrawElements(const IndexBuffer &elements)
-{
-    elements.Bind();
-    GLCHECK(glDrawElements(GL_TRIANGLES, elements.GetCount(), GL_UNSIGNED_INT, NULL));
-}
 
 void Renderer::UpdateCamera(const CameraTransformation &transformation)
 {

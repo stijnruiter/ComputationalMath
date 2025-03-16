@@ -15,5 +15,5 @@ public:
 private:
     std::unique_ptr<VertexArrayObject> m_vao;
     std::unique_ptr<VertexBuffer> m_vertexBuffer;
-    std::unique_ptr<IndexBuffer> m_indexBuffer;
+    std::unique_ptr<IndexBuffer<unsigned int>> m_indexBuffer;
 };

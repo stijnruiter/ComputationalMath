@@ -26,7 +26,7 @@ Axis::Axis()
     m_vertexBuffer->DefineFloatAttribute(0, 3);
     m_vao->AddBuffer(*m_vertexBuffer);
 
-    m_indexBuffer = std::make_unique<IndexBuffer>(indices, sizeof(indices) / sizeof(unsigned int));
+    m_indexBuffer = std::make_unique<IndexBuffer<unsigned int>>(indices, sizeof(indices) / sizeof(unsigned int));
 }
 
 void Axis::Draw(Renderer &render)

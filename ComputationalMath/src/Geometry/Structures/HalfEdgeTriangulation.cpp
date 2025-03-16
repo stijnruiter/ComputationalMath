@@ -1,20 +1,21 @@
 #include "HalfEdgeTriangulation.h"
 #include <cassert>
+#include <climits>
 
 namespace Geometry
 {
-    HalfEdgeTriangulation::HalfEdgeTriangulation(size_t initialSize)
+    HalfEdgeTriangulation::HalfEdgeTriangulation(unsigned int initialSize)
         : m_triangles(0), m_edges(0), m_elementCount(0), m_edgeCount(0)
     {
         m_triangles.reserve(initialSize);
         m_edges.reserve(initialSize * 3);
     }
 
-    void HalfEdgeTriangulation::AddTriangle(size_t vertexIndex1, size_t vertexIndex2, size_t vertexIndex3)
+    void HalfEdgeTriangulation::AddTriangle(unsigned int vertexIndex1, unsigned int vertexIndex2, unsigned int vertexIndex3)
     {
-        size_t edgeIndex1 = m_elementCount;
-        size_t edgeIndex2 = edgeIndex1 + 1;
-        size_t edgeIndex3 = edgeIndex1 + 2;
+        unsigned int edgeIndex1 = m_elementCount;
+        unsigned int edgeIndex2 = edgeIndex1 + 1;
+        unsigned int edgeIndex3 = edgeIndex1 + 2;
 
         m_triangles.push_back(edgeIndex1);
         InsertEdge(vertexIndex1, vertexIndex2, edgeIndex1, edgeIndex3, edgeIndex2, m_elementCount);
@@ -25,33 +26,33 @@ namespace Geometry
         m_edgeCount += 3;
     }
 
-    TriangleElement HalfEdgeTriangulation::GetTriangleElement(size_t elementIndex) const
+    TriangleElement HalfEdgeTriangulation::GetTriangleElement(unsigned int elementIndex) const
     {
         return GetTriangleElementFromEdge(m_triangles[elementIndex]);
     }
 
-    TriangleElement HalfEdgeTriangulation::GetTriangleElementFromEdge(size_t edgeIndex) const
+    TriangleElement HalfEdgeTriangulation::GetTriangleElementFromEdge(unsigned int edgeIndex) const
     {
         HalfEdge edge = m_edges[edgeIndex];
         return TriangleElement(edge.V1, edge.V2, m_edges[edge.NextEdge].V2);
     }
 
-    const HalfEdge& HalfEdgeTriangulation::GetEdge(size_t edgeIndex) const
+    const HalfEdge& HalfEdgeTriangulation::GetEdge(unsigned int edgeIndex) const
     {
         return m_edges[edgeIndex];
     }
 
-    size_t HalfEdgeTriangulation::GetElementCount() const
+    unsigned int HalfEdgeTriangulation::GetElementCount() const
     {
         return m_elementCount;
     }
 
-    size_t HalfEdgeTriangulation::GetEdgeCount() const
+    unsigned int HalfEdgeTriangulation::GetEdgeCount() const
     {
         return m_edgeCount;
     }
 
-    bool HalfEdgeTriangulation::IsValidEdge(size_t edgeIndex) const
+    bool HalfEdgeTriangulation::IsValidEdge(unsigned int edgeIndex) const
     {
         return edgeIndex < m_edgeCount;
     }
@@ -59,7 +60,7 @@ namespace Geometry
     Mesh2D HalfEdgeTriangulation::ToMesh() const
     {
         Mesh2D mesh(m_elementCount, 3);
-        for (size_t i = 0; i < m_elementCount; i++)
+        for (unsigned int i = 0; i < m_elementCount; i++)
         {
             HalfEdge edge1 = m_edges[m_triangles[i]];
             HalfEdge edge2 = m_edges[edge1.NextEdge];
@@ -67,20 +68,20 @@ namespace Geometry
             assert(edge3.NextEdge == m_triangles[i]);
             mesh.Interior.push_back(TriangleElement(edge1.V1, edge2.V1, edge3.V1));
 
-            if(edge1.TwinEdge == size_t(-1)) { mesh.Boundary.push_back(LineElement(edge1.V1, edge1.V2)); }
-            if(edge2.TwinEdge == size_t(-1)) { mesh.Boundary.push_back(LineElement(edge2.V1, edge2.V2)); }
-            if(edge3.TwinEdge == size_t(-1)) { mesh.Boundary.push_back(LineElement(edge3.V1, edge3.V2)); }
+            if(edge1.TwinEdge == (unsigned int)(-1)) { mesh.Boundary.push_back(LineElement(edge1.V1, edge1.V2)); }
+            if(edge2.TwinEdge == (unsigned int)(-1)) { mesh.Boundary.push_back(LineElement(edge2.V1, edge2.V2)); }
+            if(edge3.TwinEdge == (unsigned int)(-1)) { mesh.Boundary.push_back(LineElement(edge3.V1, edge3.V2)); }
         }
         return mesh;
     }
 
-    void HalfEdgeTriangulation::InsertEdge(size_t vertexIndexStart, size_t vertexIndexEnd, size_t edgeIndex, size_t edgeIndexPrevious, size_t edgeIndexNext, size_t elementIndex)
+    void HalfEdgeTriangulation::InsertEdge(unsigned int vertexIndexStart, unsigned int vertexIndexEnd, unsigned int edgeIndex, unsigned int edgeIndexPrevious, unsigned int edgeIndexNext, unsigned int elementIndex)
     {
-        size_t tmp;
+        unsigned int tmp;
         assert(GetEdgeIndex(vertexIndexStart, vertexIndexEnd, tmp) == false); // Edge already exists
         assert(edgeIndex == m_edges.size());
         
-        size_t twinIndex;
+        unsigned int twinIndex;
         if (GetEdgeIndex(vertexIndexEnd, vertexIndexStart, twinIndex))
         {
             assert(m_edges[twinIndex].TwinEdge > m_edgeCount); // Twin already has a neighbour
@@ -89,8 +90,11 @@ namespace Geometry
         m_edges.push_back(HalfEdge(vertexIndexStart, vertexIndexEnd, edgeIndexPrevious, edgeIndexNext, twinIndex, elementIndex));
     }
 
-    TriangleElement HalfEdgeTriangulation::RefineTriangle(size_t triangleIndex, size_t newVertexIndex)
+    TriangleElement HalfEdgeTriangulation::RefineTriangle(unsigned int triangleIndex, unsigned int newVertexIndex)
     {
+        assert(m_elementCount < UINT_MAX - 2);
+        assert(m_edgeCount < UINT_MAX - 6);
+
         // TODO: simplify/references
         size_t oldEdgeIndex1 = m_triangles[triangleIndex];
         HalfEdge oldEdge1 = m_edges[oldEdgeIndex1];
@@ -135,7 +139,7 @@ namespace Geometry
         return TriangleElement(oldEdgeIndex1, oldEdgeIndex2, oldEdgeIndex3);
     }
 
-    void HalfEdgeTriangulation::FlipEdge(size_t edgeIndex)
+    void HalfEdgeTriangulation::FlipEdge(unsigned int edgeIndex)
     {
         // TODO: optimize
         HalfEdge edge = m_edges[edgeIndex];
@@ -181,9 +185,9 @@ namespace Geometry
         m_triangles[twin.ElementIndex] = twinIndex;
     }
 
-    bool HalfEdgeTriangulation::GetEdgeIndex(size_t vStart, size_t vEnd, size_t& index) const
+    bool HalfEdgeTriangulation::GetEdgeIndex(unsigned int vStart, unsigned int vEnd, unsigned int& index) const
     {
-        for (size_t i = 0; i < m_edgeCount; i++)
+        for (unsigned int i = 0; i < m_edgeCount; i++)
         {
             if (m_edges[i].V1 == vStart && m_edges[i].V2 == vEnd)
             {

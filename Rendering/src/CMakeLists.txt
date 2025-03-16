@@ -2,7 +2,6 @@ add_library(Rendering)
 
 target_sources(Rendering
   PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/IndexBuffer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/Renderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/ShaderProgram.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Core/VertexArrayObject.cpp

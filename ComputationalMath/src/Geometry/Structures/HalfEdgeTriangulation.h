@@ -10,33 +10,33 @@ namespace Geometry
     class HalfEdgeTriangulation
     {
     public:
-        HalfEdgeTriangulation(size_t initialSize);
+        HalfEdgeTriangulation(unsigned int initialSize);
 
-        void AddTriangle(size_t vertexIndex1, size_t vertexIndex2, size_t vertexIndex3);
-        TriangleElement RefineTriangle(size_t triangleIndex, size_t newVertexIndex);
-        void FlipEdge(size_t edgeIndex);
+        void AddTriangle(unsigned int vertexIndex1, unsigned int vertexIndex2, unsigned int vertexIndex3);
+        TriangleElement RefineTriangle(unsigned int triangleIndex, unsigned int newVertexIndex);
+        void FlipEdge(unsigned int edgeIndex);
 
-        TriangleElement GetTriangleElement(size_t elementIndex) const;
-        TriangleElement GetTriangleElementFromEdge(size_t edgeIndex) const;
+        TriangleElement GetTriangleElement(unsigned int elementIndex) const;
+        TriangleElement GetTriangleElementFromEdge(unsigned int edgeIndex) const;
 
-        const HalfEdge& GetEdge(size_t edgeIndex) const;
+        const HalfEdge& GetEdge(unsigned int edgeIndex) const;
 
-        size_t GetElementCount() const;
-        size_t GetEdgeCount() const;
+        unsigned int GetElementCount() const;
+        unsigned int GetEdgeCount() const;
 
-        bool IsValidEdge(size_t edgeIndex) const;
+        bool IsValidEdge(unsigned int edgeIndex) const;
 
         Mesh2D ToMesh() const;
 
     private: 
-        void InsertEdge(size_t vertexIndexStart, size_t vertexIndexEnd, size_t edgeIndex, size_t edgeIndexPrevious, size_t edgeIndexNext, size_t elementIndex);
-        bool GetEdgeIndex(size_t vStart, size_t vEnd, size_t& index) const;
+        void InsertEdge(unsigned int vertexIndexStart, unsigned int vertexIndexEnd, unsigned int edgeIndex, unsigned int edgeIndexPrevious, unsigned int edgeIndexNext, unsigned int elementIndex);
+        bool GetEdgeIndex(unsigned int vStart, unsigned int vEnd, unsigned int& index) const;
 
     private:
         std::vector<HalfEdge> m_edges;
         std::vector<int> m_triangles;
 
-        size_t m_elementCount;
-        size_t m_edgeCount;
+        unsigned int m_elementCount;
+        unsigned int m_edgeCount;
     };
 }

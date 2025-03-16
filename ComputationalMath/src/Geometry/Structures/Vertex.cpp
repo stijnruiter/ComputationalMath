@@ -68,6 +68,11 @@ namespace Geometry
         return Vertex2F(X - other.X, Y - other.Y).Length();
     }
 
+    Vertex3F Vertex2F::XY0() const
+    {
+        return Vertex3F(X, Y, 0.0f);
+    }
+
     Vertex3F::Vertex3F() 
         : X(0), Y(0), Z(0)
     {
@@ -75,6 +80,11 @@ namespace Geometry
 
     Vertex3F::Vertex3F(float x, float y, float z)
         : X(x), Y(y), Z(z)
+    {
+    }
+
+    Vertex3F::Vertex3F(Vertex2F vertex2, float z)
+        : X(vertex2.X), Y(vertex2.Y), Z(0.0f)
     {
     }
 }

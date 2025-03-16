@@ -1,4 +1,6 @@
 #include "RefinedDelaunay.h"
+#include <cassert>
+#include <climits>
 
 namespace Geometry
 {
@@ -47,7 +49,8 @@ namespace Geometry
                 return;
 
             bool circumcenterEncroached = false;
-            for (size_t i = 0; i < segments.size(); i++)
+            assert(segments.size() < UINT_MAX);
+            for (unsigned int i = 0; i < segments.size(); i++)
             {
                 LineElement segment = segments[i];
                 Vertex2F v1 = vertices[segment.I];

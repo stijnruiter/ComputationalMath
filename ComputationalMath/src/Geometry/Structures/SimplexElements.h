@@ -6,17 +6,17 @@ namespace Geometry
 {
     struct LineElement
     {
-        size_t I, J;
+        unsigned int I, J;
         LineElement();
-        LineElement(size_t i, size_t j);
+        LineElement(unsigned int i, unsigned int j);
         friend std::ostream& operator<<(std::ostream& os, const LineElement& line);
     };
 
     struct TriangleElement
     {
-        size_t I, J, K;
+        unsigned int I, J, K;
         TriangleElement();
-        TriangleElement(size_t i, size_t j, size_t k);
+        TriangleElement(unsigned int i, unsigned int j, unsigned int k);
         friend std::ostream& operator<<(std::ostream& os, const TriangleElement& Triangle);
     };
 }
