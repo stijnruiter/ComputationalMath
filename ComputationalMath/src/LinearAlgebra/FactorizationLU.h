@@ -39,6 +39,13 @@ namespace LinearAlgebra
             return result;
         }
         
+        /// <summary>
+        /// PLU Factorization using partial pivoting. Currently, no check are performed to check if A is factorizable.
+        /// 
+        /// LU matrix where LU = L + U - I. Since the diagonal of the lower triangle matrix L only contains ones, it is not necessary to store it. We can just store both triangular matrices in 1 matrix.
+        /// Pivots contains the vector with the pivot row for each column, A[i, P[i]]
+        /// Permutations is the number of row swaps,  used for computing the determinant (det(A) = det(P)det(L)det(U) = (-1)^{Permutations} * prod(diag(U))</returns
+        /// </summary>
         template<typename T>
         FactorizationResult<T> PluFactorization(const Matrix<T>& A, T tolerance)
         {
@@ -92,6 +99,8 @@ namespace LinearAlgebra
             return result;
         }
         
+        
+        // Extract lower triangle, assuming the diagonal should be 1
         template<typename T>
         Matrix<T> ExtractLowerMatrix(const Matrix<T>& matrix)
         {
@@ -116,12 +125,23 @@ namespace LinearAlgebra
             return result;
         }
         
+        /// <summary>
+        /// Compute the determinant of matrix A using the PLU decomposition.
+        /// </summary>
         template<typename T>
         T Determinant(const Matrix<T>& matrix, T tolerance)
         {
             if (matrix.GetColumnCount() != matrix.GetRowCount())
                 throw std::invalid_argument("Cannot compute determinant of non-square matrix");
         
+            // P * A = L * U
+            // det(A) = det(P^{-1})det(L)det(U)
+            // P is the permutation matrix, thus P^{-1}=P^T
+
+            // Both L and U are triangular matrices, thus det(L) = prod(diag(L))
+            // det(L) = prod(diag(L)) = prod([1,1,1...]) = 1
+            // det(U) = prod(diag(U)) = u[0,0] * u[1,1] * u[2,2]*...
+            // det(P) = (-1)^(number of permutations) = (-1)^(permutations % 2)
             FactorizationResult<T> results = PluFactorization(matrix, tolerance);
             return Determinant(results);
         }
@@ -142,6 +162,10 @@ namespace LinearAlgebra
             return determinant;
         }
     
+
+        /// <summary>
+        /// Forward substitution for solving the system Ly=b, where L is a lower triangular matrix where the diagonal is 1. y and b are column vectors.
+        /// </summary>    
         template<typename T>
         void ForwardSubstitutionInPlace(const Matrix<T>& matrix, ColumnVector<T>& rhs)
         {
@@ -168,6 +192,9 @@ namespace LinearAlgebra
             }
         }
 
+        /// <summary>
+        /// Forward substitution for solving the system Ly=b, where L is a lower triangular matrix where the diagonal is 1. y and b are column vectors.
+        /// </summary>
         template<typename T>
         void ForwardSubstitutionInPlace(const Matrix<T>& matrix, Matrix<T>& rhs)
         {
@@ -195,6 +222,9 @@ namespace LinearAlgebra
             }
         }
 
+        /// <summary>
+        /// Backwards substitution for solving Ux=y, where U is an upper triangular matrix. x and y are column matrices.
+        /// </summary>
         template<typename T>
         void BackwardSubstitutionInPlace(const Matrix<T>& matrix, ColumnVector<T>& rhs)
         {
@@ -221,6 +251,9 @@ namespace LinearAlgebra
             }
         }
 
+        /// <summary>
+        /// Backwards substitution for solving Ux=y, where U is an upper triangular matrix. x and y are column matrices.
+        /// </summary>
         template<typename T>
         void BackwardSubstitutionInPlace(const Matrix<T>& matrix, Matrix<T>& rhs)
         {

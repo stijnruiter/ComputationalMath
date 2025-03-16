@@ -194,6 +194,7 @@ inline void Matrix<T>::Fill(const T &value)
 template <typename T>
 inline Matrix<T> Matrix<T>::Transposed() const
 {
+	// TODO: Vectorized version
 	Matrix<T> transp(m_columnCount, m_rowCount);
 	for (size_t i = 0; i < m_rowCount; i++)
 	{

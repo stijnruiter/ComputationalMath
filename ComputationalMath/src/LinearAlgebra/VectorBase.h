@@ -242,6 +242,7 @@ inline ColumnVector<T> ColumnVector<T>::operator*(const T &scalar) const
 template <typename T>
 inline RowVector<T> ColumnVector<T>::Transposed() const
 {
+	// TODO: view
     return RowVector<T>(this->m_length, this->m_data.get());
 }
 
@@ -292,6 +293,7 @@ inline RowVector<T> RowVector<T>::operator*(const T &scalar) const
 template <typename T>
 inline T RowVector<T>::operator*(const ColumnVector<T> &vector) const
 {
+	// TODO: Vectorized version
 	this->ThrowIfDimensionsMismatch(vector.GetLength());
 	T* lhsPtr = this->m_data.get();
 	const T* rhsPtr = vector.Data();
@@ -301,11 +303,11 @@ inline T RowVector<T>::operator*(const ColumnVector<T> &vector) const
 		result += lhsPtr[i] * rhsPtr[i];
 	}
 	return result;
-	// return std::inner_product(lhsPtr, lhsPtr + this->m_length, rhsPtr, 0);
 }
 
 template <typename T>
 inline ColumnVector<T> RowVector<T>::Transposed() const
 {
-    return ColumnVector<T>(*this);
+	// TODO: view
+    return ColumnVector<T>(this->m_length, this->m_data.get());
 }

@@ -154,7 +154,7 @@ void Window::Run()
 {
     Renderer renderer;
 
-    renderer.SetClearColor(0.0f, 0.0f, 0.0f);
+    renderer.SetClearColor(0.2f, 0.3f, 0.3f);
     renderer.UpdateCamera(m_camera.GetTransformation());
 
     double deltaTime = 0.0;
