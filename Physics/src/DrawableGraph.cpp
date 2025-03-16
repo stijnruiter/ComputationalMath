@@ -21,6 +21,6 @@ void DrawableGraph::Draw(Renderer &render)
     m_vao->Bind();
     render.EnableLinearAlphaBlend();
 
-    render.UseSolidColor(1, 0, 0);
+    render.UseSolidColor(1, 0, 0, 0.5f);
     render.DrawLines(*m_triangleBuffer);
 }

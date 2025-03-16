@@ -62,9 +62,9 @@ int main()
     delaunayMesh.Refine(25);
 
     std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>();
-    scene->AddObject(std::make_unique<Axis>());
     scene->AddObject(std::make_unique<DrawableMesh>(delaunayMesh.ToMesh()));
     scene->AddObject(std::make_unique<DrawableGraph>(graph));
+    scene->AddObject(std::make_unique<Axis>());
     window.AddScene(std::move(scene));
 
     window.Run();

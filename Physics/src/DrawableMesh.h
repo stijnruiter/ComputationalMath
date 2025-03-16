@@ -19,6 +19,7 @@ public:
 private:
     std::unique_ptr<VertexArrayObject> m_vao;
     std::unique_ptr<VertexBuffer> m_vertexBuffer;
+    std::unique_ptr<VertexBuffer> m_valuesBuffer;
     std::unique_ptr<IndexBuffer<Geometry::TriangleElement>> m_triangleBuffer;
     std::unique_ptr<IndexBuffer<Geometry::LineElement>> m_interiorEdgeBuffer;
     std::unique_ptr<IndexBuffer<Geometry::LineElement>> m_boundaryEdgeBuffer;

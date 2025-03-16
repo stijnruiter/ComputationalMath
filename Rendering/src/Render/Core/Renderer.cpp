@@ -4,11 +4,15 @@
 #include "../Debug/gl_debug.hpp"
 
 #include "Render/Shader/SolidColorShader.hpp"
+#include "Render/Shader/VertexColorShader.hpp"
+#include "Render/Shader/ScalarColorShader.hpp"
 
 Renderer::Renderer()
-    : m_solidColorShader("SOLID_COLOR_SHADER")
+    : m_solidColorShader("SOLID_COLOR_SHADER"), m_vertexColorShader("VERTEX_COLOR_SHADER"), m_scalarColorShader("SCALAR_COLOR_SHADER")
 {
     m_solidColorShader.Create(SolidColorShader::GLSL_SHADER_VERTEX, SolidColorShader::GLSL_SHADER_FRAGMENT);
+    m_vertexColorShader.Create(VertexColorShader::GLSL_SHADER_VERTEX, VertexColorShader::GLSL_SHADER_FRAGMENT);
+    m_scalarColorShader.Create(ScalarColorShader::GLSL_SHADER_VERTEX, ScalarColorShader::GLSL_SHADER_FRAGMENT);
 }
 
 Renderer::~Renderer()
@@ -31,6 +35,14 @@ void Renderer::UpdateCamera(const CameraTransformation &transformation)
     m_solidColorShader.SetUniformMatrix4("model", transformation.Model, true);
     m_solidColorShader.SetUniformMatrix4("view", transformation.View, true);
     m_solidColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
+    
+    m_vertexColorShader.SetUniformMatrix4("model", transformation.Model, true);
+    m_vertexColorShader.SetUniformMatrix4("view", transformation.View, true);
+    m_vertexColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
+    
+    m_scalarColorShader.SetUniformMatrix4("model", transformation.Model, true);
+    m_scalarColorShader.SetUniformMatrix4("view", transformation.View, true);
+    m_scalarColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
 }
 
 void Renderer::SetLineWidth(float width)
@@ -63,4 +75,14 @@ void Renderer::UseSolidColor(float r, float g, float b, float a)
 {
     m_solidColorShader.Use();
     m_solidColorShader.SetUniformVector4("drawColor", glm::vec4(r, g, b, a));
+}
+
+void Renderer::UseVertexColor()
+{
+    m_vertexColorShader.Use();
+}
+
+void Renderer::UseScalarColor()
+{
+    m_scalarColorShader.Use();
 }

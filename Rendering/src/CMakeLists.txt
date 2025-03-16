@@ -28,6 +28,7 @@ target_sources(Rendering
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Debug/Logger.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Shader/SolidColorShader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Render/Shader/VertexColorShader.hpp
     
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Drawable/SceneBase.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Render/Drawable/ObjectScene.hpp

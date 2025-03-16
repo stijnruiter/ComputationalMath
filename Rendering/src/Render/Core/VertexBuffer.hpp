@@ -2,6 +2,7 @@
 
 #include <glad\glad.h>
 #include <vector>
+#include <array>
 
 struct AttributeDefinition
 {
@@ -26,6 +27,12 @@ private:
 
 public:
 	VertexBuffer(const void* data, size_t size, GLenum usage = GL_STATIC_DRAW);
+
+	template<typename T>
+	VertexBuffer(const std::vector<T>& vector, GLenum usage = GL_STATIC_DRAW);
+
+	template<typename T, std::size_t N>
+	VertexBuffer(const std::array<T, N>& array, GLenum usage = GL_STATIC_DRAW);
 	~VertexBuffer();
 
 	void Bind() const;
@@ -36,3 +43,15 @@ public:
 	std::vector<AttributeDefinition> GetAttributes() const;
 	unsigned int GetStride() const;
 };
+
+template <typename T>
+inline VertexBuffer::VertexBuffer(const std::vector<T> &vector, GLenum usage)
+	: VertexBuffer(&vector[0], vector.size() * sizeof(T), usage)
+{
+}
+
+template <typename T, std::size_t N>
+inline VertexBuffer::VertexBuffer(const std::array<T, N> &array, GLenum usage)
+    : VertexBuffer(&array[0], array.size() * sizeof(T), usage)
+{
+}

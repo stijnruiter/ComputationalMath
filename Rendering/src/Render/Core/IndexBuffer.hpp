@@ -2,6 +2,7 @@
 
 #include <glad\glad.h>
 #include <vector>
+#include <array>
 #include "../Debug/gl_debug.hpp"
 
 template<typename T>
@@ -14,6 +15,9 @@ private:
 public:
 	IndexBuffer(const T* indices, const size_t count, GLenum usage = GL_STATIC_DRAW);
 	IndexBuffer(const std::vector<T>& indices, GLenum usage = GL_STATIC_DRAW);
+	
+	template <std::size_t N>
+	IndexBuffer(const std::array<T, N>& indices, GLenum usage = GL_STATIC_DRAW);
 	~IndexBuffer();
 
 	void Bind() const;
@@ -39,6 +43,13 @@ IndexBuffer<T>::IndexBuffer(const std::vector<T> &indices, GLenum usage)
 	: IndexBuffer<T>(&indices[0], indices.size(), usage)
 {
 
+}
+
+template <typename T>
+template <typename std::size_t N>
+inline IndexBuffer<T>::IndexBuffer(const std::array<T, N> &indices, GLenum usage)
+	: IndexBuffer<T>(&indices[0], indices.size(), usage)
+{
 }
 
 template <typename T>

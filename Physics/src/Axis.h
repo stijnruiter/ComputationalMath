@@ -3,6 +3,7 @@
 #include <Render/Core/VertexArrayObject.hpp>
 #include <Render/Core/VertexBuffer.hpp>
 #include <Render/Core/IndexBuffer.hpp>
+#include <Geometry/Structures/SimplexElements.h>
 
 #include <memory>
 
@@ -15,5 +16,6 @@ public:
 private:
     std::unique_ptr<VertexArrayObject> m_vao;
     std::unique_ptr<VertexBuffer> m_vertexBuffer;
-    std::unique_ptr<IndexBuffer<unsigned int>> m_indexBuffer;
+    std::unique_ptr<VertexBuffer> m_colorBuffer;
+    std::unique_ptr<IndexBuffer<Geometry::LineElement>> m_indexBuffer;
 };
