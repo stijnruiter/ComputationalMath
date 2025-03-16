@@ -27,6 +27,7 @@ target_sources(ComputationalMath
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Triangle.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RectangularMesh.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.h
 

@@ -1,13 +1,27 @@
 #include "ObjectScene.hpp"
 
-ObjectScene::ObjectScene()
-    : m_objects(0)
+ObjectScene::ObjectScene(bool is3d)
+    : m_objects(0), m_is3d(is3d)
 {
 }
 
 void ObjectScene::AddObject(std::unique_ptr<DrawableObject> object)
 {
     m_objects.push_back(std::move(object));
+}
+
+void ObjectScene::Activate(Renderer& render, PlotCamera& camera)
+{
+    if (m_is3d)
+    {
+        camera.Reset(glm::vec3(2.5, -2.5, 2.5), glm::vec3(0,0,1));
+        render.EnableDepth();
+    }
+    else 
+    {
+        camera.Reset(glm::vec3(0, 0, 2.5), glm::vec3(0,1, 0));
+        render.DisableDepth();
+    }
 }
 
 void ObjectScene::Update(float deltaTime)

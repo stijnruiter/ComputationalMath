@@ -33,8 +33,9 @@ public:
 	bool ElementwiseCompare(const Matrix<T>& mat, float epsilon) const;
 
 	void SwapRows(size_t row1, size_t row2);
+	void Fill(const T& value);
 
-	Matrix<T> Inverse() const;
+	Matrix<T> Transposed() const;
 
 	static T Determinant(const T& m11, const T& m12,
 						 const T& m21, const T& m22);
@@ -181,6 +182,27 @@ inline void Matrix<T>::SwapRows(size_t row1, size_t row2)
 	size_t row1End = row1Start + m_columnCount;
 	size_t row2Start = row2 * m_columnCount;
 	std::swap_ranges(data + row1Start, data + row1End, data + row2Start);
+}
+
+template <typename T>
+inline void Matrix<T>::Fill(const T &value)
+{
+	T* destination = m_storage.get();
+	std::fill(destination, destination + m_length, value);
+}
+
+template <typename T>
+inline Matrix<T> Matrix<T>::Transposed() const
+{
+	Matrix<T> transp(m_columnCount, m_rowCount);
+	for (size_t i = 0; i < m_rowCount; i++)
+	{
+		for (size_t j = 0; j < m_columnCount; j++)
+		{
+			transp(j, i) = GetValue(i, j);
+		}
+	}
+	return transp;
 }
 
 template <typename T>

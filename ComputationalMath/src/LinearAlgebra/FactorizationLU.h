@@ -40,7 +40,7 @@ namespace LinearAlgebra
         }
         
         template<typename T>
-        FactorizationResult<T> PluFactorization(Matrix<T> A, T tolerance)
+        FactorizationResult<T> PluFactorization(const Matrix<T>& A, T tolerance)
         {
             FactorizationResult<T> factorization { Matrix<T>(A), 0, IntRange(A.GetColumnCount()) };
         
@@ -117,7 +117,7 @@ namespace LinearAlgebra
         }
         
         template<typename T>
-        T Determinant(Matrix<T> matrix, T tolerance)
+        T Determinant(const Matrix<T>& matrix, T tolerance)
         {
             if (matrix.GetColumnCount() != matrix.GetRowCount())
                 throw std::invalid_argument("Cannot compute determinant of non-square matrix");
@@ -127,7 +127,7 @@ namespace LinearAlgebra
         }
         
         template<typename T>
-        T Determinant(FactorizationResult<T> results)
+        T Determinant(const FactorizationResult<T>& results)
         {
             if (results.Factorization.GetColumnCount() != results.Factorization.GetRowCount())
                 throw std::invalid_argument("Cannot compute determinant of non-square matrix");
@@ -321,7 +321,7 @@ namespace LinearAlgebra
         }
 
         template<typename T>
-        Matrix<float> InverseMatrix(const Matrix<float>& matrix, T tolerance)
+        Matrix<float> InverseMatrix(const Matrix<T>& matrix, T tolerance)
         {
             if (matrix.GetColumnCount() != matrix.GetRowCount())
                 throw std::invalid_argument("Non-square matrix");

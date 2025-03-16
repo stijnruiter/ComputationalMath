@@ -20,4 +20,5 @@ public:
     const CameraTransformation& GetTransformation() const { return m_camera; }
     void Rotate(float delta);
     void Reset();
+    void Reset(const glm::vec3& initialPosition, const glm::vec3& up);
 };

@@ -15,8 +15,8 @@ namespace Geometry
 
 		Rectangle();
 		Rectangle(float left, float right, float bottom, float top);
-		float GetWidth();
-		float GetHeight();
+		float GetWidth() const;
+		float GetHeight() const;
 
 		static Rectangle BoundingBox(const std::vector<Vertex2F>& vertices, float dilate);
 	};

@@ -12,8 +12,11 @@
 class DrawableMesh : public DrawableObject
 {
 public:
-    static std::vector<Geometry::Vertex3F> ToVertex3F(const std::vector<Geometry::Vertex2F>& vertices);
+    static std::vector<Geometry::Vertex3F> ToVertex3F(const std::vector<Geometry::Vertex2F> &vertices, const std::vector<float>& zValues);
+    static std::vector<float> Normalize(const std::vector<float>& data);
+
     DrawableMesh(const Geometry::Mesh2D& mesh);
+    DrawableMesh(const Geometry::Mesh2D& mesh, const std::vector<float>& values);
     virtual void Draw(Renderer& render) override;
 
 private:

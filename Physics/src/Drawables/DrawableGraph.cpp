@@ -4,7 +4,8 @@
 
 DrawableGraph::DrawableGraph(const Geometry::PlanarStraightLineGraph &graph)
 {
-    std::vector<Geometry::Vertex3F> vertices = DrawableMesh::ToVertex3F(graph.GetVertices());
+    std::vector<float> zvalues = std::vector<float>(graph.GetVertexCount());
+    std::vector<Geometry::Vertex3F> vertices = DrawableMesh::ToVertex3F(graph.GetVertices(), zvalues);
 
     m_vao = std::make_unique<VertexArrayObject>();
     m_vao->Bind();

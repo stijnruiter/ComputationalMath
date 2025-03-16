@@ -5,17 +5,21 @@
 #include <LinearAlgebra/FactorizationLU.h>
 
 #include <Geometry/RefinedDelaunay.h>
+#include <Geometry/Structures/Rectangle.h>
+#include <Geometry/RectangularMesh.h>
 
 #include <Render/Window.hpp>
 #include <Render/Drawable/ObjectScene.hpp>
-#include "Axis.h"
-#include "DrawableMesh.h"
-#include "DrawableGraph.h"
+#include "Drawables/Axis.h"
+#include "Drawables/DrawableMesh.h"
+#include "Drawables/DrawableGraph.h"
+
+#include "Fem/HelmholtzEquationWithSource.h"
+#include "Fem/LaplaceFem.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-int main()
+void RandomMath()
 {
     Matrix<float> mat(3, 3, new float[9]{
         1,2,3,
@@ -33,9 +37,10 @@ int main()
     ColumnVector<float> result = LinearAlgebra::Factorization::LUSolve(mat, rhs, 1e-5f);
     std::cout << std::endl << "b = " << rhs << std::endl; 
     std::cout << "A\\b = " << result << std::endl;
-	Window window(800, 600, "Physics");
-    window.SetMouseCursor(true);
+}
 
+Geometry::PlanarStraightLineGraph CreateGraph()
+{
     std::vector<Geometry::Vertex2F> vertices({
         Geometry::Vertex2F(-0.822222222f,  0.862222222f),
         Geometry::Vertex2F(0.257777778f,  0.76f),
@@ -57,16 +62,69 @@ int main()
         Geometry::Vertex2F(-0.6f, 0.5f), 
         Geometry::Vertex2F(-0.5f, 0.5f), 
         Geometry::Vertex2F(-0.3f, 0.3f)}));
+    return graph;
+}
 
+std::unique_ptr<DrawableMesh> CreateRefinedDelaunay(const Geometry::PlanarStraightLineGraph& graph)
+{
     Geometry::RefinedDelaunay delaunayMesh = Geometry::RefinedDelaunay::CreateTriangulation(graph);
     delaunayMesh.Refine(25);
+    return std::make_unique<DrawableMesh>(delaunayMesh.ToMesh());
+}
 
-    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>();
-    scene->AddObject(std::make_unique<DrawableMesh>(delaunayMesh.ToMesh()));
+std::unique_ptr<ObjectScene> CreateDelaunayScene()
+{
+    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(false);
+    
+    Geometry::PlanarStraightLineGraph graph = CreateGraph();
+    scene->AddObject(CreateRefinedDelaunay(graph));
     scene->AddObject(std::make_unique<DrawableGraph>(graph));
-    scene->AddObject(std::make_unique<Axis>());
-    window.AddScene(std::move(scene));
 
+    scene->AddObject(std::make_unique<Axis>());
+    return scene;
+}
+
+template <typename T, typename ..._Args>
+typename std::enable_if<std::is_base_of<FemProblem2dBase, T>::value, std::unique_ptr<ObjectScene>>::type CreateFemScene(_Args&&... __args)
+{
+    using namespace Geometry;
+    Rectangle bounds(-0.75f, 0.75f, -0.75f, 0.75f);
+    Mesh2D mesh = CreateRectangularMesh(bounds, 10, 10);
+    T fem(bounds, mesh, std::forward<_Args>(__args)...);
+    ColumnVector<float> solution = fem.Solve();
+    std::vector<float> solutionVector(solution.GetLength());
+    for(size_t i = 0; i < solution.GetLength(); i++)
+    {
+        solutionVector[i] = solution[i];
+    }
+    
+    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(true);
+    std::unique_ptr<DrawableMesh> drawableMesh = std::make_unique<DrawableMesh>(mesh, solutionVector);
+
+    scene->AddObject(std::move(drawableMesh));
+    scene->AddObject(std::make_unique<Axis>());
+    return scene;
+}
+
+int main()
+{
+    RandomMath();
+    
+	Window window(800, 600, "Physics");
+    window.SetMouseCursor(true);
+
+    window.AddScene(CreateDelaunayScene());
+    window.AddScene(CreateFemScene<HelmholtzEquationWithSourceFEM>(5));
+    window.AddScene(CreateFemScene<LaplaceFem>());
+    size_t sceneIndex = 0;
+    window.SetCallbackOnKey([&sceneIndex, &window](const KeyEvent& eventArgs) 
+    {
+        if (eventArgs.Action == GLFW_PRESS && eventArgs.Key == GLFW_KEY_1)
+        {
+            sceneIndex = (sceneIndex + 1) % window.GetSceneCount();
+            window.SwitchScene(sceneIndex);
+        }
+    });
     window.Run();
 
 	return 0;

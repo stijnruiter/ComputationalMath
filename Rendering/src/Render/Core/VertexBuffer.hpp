@@ -42,6 +42,8 @@ public:
 
 	std::vector<AttributeDefinition> GetAttributes() const;
 	unsigned int GetStride() const;
+
+	void SetData(const void* data, size_t size, GLenum usage = GL_STATIC_DRAW);
 };
 
 template <typename T>

@@ -84,7 +84,7 @@ namespace Geometry
     }
 
     Vertex3F::Vertex3F(Vertex2F vertex2, float z)
-        : X(vertex2.X), Y(vertex2.Y), Z(0.0f)
+        : X(vertex2.X), Y(vertex2.Y), Z(z)
     {
     }
 }

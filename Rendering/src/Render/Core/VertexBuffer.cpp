@@ -42,3 +42,9 @@ unsigned int VertexBuffer::GetStride() const
 {
     return m_stride;
 }
+
+void VertexBuffer::SetData(const void *data, size_t size, GLenum usage)
+{
+    Bind();
+    GLCHECK(glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)size, data, usage));
+}

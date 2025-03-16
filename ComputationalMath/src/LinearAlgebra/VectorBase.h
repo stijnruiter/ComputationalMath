@@ -2,11 +2,15 @@
 #include <memory>
 #include <stdexcept>
 #include <algorithm>
+#include <numeric>
 
 #include <iostream>
 
 template<typename T>
 class VectorBase;
+
+template<typename T>
+class RowVector;
 
 template<typename T>
 class ColumnVector : public VectorBase<T>
@@ -17,6 +21,11 @@ public:
 	bool ElementwiseCompare(const ColumnVector<T>& vector, float epsilon) const;
 	ColumnVector<T> operator+(const ColumnVector<T>& vector) const;
 	ColumnVector<T> operator-(const ColumnVector<T>& vector) const;
+	ColumnVector<T> operator*(const T& scalar) const;
+	friend ColumnVector<T> operator*(const T& scalar, const ColumnVector<T>& vector) { return vector * scalar; }
+	// Matrix<T> operator*(const RowVector<T>& vector) const;
+
+	RowVector<T> Transposed() const;
 };
 
 template<typename T>
@@ -29,6 +38,11 @@ public:
 	
 	RowVector<T> operator+(const RowVector<T>& vector) const;
 	RowVector<T> operator-(const RowVector<T>& vector) const;
+	RowVector<T> operator*(const T& scalar) const;
+	friend RowVector<T> operator*(const T& scalar, const RowVector<T>& vector) { return vector * scalar; };
+	T operator*(const ColumnVector<T>& vector) const;
+	
+	ColumnVector<T> Transposed() const;
 };
 
 template<typename T>
@@ -49,6 +63,7 @@ public:
 
 	T* Data();
 	const T* Data() const;
+	void Fill(const T& value);
 	
 protected:
 	void ThrowIfOutOfRange(size_t index) const;
@@ -140,6 +155,13 @@ inline const T *VectorBase<T>::Data() const
 	return m_data.get();
 }
 
+template <typename T>
+inline void VectorBase<T>::Fill(const T &value)
+{
+	T* storageDestination = this->m_data.get();
+	std::fill(storageDestination, storageDestination + this->m_length, value);
+}
+
 template<typename T>
 inline void VectorBase<T>::ThrowIfOutOfRange(size_t index) const
 {
@@ -206,6 +228,23 @@ inline ColumnVector<T> ColumnVector<T>::operator-(const ColumnVector<T> &vector)
 	return result;
 }
 
+template <typename T>
+inline ColumnVector<T> ColumnVector<T>::operator*(const T &scalar) const
+{
+    ColumnVector<T> result(this->m_length);
+	T* srcPtr = this->m_data.get();
+	T* dstPtr = result.m_data.get();
+	std::transform(srcPtr, srcPtr + this->m_length, dstPtr, [&scalar](T& right) {return scalar * right; });
+	return result;
+}
+
+
+template <typename T>
+inline RowVector<T> ColumnVector<T>::Transposed() const
+{
+    return RowVector<T>(this->m_length, this->m_data.get());
+}
+
 template<typename T>
 inline bool RowVector<T>::ElementwiseEquals(const RowVector<T>& vector) const
 {
@@ -238,4 +277,35 @@ inline RowVector<T> RowVector<T>::operator-(const RowVector<T> &vector) const
     RowVector<T> result(this->m_length);
 	this->ElementwiseSubtractVector(vector, result);
 	return result;
+}
+
+template <typename T>
+inline RowVector<T> RowVector<T>::operator*(const T &scalar) const
+{
+    RowVector<T> result(this->m_length);
+	T* srcPtr = this->m_data.get();
+	T* dstPtr = result.m_data.get();
+	std::transform(srcPtr, srcPtr + this->m_length, dstPtr, [&scalar](T& right) {return scalar * right; });
+	return result;
+}
+
+template <typename T>
+inline T RowVector<T>::operator*(const ColumnVector<T> &vector) const
+{
+	this->ThrowIfDimensionsMismatch(vector.GetLength());
+	T* lhsPtr = this->m_data.get();
+	const T* rhsPtr = vector.Data();
+	T result = 0;
+	for (size_t i = 0; i < this->m_length; i++)
+	{
+		result += lhsPtr[i] * rhsPtr[i];
+	}
+	return result;
+	// return std::inner_product(lhsPtr, lhsPtr + this->m_length, rhsPtr, 0);
+}
+
+template <typename T>
+inline ColumnVector<T> RowVector<T>::Transposed() const
+{
+    return ColumnVector<T>(*this);
 }

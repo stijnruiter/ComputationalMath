@@ -25,7 +25,15 @@ void PlotCamera::Rotate(float delta)
 
 void PlotCamera::Reset()
 {
+    m_angle = 0;
     m_camera.Model = glm::mat4(1.0);
     m_camera.View = glm::lookAt(m_initialEye, glm::vec3(0), m_up);
     m_camera.Projection = glm::perspective(glm::radians(45.0f), (float)800 / 600, 0.1f, 100.0f);
+}
+
+void PlotCamera::Reset(const glm::vec3& initialPosition, const glm::vec3& up)
+{
+    m_initialEye = initialPosition;
+    m_up = up;
+    Reset();
 }

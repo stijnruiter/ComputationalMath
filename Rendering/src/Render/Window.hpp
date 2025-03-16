@@ -19,6 +19,7 @@ private:
 
 	std::vector<std::unique_ptr<SceneBase>> m_scenes;
 	int m_currentScene;
+	PlotCamera m_camera;
 
 private:
 	bool InitializeGLFW();
@@ -39,6 +40,8 @@ public:
 	void SwapBuffers();
 
 	void AddScene(std::unique_ptr<SceneBase> scene);
+	void SwitchScene(size_t sceneIndex);
+	size_t GetSceneCount() const { return m_scenes.size(); };
 
 	void Close();
 

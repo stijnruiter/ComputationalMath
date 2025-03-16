@@ -17,12 +17,12 @@ namespace Geometry
 		Top = top;
 	}
 
-	float Rectangle::GetWidth()
+	float Rectangle::GetWidth() const
 	{
 		return Right - Left;
 	}
 
-	float Rectangle::GetHeight()
+	float Rectangle::GetHeight() const
 	{
 		return Top - Bottom;
 	}
