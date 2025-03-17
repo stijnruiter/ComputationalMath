@@ -5,7 +5,8 @@ add_executable(ComputationalMathBenchmark)
 target_sources(
   ComputationalMathBenchmark
   PRIVATE
-    benchmark.cpp
+    # benchmark.cpp
+    MatrixTransposed.cpp
     )
 
 target_link_libraries(

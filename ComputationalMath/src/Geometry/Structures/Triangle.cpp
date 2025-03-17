@@ -19,14 +19,15 @@ namespace Geometry
 
     bool Triangle::ContainsVertex(Vertex2F vertex) const
     {
+        const float epsilon = 1e-8f;
         float d1 = Triangle::HalfPlaneSide(vertex, V1, V2);
         float d2 = Triangle::HalfPlaneSide(vertex, V2, V3);
         float d3 = Triangle::HalfPlaneSide(vertex, V3, V1);
 
-        bool has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
-        bool has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+        bool all_neg = (d1 <= epsilon) && (d2 <= epsilon) && (d3 <= epsilon);
+        bool all_pos = (d1 >= -epsilon) && (d2 >= -epsilon) && (d3 >= -epsilon);
 
-        return !(has_neg && has_pos);
+        return all_neg || all_pos;
     }
 
     bool Triangle::ContainsVertex(Vertex2F vertex, Vertex2F v1, Vertex2F v2, Vertex2F v3)

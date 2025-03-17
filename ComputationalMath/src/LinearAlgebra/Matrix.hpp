@@ -226,13 +226,19 @@ inline void Matrix<T>::Fill(const T& value)
 template <typename T>
 inline Matrix<T> Matrix<T>::Transposed() const
 {
-    // TODO: Vectorized version
     Matrix<T> transp(m_columnCount, m_rowCount);
-    for (size_t i = 0; i < m_rowCount; i++)
+    const T* src = Data();
+    T* dst = transp.Data();
+
+    size_t block = 32; // For cache locality
+    for (size_t i = 0; i < m_rowCount; i += block)
     {
-        for (size_t j = 0; j < m_columnCount; j++)
+        for (size_t j = 0; j < m_columnCount; ++j)
         {
-            transp(j, i) = GetValue(i, j);
+            for (size_t k = 0; k < block && i + k < m_rowCount; ++k)
+            {
+                dst[j * m_rowCount + i + k] = src[(i + k) * m_columnCount + j];
+            }
         }
     }
     return transp;

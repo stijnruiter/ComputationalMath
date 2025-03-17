@@ -90,7 +90,7 @@ namespace Geometry
         assert(GetEdgeIndex(vertexIndexStart, vertexIndexEnd, tmp) == false); // Edge already exists
         assert(edgeIndex == m_edges.size());
 
-        unsigned int twinIndex;
+        unsigned int twinIndex = UINT_MAX;
         if (GetEdgeIndex(vertexIndexEnd, vertexIndexStart, twinIndex))
         {
             assert(m_edges[twinIndex].TwinEdge > m_edgeCount); // Twin already has a neighbour

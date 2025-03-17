@@ -10,10 +10,11 @@ static void BM_MatrixSum(benchmark::State& state)
         size_t size = state.range(); 
         Matrix<int> mat1(size, size); // TODO: properly initialize
         Matrix<int> mat2(size, size);
-        Matrix<int> mat3;
+        mat1.Fill(5);
+        mat1.Fill(3);
         state.ResumeTiming();
 
-        benchmark::DoNotOptimize(mat3 = mat1 + mat2);
+        benchmark::DoNotOptimize(mat1 + mat2);
         benchmark::ClobberMemory();
     }
 }

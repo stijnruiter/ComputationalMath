@@ -309,16 +309,10 @@ inline RowVector<T> RowVector<T>::operator*(const T& scalar) const
 template <typename T>
 inline T RowVector<T>::operator*(const ColumnVector<T>& vector) const
 {
-    // TODO: Vectorized version
     this->ThrowIfDimensionsMismatch(vector.GetLength());
     T* lhsPtr = this->m_data.get();
     const T* rhsPtr = vector.Data();
-    T result = 0;
-    for (size_t i = 0; i < this->m_length; i++)
-    {
-        result += lhsPtr[i] * rhsPtr[i];
-    }
-    return result;
+    return std::inner_product(lhsPtr, lhsPtr + this->m_length, rhsPtr, 0);
 }
 
 template <typename T>
