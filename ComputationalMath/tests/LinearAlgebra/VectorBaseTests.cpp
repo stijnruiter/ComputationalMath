@@ -106,6 +106,38 @@ namespace LinearAlgebra
         EXPECT_THROW(lhs - rhs, std::invalid_argument);
     }
 
+    TEST(ColumnVectorTests, Constructor_WhenUsingInitializerList_ShouldHaveValues)
+    {
+        ColumnVector<float> value({1, 2, 3, 4});
+        EXPECT_EQ(value.GetLength(), 4);
+        EXPECT_EQ(value[0], 1);
+        EXPECT_EQ(value[1], 2);
+        EXPECT_EQ(value[2], 3);
+        EXPECT_EQ(value[3], 4);
+    }
+
+    TEST(ColumnVectorTests, Constructor_WhenUsingEmptyInitializerList_ShouldBeEmpty)
+    {
+        ColumnVector<float> value({});
+        EXPECT_EQ(value.GetLength(), 0);
+    }
+
+    TEST(ColumnVectorTests, Assignment_WhenUsingInitializerList_ShouldHaveValues)
+    {
+        ColumnVector<float> value = {1, 2, 3, 4};
+        EXPECT_EQ(value.GetLength(), 4);
+        EXPECT_EQ(value[0], 1);
+        EXPECT_EQ(value[1], 2);
+        EXPECT_EQ(value[2], 3);
+        EXPECT_EQ(value[3], 4);
+    }
+
+    TEST(ColumnVectorTests, Assignment_WhenUsingEmptyInitializerList_ShouldBeEmpty)
+    {
+        ColumnVector<float> value = {};
+        EXPECT_EQ(value.GetLength(), 0);
+    }
+
     TEST(RowVectorTests, SumInt_WhenDimensionsMatch_ShouldResultCorrectSum)
     {
         RowVector<int> lhs(5, new int[5]{1, 2, 3, 4, 5});
@@ -146,5 +178,37 @@ namespace LinearAlgebra
         RowVector<int> lhs(5);
         RowVector<int> rhs(4);
         EXPECT_THROW(lhs - rhs, std::invalid_argument);
+    }
+
+    TEST(RowVectorTests, Constructor_WhenUsingInitializerList_ShouldHaveValues)
+    {
+        RowVector<float> value({1, 2, 3, 4});
+        EXPECT_EQ(value.GetLength(), 4);
+        EXPECT_EQ(value[0], 1);
+        EXPECT_EQ(value[1], 2);
+        EXPECT_EQ(value[2], 3);
+        EXPECT_EQ(value[3], 4);
+    }
+
+    TEST(RowVectorTests, Constructor_WhenUsingEmptyInitializerList_ShouldBeEmpty)
+    {
+        RowVector<float> value({});
+        EXPECT_EQ(value.GetLength(), 0);
+    }
+
+    TEST(RowVectorTests, Assignment_WhenUsingInitializerList_ShouldHaveValues)
+    {
+        RowVector<float> value = {1, 2, 3, 4};
+        EXPECT_EQ(value.GetLength(), 4);
+        EXPECT_EQ(value[0], 1);
+        EXPECT_EQ(value[1], 2);
+        EXPECT_EQ(value[2], 3);
+        EXPECT_EQ(value[3], 4);
+    }
+
+    TEST(RowVectorTests, Assignment_WhenUsingEmptyInitializerList_ShouldBeEmpty)
+    {
+        RowVector<float> value = {};
+        EXPECT_EQ(value.GetLength(), 0);
     }
 }

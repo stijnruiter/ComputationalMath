@@ -6,6 +6,8 @@ include(../cmake/GoogleTest.cmake)
 add_executable(
     ComputationalMathTests
     "Geometry/Structures/RectangleTests.cpp"
+    "Geometry/Structures/VertexTests.cpp"
+    "Geometry/Structures/SimplexElementTests.cpp"
     "Geometry/DelaunayTests.cpp"
     "Geometry/RefinedDelaunayTests.cpp"
     "LinearAlgebra/MatrixTests.cpp"  

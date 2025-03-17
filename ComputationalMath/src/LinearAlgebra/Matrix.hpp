@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -15,7 +16,8 @@ public:
     Matrix();
     Matrix(size_t rowCount, size_t columnCount);
     Matrix(size_t rowCount, size_t columnCount, const T* data);
-    Matrix(const Matrix& mat);
+    Matrix(const Matrix<T>& mat);
+    Matrix(const std::initializer_list<RowVector<T>>& values);
 
     T& GetValue(size_t row, size_t column) const;
     void SetValue(size_t row, size_t column, const T& value);
@@ -91,9 +93,36 @@ inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, const T* data)
 }
 
 template <typename T>
-inline Matrix<T>::Matrix(const Matrix& mat)
+inline Matrix<T>::Matrix(const Matrix<T>& mat)
     : Matrix(mat.m_rowCount, mat.m_columnCount, mat.m_storage.get())
 {
+}
+
+template <typename T>
+inline Matrix<T>::Matrix(const std::initializer_list<RowVector<T>>& values)
+{
+    if (values.size() == 0)
+    {
+        m_columnCount = 0;
+        m_rowCount = 0;
+        m_length = 0;
+        m_storage.reset();
+        return;
+    }
+
+    m_rowCount = values.size();
+    m_columnCount = values.begin()->GetLength();
+    m_length = m_rowCount * m_columnCount;
+    m_storage.reset(new T[m_length]);
+    T* matrixData = m_storage.get();
+    for (const RowVector<T>& row : values)
+    {
+        if (m_columnCount != row.GetLength())
+            throw std::invalid_argument("Not all rows have identical lengths");
+        const T* rowData = row.Data();
+        std::copy(rowData, rowData + m_columnCount, matrixData);
+        matrixData += m_columnCount;
+    }
 }
 
 template <typename T>

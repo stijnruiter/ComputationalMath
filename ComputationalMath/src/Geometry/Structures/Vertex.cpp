@@ -1,10 +1,21 @@
 #include "Vertex.hpp"
+#include <cassert>
 #include <cmath>
+#include <stdexcept>
 
 namespace Geometry
 {
     Vertex2F::Vertex2F() : X(0), Y(0) {}
     Vertex2F::Vertex2F(float x, float y) : X(x), Y(y) {}
+
+    Vertex2F::Vertex2F(const std::initializer_list<float>& value)
+    {
+        if (value.size() != 2)
+            throw std::invalid_argument("Initializer list should only contain 2 values");
+
+        X = *value.begin();
+        Y = *(value.begin() + 1);
+    }
 
     Vertex2F Vertex2F::operator+(Vertex2F rhs) const
     {
@@ -86,5 +97,14 @@ namespace Geometry
     Vertex3F::Vertex3F(Vertex2F vertex2, float z)
         : X(vertex2.X), Y(vertex2.Y), Z(z)
     {
+    }
+
+    Vertex3F::Vertex3F(const std::initializer_list<float>& value)
+    {
+        if (value.size() != 3)
+            throw std::invalid_argument("Initializer list should only contain 3 values");
+        X = *value.begin();
+        Y = *(value.begin() + 1);
+        Z = *(value.begin() + 2);
     }
 }

@@ -9,6 +9,9 @@ target_sources(Physics
 	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Drawables/Axis.cpp
 	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Drawables/DrawableMesh.cpp
 	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Drawables/DrawableGraph.cpp
+	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Fem/FemProblem2dBase.cpp
+	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Fem/HelmholtzEquationWithSource.cpp
+	  ${CMAKE_CURRENT_SOURCE_DIR}/src/Fem/LaplaceFem.cpp
 	
 	PUBLIC
     	${CMAKE_CURRENT_SOURCE_DIR}/src/Drawables/Axis.hpp

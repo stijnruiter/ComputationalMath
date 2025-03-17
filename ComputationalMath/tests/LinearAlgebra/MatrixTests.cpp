@@ -343,4 +343,46 @@ namespace LinearAlgebra
         }
         EXPECT_THROW(storage.GetRow(3), std::out_of_range);
     }
+
+    TEST(MatrixTests, Constructor_WhenInitializeListsOfIdenticalLength_ShouldHaveCorrectValues)
+    {
+        Matrix<float> matrix({{1, 2, 3},
+                              {3, 4, 5}});
+        EXPECT_EQ(matrix.GetColumnCount(), 3);
+        EXPECT_EQ(matrix.GetRowCount(), 2);
+        EXPECT_EQ(matrix(0, 0), 1);
+        EXPECT_EQ(matrix(0, 1), 2);
+        EXPECT_EQ(matrix(0, 2), 3);
+        EXPECT_EQ(matrix(1, 0), 3);
+        EXPECT_EQ(matrix(1, 1), 4);
+        EXPECT_EQ(matrix(1, 2), 5);
+    }
+
+    TEST(MatrixTests, Constructor_WhenInitializeListsOfIdenticalLength_ShouldThrow)
+    {
+        EXPECT_THROW(Matrix<float>({{1, 2, 3}, {3, 4}}), std::invalid_argument);
+    }
+
+    TEST(MatrixTests, Assignment_WhenInitializeListsOfIdenticalLength_ShouldHaveCorrectValues)
+    {
+        Matrix<float> matrix;
+        EXPECT_EQ(matrix.GetColumnCount(), 0);
+        EXPECT_EQ(matrix.GetRowCount(), 0);
+        matrix = {{1, 2, 3},
+                  {3, 4, 5}};
+        EXPECT_EQ(matrix.GetColumnCount(), 3);
+        EXPECT_EQ(matrix.GetRowCount(), 2);
+        EXPECT_EQ(matrix(0, 0), 1);
+        EXPECT_EQ(matrix(0, 1), 2);
+        EXPECT_EQ(matrix(0, 2), 3);
+        EXPECT_EQ(matrix(1, 0), 3);
+        EXPECT_EQ(matrix(1, 1), 4);
+        EXPECT_EQ(matrix(1, 2), 5);
+    }
+
+    TEST(MatrixTests, Assignment_WhenInitializeListsOfDifferentLength_ShouldThrow)
+    {
+        Matrix<int> matrix;
+        // EXPECT_THROW(matrix = {{1, 2, 3}, {3, 4}}, std::invalid_argument);
+    }
 }

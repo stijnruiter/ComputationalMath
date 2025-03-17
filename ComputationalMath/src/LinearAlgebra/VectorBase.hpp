@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <initializer_list>
 #include <memory>
 #include <numeric>
 #include <stdexcept>
@@ -62,6 +63,7 @@ public:
     VectorBase();
     VectorBase(size_t length);
     VectorBase(size_t length, const T* data);
+    VectorBase(const std::initializer_list<T>& values);
 
     T* Data();
     const T* Data() const;
@@ -143,6 +145,13 @@ inline VectorBase<T>::VectorBase(size_t length, const T* data) : VectorBase<T>(l
 {
     T* storageDestination = m_data.get();
     std::copy(data, data + length, storageDestination);
+}
+
+template <typename T>
+inline VectorBase<T>::VectorBase(const std::initializer_list<T>& values) : VectorBase<T>(values.size())
+{
+    T* storageDestination = m_data.get();
+    std::copy(values.begin(), values.end(), storageDestination);
 }
 
 template <typename T>

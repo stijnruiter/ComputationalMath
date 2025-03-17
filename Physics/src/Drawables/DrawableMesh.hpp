@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Geometry/Structures/Mesh2D.hpp>
+#include <LinearAlgebra/VectorBase.hpp>
 
 #include <Render/Core/IndexBuffer.hpp>
 #include <Render/Core/VertexArrayObject.hpp>
@@ -12,14 +13,15 @@
 class DrawableMesh : public DrawableObject
 {
 public:
-    static std::vector<Geometry::Vertex3F> ToVertex3F(const std::vector<Geometry::Vertex2F>& vertices, const std::vector<float>& zValues);
-    static std::vector<float> Normalize(const std::vector<float>& data);
-
     DrawableMesh(const Geometry::Mesh2D& mesh);
     DrawableMesh(const Geometry::Mesh2D& mesh, const std::vector<float>& values);
+    DrawableMesh(const Geometry::Mesh2D& mesh, const ColumnVector<float>& values);
+    DrawableMesh(const Geometry::Mesh2D& mesh, const float* values, size_t length);
     virtual void Draw(Renderer& render) override;
 
 private:
+    static std::vector<Geometry::Vertex3F> ToVertex3F(const std::vector<Geometry::Vertex2F>& vertices, const float* zValues);
+    static std::vector<float> Normalize(const float* data, size_t length);
     std::unique_ptr<VertexArrayObject> m_vao;
     std::unique_ptr<VertexBuffer> m_vertexBuffer;
     std::unique_ptr<VertexBuffer> m_valuesBuffer;

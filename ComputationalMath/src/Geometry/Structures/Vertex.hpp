@@ -1,5 +1,7 @@
 #pragma once
 
+#include <initializer_list>
+
 namespace Geometry
 {
     struct Vertex3F;
@@ -11,6 +13,7 @@ namespace Geometry
 
         Vertex2F();
         Vertex2F(float x, float y);
+        Vertex2F(const std::initializer_list<float>& value);
 
         Vertex2F operator+(Vertex2F rhs) const;
         Vertex2F operator-(Vertex2F rhs) const;
@@ -39,5 +42,6 @@ namespace Geometry
         Vertex3F();
         Vertex3F(float x, float y, float z);
         Vertex3F(Vertex2F vertex2, float z);
+        Vertex3F(const std::initializer_list<float>& value);
     };
 }

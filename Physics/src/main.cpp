@@ -19,12 +19,11 @@
 
 void RandomMath()
 {
-    Matrix<float> mat(3, 3, new float[9]{
-        1, 2, 3, 
-        3, 2, 1, 
-        2, 1, 3
-    });
-    ColumnVector<float> rhs(3, new float[3]{1, 2, 2});
+    Matrix<float> mat = {
+        {1, 2, 3},
+        {3, 2, 1},
+        {2, 1, 3}};
+    ColumnVector<float> rhs = {1, 2, 2};
 
     LinearAlgebra::Factorization::FactorizationResult<float> factorization = LinearAlgebra::Factorization::PluFactorization(mat, 1e-5f);
 
@@ -40,26 +39,26 @@ void RandomMath()
 
 Geometry::PlanarStraightLineGraph CreateGraph()
 {
-    std::vector<Geometry::Vertex2F> vertices({
-        Geometry::Vertex2F(-0.822222222f, 0.862222222f),
-        Geometry::Vertex2F(0.257777778f, 0.76f),
-        Geometry::Vertex2F(0.057777778f, 0.053333333f),
-        Geometry::Vertex2F(0.333333333f, -0.235555556f),
-        Geometry::Vertex2F(0.502222222f, 0.626666667f),
-        Geometry::Vertex2F(0.764444444f, -0.075555556f),
-        Geometry::Vertex2F(0.466666667f, -0.791111111f),
-        Geometry::Vertex2F(0.155555556f, -0.871111111f),
-        Geometry::Vertex2F(-0.177777778f, -0.866666667f),
-        Geometry::Vertex2F(-0.497777778f, -0.684444444f),
-        Geometry::Vertex2F(0.04f, -0.457777778f),
-        Geometry::Vertex2F(0.022222222f, -0.395555556f),
-        Geometry::Vertex2F(-0.773333333f, -0.035555556f),
-    });
+    std::vector<Geometry::Vertex2F> vertices = {
+        {-0.822222222f, 0.862222222f},
+        {0.257777778f, 0.76f},
+        {0.057777778f, 0.053333333f},
+        {0.333333333f, -0.235555556f},
+        {0.502222222f, 0.626666667f},
+        {0.764444444f, -0.075555556f},
+        {0.466666667f, -0.791111111f},
+        {0.155555556f, -0.871111111f},
+        {-0.177777778f, -0.866666667f},
+        {-0.497777778f, -0.684444444f},
+        {0.04f, -0.457777778f},
+        {0.022222222f, -0.395555556f},
+        {-0.773333333f, -0.035555556f},
+    };
     Geometry::PlanarStraightLineGraph graph;
     graph.AddClosedLineSegments(vertices);
-    graph.AddLineSegments(std::vector<Geometry::Vertex2F>({Geometry::Vertex2F(-0.6f, 0.5f),
-                                                           Geometry::Vertex2F(-0.5f, 0.5f),
-                                                           Geometry::Vertex2F(-0.3f, 0.3f)}));
+    graph.AddLineSegments({{-0.6f, 0.5f},
+                           {-0.5f, 0.5f},
+                           {-0.3f, 0.3f}});
     return graph;
 }
 
@@ -90,16 +89,9 @@ typename std::enable_if<std::is_base_of<FemProblem2dBase, T>::value, std::unique
     Mesh2D mesh = CreateRectangularMesh(bounds, 10, 10);
     T fem(bounds, mesh, std::forward<_Args>(__args)...);
     ColumnVector<float> solution = fem.Solve();
-    std::vector<float> solutionVector(solution.GetLength());
-    for (size_t i = 0; i < solution.GetLength(); i++)
-    {
-        solutionVector[i] = solution[i];
-    }
 
     std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(true);
-    std::unique_ptr<DrawableMesh> drawableMesh = std::make_unique<DrawableMesh>(mesh, solutionVector);
-
-    scene->AddObject(std::move(drawableMesh));
+    scene->AddObject(std::make_unique<DrawableMesh>(mesh, solution));
     scene->AddObject(std::make_unique<Axis>());
     return scene;
 }
@@ -117,11 +109,11 @@ int main()
     size_t sceneIndex = 0;
     window.SetCallbackOnKey([&sceneIndex, &window](const KeyEvent& eventArgs)
                             {
-        if (eventArgs.Action == GLFW_PRESS && eventArgs.Key == GLFW_KEY_1)
-        {
-            sceneIndex = (sceneIndex + 1) % window.GetSceneCount();
-            window.SwitchScene(sceneIndex);
-        } });
+            if (eventArgs.Action == GLFW_PRESS && eventArgs.Key == GLFW_KEY_1)
+            {
+                sceneIndex = (sceneIndex + 1) % window.GetSceneCount();
+                window.SwitchScene(sceneIndex);
+            } });
     window.Run();
 
     return 0;

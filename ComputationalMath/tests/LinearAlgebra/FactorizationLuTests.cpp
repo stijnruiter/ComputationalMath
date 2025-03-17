@@ -8,63 +8,51 @@ namespace LinearAlgebra
     {
         static auto FacorizationMatricesSets = ::testing::Values(
             std::make_tuple(
-                Matrix<float>(2, 2, new float[4]{
-                    6, -7, 
-                    0,  3,
+                Matrix<float>({
+                    {6, -7},
+                    {0, 3},
                 }),
-                Matrix<float>(2, 2, new float[4]{
-                    1, 0, 
-                    0, 1
-                }),
-                Matrix<float>(2, 2, new float[4]{
-                    6, -7, 
-                    0,  3
-                }),
+                Matrix<float>({{1, 0},
+                               {0, 1}}),
+                Matrix<float>({{6, -7},
+                               {0, 3}}),
                 new int[2]{0, 1},
                 0),
             std::make_tuple(
-                Matrix<float>(3, 3, new float[9]{
-                    1, 2, 3, 
-                    3, 2, 1, 
-                    2, 1, 3
+                Matrix<float>({{1, 2, 3},
+                               {3, 2, 1},
+                               {2, 1, 3}}),
+                Matrix<float>({
+                    {1, 0, 0},
+                    {1.0f / 3, 1, 0},
+                    {2.0f / 3, -1.0f / 4, 1},
                 }),
-                Matrix<float>(3, 3, new float[9]{
-                    1,         0,        0, 
-                    1.0f / 3,  1,        0, 
-                    2.0f / 3, -1.0f / 4, 1,
-                }),
-                Matrix<float>(3, 3, new float[9]{
-                    3, 2,        1, 
-                    0, 4.0f / 3, 8.0f / 3, 
-                    0, 0,        3,
+                Matrix<float>({
+                    {3, 2, 1},
+                    {0, 4.0f / 3, 8.0f / 3},
+                    {0, 0, 3},
                 }),
                 new int[3]{1, 0, 2},
                 1),
             std::make_tuple(
-                Matrix<float>(6, 6, new float[36]{
-                    1.0f,   5.0f,  3.2f,  4.3f, 8.2f,  6.0f, 
-                    1.0f,   4.3f,  5.6f,  2.4f, 5.1f, -5.0f, 
-                    0.0f,   0.0f,  3.1f,  4.0f, 5.0f,  6.0f, 
-                    0.0f,  18.0f,  0.1f,  2.0f, 5.0f,  8.0f, 
-                    1.0f, -50.0f, -3.21f, 3.0f, 1.0f,  0.0f,
-                    0.0f,  -2.0f,  3.1f,  4.0f, 0.0f,  0.0f
-                }),
-                Matrix<float>(6, 6, new float[36]{
-                    1,         0,  0,         0,        0,        0, 
-                    1,         1,  0,         0,        0,        0, 
-                    0,  0.03636f,  1,         0,        0,        0, 
-                    1,  0.01273f,  0.74453f,  1,        0,        0, 
-                    0,         0,  0.93007f, -0.04815f, 1,        0, 
-                    0, -0.32727f, -0.59939f, -0.81695f, 0.03990f, 1
-                }),
-                Matrix<float>(6, 6, new float[36]{
-                    1,  5,   3.2f,      4.3f,      8.2f,       6, 
-                    0, -55, -6.41f,    -1.3f,     -7.2f,      -6, 
-                    0,  0,   3.33309f,  4.04727f,  0.26182f,   0.21818f, 
-                    0,  0,   0,        -4.89677f, -3.20329f, -11.08608f,
-                    0,  0,   0,         0,         4.60226f,   5.26332f, 
-                    0,  0,   0,         0,         0,         -3.09968f
-                }),
+                Matrix<float>({{1.0f, 5.0f, 3.2f, 4.3f, 8.2f, 6.0f},
+                               {1.0f, 4.3f, 5.6f, 2.4f, 5.1f, -5.0f},
+                               {0.0f, 0.0f, 3.1f, 4.0f, 5.0f, 6.0f},
+                               {0.0f, 18.0f, 0.1f, 2.0f, 5.0f, 8.0f},
+                               {1.0f, -50.0f, -3.21f, 3.0f, 1.0f, 0.0f},
+                               {0.0f, -2.0f, 3.1f, 4.0f, 0.0f, 0.0f}}),
+                Matrix<float>({{1, 0, 0, 0, 0, 0},
+                               {1, 1, 0, 0, 0, 0},
+                               {0, 0.03636f, 1, 0, 0, 0},
+                               {1, 0.01273f, 0.74453f, 1, 0, 0},
+                               {0, 0, 0.93007f, -0.04815f, 1, 0},
+                               {0, -0.32727f, -0.59939f, -0.81695f, 0.03990f, 1}}),
+                Matrix<float>({{1, 5, 3.2f, 4.3f, 8.2f, 6},
+                               {0, -55, -6.41f, -1.3f, -7.2f, -6},
+                               {0, 0, 3.33309f, 4.04727f, 0.26182f, 0.21818f},
+                               {0, 0, 0, -4.89677f, -3.20329f, -11.08608f},
+                               {0, 0, 0, 0, 4.60226f, 5.26332f},
+                               {0, 0, 0, 0, 0, -3.09968f}}),
                 new int[6]{0, 4, 5, 1, 2, 3},
                 4));
         class MatrixLuFactorizationTests : public ::testing::TestWithParam<std::tuple<Matrix<float>, Matrix<float>, Matrix<float>, int*, int>>
@@ -108,19 +96,15 @@ namespace LinearAlgebra
 
         static auto ForwardSubstitutionColumnVectorSets = ::testing::Values(
             std::make_tuple(
-                Matrix<int>(2, 2, new int[4]{
-                    1, 0, 
-                    2, 1
-                }),
-                ColumnVector<int>(2, new int[2]{1, 5}),
-                ColumnVector<int>(2, new int[2]{1, 3})),
+                Matrix<int>({{1, 0},
+                             {2, 1}}),
+                ColumnVector<int>({1, 5}),
+                ColumnVector<int>({1, 3})),
             std::make_tuple(
-                Matrix<int>(4, 4, new int[16]{
-                    1, 0, 0, 0, 
-                    2, 1, 0, 0, 
-                    3, 4, 1, 0, 
-                    1, 2, 3, 1
-                }),
+                Matrix<int>({{1, 0, 0, 0},
+                             {2, 1, 0, 0},
+                             {3, 4, 1, 0},
+                             {1, 2, 3, 1}}),
                 ColumnVector<int>(4, new int[4]{1, 5, 3, 4}),
                 ColumnVector<int>(4, new int[4]{1, 3, -12, 33})));
 
@@ -141,19 +125,17 @@ namespace LinearAlgebra
 
         static auto BackwardSubstitutionColumnVectorSets = ::testing::Values(
             std::make_tuple(
-                Matrix<int>(2, 2, new int[4]{
-                    3, 4, 
-                    0, 2,
+                Matrix<int>({
+                    {3, 4},
+                    {0, 2},
                 }),
-                ColumnVector<int>(2, new int[2]{3, 6}),
-                ColumnVector<int>(2, new int[2]{-3, 3})),
+                ColumnVector<int>({3, 6}),
+                ColumnVector<int>({-3, 3})),
             std::make_tuple(
-                Matrix<int>(4, 4, new int[16]{
-                    3, 4, 5, 6, 
-                    0, 2, 4, 2, 
-                    0, 0, 6, 5, 
-                    0, 0, 0, 2
-                }),
+                Matrix<int>({{3, 4, 5, 6},
+                             {0, 2, 4, 2},
+                             {0, 0, 6, 5},
+                             {0, 0, 0, 2}}),
                 ColumnVector<int>(4, new int[4]{3, 6, 3, 6}),
                 ColumnVector<int>(4, new int[4]{-7, 4, -2, 3})));
 
@@ -173,30 +155,32 @@ namespace LinearAlgebra
 
         static auto LinearSystemSets = ::testing::Values(
             std::make_tuple(
-                Matrix<float>(2, 2, new float[4]{6, -7, 0, 3}),
-                ColumnVector<float>(2, new float[2]{3, 4}),
-                ColumnVector<float>(2, new float[2]{37.0f / 18, 4.0f / 3})),
+                Matrix<float>({{6, -7},
+                               {0, 3}}),
+                ColumnVector<float>({3, 4}),
+                ColumnVector<float>({37.0f / 18, 4.0f / 3})),
             std::make_tuple(
-                Matrix<float>(3, 3, new float[9]{1, 2, 3, 3, 2, 1, 2, 1, 3}),
-                ColumnVector<float>(3, new float[3]{1, 2, 2}),
-                ColumnVector<float>(3, new float[3]{3.0f / 4, -1.0f / 4, 1.0f / 4})),
+                Matrix<float>({{1, 2, 3},
+                               {3, 2, 1},
+                               {2, 1, 3}}),
+                ColumnVector<float>({1, 2, 2}),
+                ColumnVector<float>({3.0f / 4, -1.0f / 4, 1.0f / 4})),
             std::make_tuple(
-                Matrix<float>(6, 6, new float[36]{
-                    1.0f,   5.0f,  3.2f,  4.3f, 8.2f,  6.0f, 
-                    1.0f,   4.3f,  5.6f,  2.4f, 5.1f, -5.0f, 
-                    0.0f,   0.0f,  3.1f,  4.0f, 5.0f,  6.0f, 
-                    0.0f,  18.0f,  0.1f,  2.0f, 5.0f,  8.0f, 
-                    1.0f, -50.0f, -3.21f, 3.0f, 1.0f,  0.0f, 
-                    0.0f,  -2.0f,  3.1f,  4.0f, 0.0f,  0.0f,
+                Matrix<float>({
+                    {1.0f, 5.0f, 3.2f, 4.3f, 8.2f, 6.0f},
+                    {1.0f, 4.3f, 5.6f, 2.4f, 5.1f, -5.0f},
+                    {0.0f, 0.0f, 3.1f, 4.0f, 5.0f, 6.0f},
+                    {0.0f, 18.0f, 0.1f, 2.0f, 5.0f, 8.0f},
+                    {1.0f, -50.0f, -3.21f, 3.0f, 1.0f, 0.0f},
+                    {0.0f, -2.0f, 3.1f, 4.0f, 0.0f, 0.0f},
                 }),
-                ColumnVector<float>(6, new float[6]{1.0f, 2.0f, 3.3f, 4.4f, 5.5f, 6.6f}),
-                ColumnVector<float>(6, new float[6]{
-                                           -10.2777f,
-                                           0.214471f,
-                                           -3.5016f,
-                                           4.47097f,
-                                           1.8482f,
-                                           -2.16166f})));
+                ColumnVector<float>({1.0f, 2.0f, 3.3f, 4.4f, 5.5f, 6.6f}),
+                ColumnVector<float>({-10.2777f,
+                                     0.214471f,
+                                     -3.5016f,
+                                     4.47097f,
+                                     1.8482f,
+                                     -2.16166f})));
         class SolveUsingLuTests : public ::testing::TestWithParam<std::tuple<Matrix<float>, ColumnVector<float>, ColumnVector<float>>>
         {
         };
@@ -213,30 +197,28 @@ namespace LinearAlgebra
 
         static auto InverseMatrixSets = ::testing::Values(
             std::make_tuple(
-                Matrix<float>(2, 2, new float[4]{
-                    1, 2, 
-                    3, 4,
+                Matrix<float>({
+                    {1, 2},
+                    {3, 4},
                 }),
-                Matrix<float>(2, 2, new float[4]{
-                    -2,     1, 
-                     1.5f, -0.5f,
-                    })),
+                Matrix<float>({{-2, 1},
+                               {1.5f, -0.5f}})),
             std::make_tuple(
-                Matrix<float>(6, 6, new float[36]{
-                    1.0f,  5.0f,   3.2f,  4.3f, 8.2f,  6.0f, 
-                    1.0f,  4.3f,   5.6f,  2.4f, 5.1f, -5.0f, 
-                    0.0f,  0.0f,   3.1f,  4.0f, 5.0f,  6.0f, 
-                    0.0f,  18.0f,  0.1f,  2.0f, 5.0f,  8.0f, 
-                    1.0f, -50.0f, -3.21f, 3.0f, 1.0f,  0.0f, 
-                    0.0f, -2.0f,   3.1f,  4.0f, 0.0f,  0.0f,
+                Matrix<float>({
+                    {1.0f, 5.0f, 3.2f, 4.3f, 8.2f, 6.0f},
+                    {1.0f, 4.3f, 5.6f, 2.4f, 5.1f, -5.0f},
+                    {0.0f, 0.0f, 3.1f, 4.0f, 5.0f, 6.0f},
+                    {0.0f, 18.0f, 0.1f, 2.0f, 5.0f, 8.0f},
+                    {1.0f, -50.0f, -3.21f, 3.0f, 1.0f, 0.0f},
+                    {0.0f, -2.0f, 3.1f, 4.0f, 0.0f, 0.0f},
                 }),
-                Matrix<float>(6, 6, new float[36]{
-                     2.48269f,   -1.08299f,   -1.39254f,   -1.49448f,   -0.399701f,    0.420458f, 
-                    -0.0065064f,  0.0108966f, -0.0450246f,  0.0454587f, -0.00439019f,  0.0260444f, 
-                     0.426931f,  -0.234924f,   0.179534f,  -0.601676f,  -0.192006f,   -0.0526869f, 
-                    -0.334124f,   0.187515f,  -0.161651f,   0.489028f,   0.14661f,     0.303855f, 
-                    -0.435192f,   0.311171f,   0.202564f,   0.368953f,   0.124022f,   -0.198927f, 
-                     0.364829f,  -0.262941f,   0.0128716f, -0.322614f,  -0.101888f,   -0.00957533f,
+                Matrix<float>({
+                    {2.48269f, -1.08299f, -1.39254f, -1.49448f, -0.399701f, 0.420458f},
+                    {-0.0065064f, 0.0108966f, -0.0450246f, 0.0454587f, -0.00439019f, 0.0260444f},
+                    {0.426931f, -0.234924f, 0.179534f, -0.601676f, -0.192006f, -0.0526869f},
+                    {-0.334124f, 0.187515f, -0.161651f, 0.489028f, 0.14661f, 0.303855f},
+                    {-0.435192f, 0.311171f, 0.202564f, 0.368953f, 0.124022f, -0.198927f},
+                    {0.364829f, -0.262941f, 0.0128716f, -0.322614f, -0.101888f, -0.00957533f},
                 })));
         class InverseMatrixTests : public ::testing::TestWithParam<std::tuple<Matrix<float>, Matrix<float>>>
         {
@@ -284,26 +266,22 @@ namespace LinearAlgebra
 
         static auto DeterminantMatrixSets = ::testing::Values(
             std::make_tuple(
-                Matrix<float>(2, 2, new float[4]{
-                    6, -7, 
-                    0, 3
-                }),
+                Matrix<float>({{6, -7},
+                               {0, 3}}),
                 18.0f),
             std::make_tuple(
-                Matrix<float>(3, 3, new float[9]{
-                    1, 2, 3, 
-                    3, 2, 1, 
-                    2, 1, 3,
-                }),
+                Matrix<float>({{1, 2, 3},
+                               {3, 2, 1},
+                               {2, 1, 3}}),
                 -12.0f),
             std::make_tuple(
-                Matrix<float>(6, 6, new float[36]{
-                    1.0f,  5.0f,   3.2f,  4.3f, 8.2f,  6.0f, 
-                    1.0f,  4.3f,   5.6f,  2.4f, 5.1f, -5.0f, 
-                    0.0f,  0.0f,   3.1f,  4.0f, 5.0f,  6.0f, 
-                    0.0f,  18.0f,  0.1f,  2.0f, 5.0f,  8.0f, 
-                    1.0f, -50.0f, -3.21f, 3.0f, 1.0f,  0.0f,
-                    0.0f, -2.0f,   3.1f,  4.0f, 0.0f,  0.0f,
+                Matrix<float>({
+                    {1.0f, 5.0f, 3.2f, 4.3f, 8.2f, 6.0f},
+                    {1.0f, 4.3f, 5.6f, 2.4f, 5.1f, -5.0f},
+                    {0.0f, 0.0f, 3.1f, 4.0f, 5.0f, 6.0f},
+                    {0.0f, 18.0f, 0.1f, 2.0f, 5.0f, 8.0f},
+                    {1.0f, -50.0f, -3.21f, 3.0f, 1.0f, 0.0f},
+                    {0.0f, -2.0f, 3.1f, 4.0f, 0.0f, 0.0f},
                 }),
                 -12805.829f));
 
