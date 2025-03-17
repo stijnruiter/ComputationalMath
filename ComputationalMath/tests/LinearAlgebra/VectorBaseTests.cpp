@@ -106,6 +106,16 @@ namespace LinearAlgebra
         EXPECT_THROW(lhs - rhs, std::invalid_argument);
     }
 
+    TEST(ColumnVectorTests, ScalarProduct_WhenVectorIsNotEmpty_ShouldReturnScalarProduct)
+    {
+        ColumnVector<float> lhs = {1, 2, 3, 4, 5, 6, 7, 8};
+        ColumnVector<float> result1 = 5 * lhs;
+        ColumnVector<float> result2 = lhs * 5;
+        ColumnVector<float> expectedResult = {5, 10, 15, 20, 25, 30, 35, 40};
+        EXPECT_TRUE(result1.ElementwiseCompare(expectedResult, 1e-5f));
+        EXPECT_TRUE(result2.ElementwiseCompare(expectedResult, 1e-5f));
+    }
+
     TEST(ColumnVectorTests, Constructor_WhenUsingInitializerList_ShouldHaveValues)
     {
         ColumnVector<float> value({1, 2, 3, 4});
@@ -136,6 +146,17 @@ namespace LinearAlgebra
     {
         ColumnVector<float> value = {};
         EXPECT_EQ(value.GetLength(), 0);
+    }
+
+    TEST(ColumnVectorTests, Fill_WhenVectorIsNotEmpty_ShouldHaveIdenticalValues)
+    {
+        ColumnVector<float> temp(20);
+        temp.Fill(7.3f);
+        EXPECT_EQ(temp.GetLength(), 20);
+        for (size_t i = 0; i < 20; i++)
+        {
+            EXPECT_EQ(temp[i], 7.3f);
+        }
     }
 
     TEST(RowVectorTests, SumInt_WhenDimensionsMatch_ShouldResultCorrectSum)
@@ -180,6 +201,23 @@ namespace LinearAlgebra
         EXPECT_THROW(lhs - rhs, std::invalid_argument);
     }
 
+    TEST(RowVectorTests, ScalarProduct_WhenVectorIsNotEmpty_ShouldReturnScalarProduct)
+    {
+        RowVector<float> lhs = {1, 2, 3, 4, 5, 6, 7, 8};
+        RowVector<float> result1 = 5 * lhs;
+        RowVector<float> result2 = lhs * 5;
+        RowVector<float> expectedResult = {5, 10, 15, 20, 25, 30, 35, 40};
+        EXPECT_TRUE(result1.ElementwiseCompare(expectedResult, 1e-5f));
+        EXPECT_TRUE(result2.ElementwiseCompare(expectedResult, 1e-5f));
+    }
+
+    TEST(RowVectorTests, Transposed_WhenNonEmpty_ShouldReturnColumnVector)
+    {
+        RowVector<float> lhs = {1, 2, 3, 4, 5, 6, 7, 8};
+        ColumnVector<float> transposed = lhs.Transposed();
+        EXPECT_TRUE(transposed.Transposed().ElementwiseCompare(lhs, 1e-5f));
+    }
+
     TEST(RowVectorTests, Constructor_WhenUsingInitializerList_ShouldHaveValues)
     {
         RowVector<float> value({1, 2, 3, 4});
@@ -210,5 +248,43 @@ namespace LinearAlgebra
     {
         RowVector<float> value = {};
         EXPECT_EQ(value.GetLength(), 0);
+    }
+
+    TEST(RowVectorTests, Fill_WhenVectorIsNotEmpty_ShouldHaveIdenticalValues)
+    {
+        RowVector<float> temp(20);
+        temp.Fill(7.3f);
+        EXPECT_EQ(temp.GetLength(), 20);
+        for (size_t i = 0; i < 20; i++)
+        {
+            EXPECT_EQ(temp[i], 7.3f);
+        }
+    }
+
+    TEST(RowVectorTests, ColumnVectorProduct_WhenSameLength1_ShouldReturnInnerProduct)
+    {
+        RowVector<int> row(20);
+        ColumnVector<int> column(20);
+        row.Fill(5);
+        column.Fill(5);
+        int innerProduct = row * column;
+        EXPECT_EQ(innerProduct, 500);
+    }
+
+    TEST(RowVectorTests, ColumnVectorProduct_WhenSameLength2_ShouldReturnInnerProduct)
+    {
+        RowVector<int> row = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        ColumnVector<int> column = {5, 4, 3, 2, 0, 1, 5, 3, 2, 3};
+        int innerProduct = row * column;
+        EXPECT_EQ(innerProduct, 143);
+    }
+
+    TEST(RowVectorTests, ColumnVectorProduct_WhenNotSameLength_ShouldThrow)
+    {
+        RowVector<int> row(21);
+        ColumnVector<int> column(20);
+        row.Fill(5);
+        column.Fill(5);
+        EXPECT_THROW(row * column, std::invalid_argument);
     }
 }

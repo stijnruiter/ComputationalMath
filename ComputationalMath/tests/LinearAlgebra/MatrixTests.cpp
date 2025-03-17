@@ -363,6 +363,13 @@ namespace LinearAlgebra
         EXPECT_THROW(Matrix<float>({{1, 2, 3}, {3, 4}}), std::invalid_argument);
     }
 
+    TEST(MatrixTests, Constructor_WhenInitializeListsOfEmpty_ShouldReturnEmpty)
+    {
+        Matrix<float> mat({});
+        EXPECT_EQ(mat.GetColumnCount(), 0);
+        EXPECT_EQ(mat.GetRowCount(), 0);
+    }
+
     TEST(MatrixTests, Assignment_WhenInitializeListsOfIdenticalLength_ShouldHaveCorrectValues)
     {
         Matrix<float> matrix;
@@ -380,9 +387,60 @@ namespace LinearAlgebra
         EXPECT_EQ(matrix(1, 2), 5);
     }
 
-    TEST(MatrixTests, Assignment_WhenInitializeListsOfDifferentLength_ShouldThrow)
+    TEST(MatrixTests, Transposed_WhenMatrix1IsValid_ShouldReturnTransposed)
     {
-        Matrix<int> matrix;
-        // EXPECT_THROW(matrix = {{1, 2, 3}, {3, 4}}, std::invalid_argument);
+        Matrix<int> mat = {{1, 2, 3},
+                           {4, 5, 6}};
+        EXPECT_EQ(mat.GetColumnCount(), 3);
+        EXPECT_EQ(mat.GetRowCount(), 2);
+
+        Matrix<int> transposed = mat.Transposed();
+        EXPECT_EQ(transposed.GetColumnCount(), 2);
+        EXPECT_EQ(transposed.GetRowCount(), 3);
+
+        EXPECT_EQ(transposed(0, 0), 1);
+        EXPECT_EQ(transposed(1, 0), 2);
+        EXPECT_EQ(transposed(2, 0), 3);
+        EXPECT_EQ(transposed(0, 1), 4);
+        EXPECT_EQ(transposed(1, 1), 5);
+        EXPECT_EQ(transposed(2, 1), 6);
+    }
+
+    TEST(MatrixTests, Transposed_WhenMatrix2IsValid_ShouldReturnTransposed)
+    {
+        Matrix<int> mat = {{1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3},
+                           {4, 5, 6, 2, 3, 1, 4, 5, 6, 2, 3, 1, 4, 5, 6, 2, 3, 1},
+                           {1, 6, 9, 2, 3, 1, 1, 6, 9, 2, 3, 1, 1, 6, 9, 2, 3, 1},
+                           {5, 0, 2, 2, 3, 4, 5, 0, 2, 2, 3, 4, 5, 0, 2, 2, 3, 4},
+                           {1, 6, 9, 2, 3, 1, 1, 6, 9, 2, 3, 1, 1, 6, 9, 2, 3, 1},
+                           {1, 6, 9, 2, 3, 1, 1, 6, 9, 2, 3, 1, 1, 6, 9, 2, 3, 1},
+                           {5, 0, 2, 2, 3, 4, 5, 0, 2, 2, 3, 4, 5, 0, 2, 2, 3, 4}};
+        EXPECT_EQ(mat.GetColumnCount(), 18);
+        EXPECT_EQ(mat.GetRowCount(), 7);
+
+        Matrix<int> transposed = mat.Transposed();
+        EXPECT_EQ(transposed.GetColumnCount(), 7);
+        EXPECT_EQ(transposed.GetRowCount(), 18);
+
+        for (size_t i = 0; i < mat.GetRowCount(); i++)
+        {
+            for (size_t j = 0; j < mat.GetColumnCount(); j++)
+            {
+                EXPECT_EQ(mat(i, j), transposed(j, i));
+            }
+        }
+    }
+
+    TEST(MatrixTests, Fill_WhenMatrixIsValid_ShouldHaveAllValuesIdentical)
+    {
+        Matrix<int> mat(3, 5);
+        mat.Fill(2);
+        for (size_t i = 0; i < mat.GetRowCount(); i++)
+        {
+            for (size_t j = 0; j < mat.GetColumnCount(); j++)
+            {
+                EXPECT_EQ(mat(i, j), 2) << "Matrix is not correct at (" << i << ", " << j << ")";
+            }
+        }
     }
 }
