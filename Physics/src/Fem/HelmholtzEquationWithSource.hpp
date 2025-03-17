@@ -1,8 +1,8 @@
 #pragma once
 
-#include "FemProblem2DBase.h"
-#include <Geometry/Structures/Rectangle.h>
+#include "FemProblem2DBase.hpp"
 #include "math.h"
+#include <Geometry/Structures/Rectangle.hpp>
 
 /// <summary>
 /// Helmholtz equation with source
@@ -15,14 +15,14 @@ class HelmholtzEquationWithSourceFEM : public FemProblem2dBase
 private:
     Geometry::Rectangle m_bounds;
     float m_k;
-    
+
 public:
     float SourceFunction(Geometry::Vertex2F vertex)
     {
         return (m_k + std::pow(M_PI / m_bounds.GetWidth(), 2) + std::pow(M_PI / m_bounds.GetHeight(), 2)) * AnalyticSolutionFunction(vertex);
     }
 
-    HelmholtzEquationWithSourceFEM(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh, float k) 
+    HelmholtzEquationWithSourceFEM(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh, float k)
         : FemProblem2dBase(mesh), m_bounds(bounds), m_k(k)
     {
         Add_Matrix_NablaA_NablaV(-1.0f);
@@ -37,5 +37,4 @@ public:
 
         return std::cos(radX) * std::cos(radY);
     }
-
 };

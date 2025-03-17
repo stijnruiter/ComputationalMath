@@ -1,27 +1,27 @@
-#include "RefinedDelaunay.h"
+#include "RefinedDelaunay.hpp"
 #include <cassert>
 #include <climits>
 
 namespace Geometry
 {
-    RefinedDelaunay Geometry::RefinedDelaunay::CreateTriangulation(const PlanarStraightLineGraph &graph)
+    RefinedDelaunay Geometry::RefinedDelaunay::CreateTriangulation(const PlanarStraightLineGraph& graph)
     {
-        if(graph.GetVertexCount() <= 3)
+        if (graph.GetVertexCount() <= 3)
             throw std::invalid_argument("Graph is empty.");
-        
+
         RefinedDelaunay delaunay = RefinedDelaunay(graph, Triangle::ContainingTriangle(graph.GetVertices(), 1e5f), graph.GetVertexCount());
         for (const Vertex2F& vertex : graph.GetVertices())
         {
             delaunay.InsertPoint(vertex);
         }
-        
+
         return delaunay;
     }
-    
+
     void RefinedDelaunay::Refine(float alphaDegrees)
     {
         float alphaRadians = alphaDegrees * M_PI / 180;
-        while(true)
+        while (true)
         {
             const std::vector<LineElement>& segments = graph.GetLineSegments();
             const std::vector<Vertex2F>& vertices = graph.GetVertices();

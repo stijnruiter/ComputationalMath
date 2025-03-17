@@ -14,7 +14,7 @@ add_executable(
     "LinearAlgebra/SimdTests.cpp"
     
     "TestHelper.cpp"
-    "TestHelper.h")
+    "TestHelper.hpp")
 
 target_include_directories(ComputationalMathTests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

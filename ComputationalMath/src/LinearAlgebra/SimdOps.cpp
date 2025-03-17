@@ -1,5 +1,4 @@
-#include "SimdOps.h"
-#include "SimdOps.h"
+#include "SimdOps.hpp"
 #include <immintrin.h>
 
 namespace LinearAlgebra
@@ -24,7 +23,7 @@ namespace LinearAlgebra
 
             for (size_t simd = 0; simd < simdLoops; simd++)
             {
-                
+
                 __m128i reg_1_SSE = _mm_load_si128(arr_1_ptr);
                 __m128i reg_2_SSE = _mm_load_si128(arr_2_ptr);
                 __m128i sumRes = _mm_add_epi32(reg_1_SSE, reg_2_SSE);
@@ -56,7 +55,7 @@ namespace LinearAlgebra
             {
                 __m128i reg_1_SSE = _mm_load_si128(arr_1_ptr);
                 __m128i reg_2_SSE = _mm_load_si128(arr_2_ptr);
-                *(__m128i*) res_ptr = _mm_sub_epi32(reg_1_SSE, reg_2_SSE);
+                *(__m128i*)res_ptr = _mm_sub_epi32(reg_1_SSE, reg_2_SSE);
 
                 arr_1_ptr++;
                 arr_2_ptr++;

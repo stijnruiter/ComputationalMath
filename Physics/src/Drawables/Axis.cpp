@@ -1,25 +1,29 @@
-#include "Axis.h"
-#include <Geometry/Structures/Vertex.h>
-#include <Geometry/Structures/SimplexElements.h>
+#include "Axis.hpp"
+#include <Geometry/Structures/SimplexElements.hpp>
+#include <Geometry/Structures/Vertex.hpp>
 
 Axis::Axis()
 {
     std::array<Geometry::Vertex3F, 6> vertices({
-        Geometry::Vertex3F(-5,  0,  0), Geometry::Vertex3F(5, 0, 0),
-        Geometry::Vertex3F( 0, -5,  0), Geometry::Vertex3F(0, 5, 0),
-        Geometry::Vertex3F( 0,  0, -5), Geometry::Vertex3F(0, 0, 5),
+        Geometry::Vertex3F(-5, 0, 0),
+        Geometry::Vertex3F(5, 0, 0),
+        Geometry::Vertex3F(0, -5, 0),
+        Geometry::Vertex3F(0, 5, 0),
+        Geometry::Vertex3F(0, 0, -5),
+        Geometry::Vertex3F(0, 0, 5),
     });
-    
+
     std::array<Geometry::Vertex3F, 6> colors({
-        Geometry::Vertex3F( 1,  0,  0), Geometry::Vertex3F(1, 0, 0),
-        Geometry::Vertex3F( 0, 0.5f,  0), Geometry::Vertex3F(0, 0.5f, 0),
-        Geometry::Vertex3F( 0,  0, 1), Geometry::Vertex3F(0, 0, 1),
+        Geometry::Vertex3F(1, 0, 0),
+        Geometry::Vertex3F(1, 0, 0),
+        Geometry::Vertex3F(0, 0.5f, 0),
+        Geometry::Vertex3F(0, 0.5f, 0),
+        Geometry::Vertex3F(0, 0, 1),
+        Geometry::Vertex3F(0, 0, 1),
     });
-    std::array<Geometry::LineElement, 3> indices({
-        Geometry::LineElement(0, 1),
-        Geometry::LineElement(2, 3),
-        Geometry::LineElement(4, 5)
-    });
+    std::array<Geometry::LineElement, 3> indices({Geometry::LineElement(0, 1),
+                                                  Geometry::LineElement(2, 3),
+                                                  Geometry::LineElement(4, 5)});
 
     m_vao = std::make_unique<VertexArrayObject>();
     m_vao->Bind();
@@ -35,7 +39,7 @@ Axis::Axis()
     m_indexBuffer = std::make_unique<IndexBuffer<Geometry::LineElement>>(indices);
 }
 
-void Axis::Draw(Renderer &render)
+void Axis::Draw(Renderer& render)
 {
     m_vao->Bind();
     render.UseVertexColor();

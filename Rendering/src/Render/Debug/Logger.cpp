@@ -1,13 +1,14 @@
 #include "Logger.hpp"
 #include <ctime>
 #include <mutex>
+#include <format>
 
-void Engine::Logger::Log(LogLevel level, std::string message)
+void Debug::Logger::Log(LogLevel level, const std::string& message)
 {
     s_log << get_timestamp() << " [" << s_logLevelString[level] << "]: " << message << std::endl;
 }
 
-std::tm Engine::Logger::localtime_xp_now()
+std::tm Debug::Logger::localtime_xp_now()
 {
     std::time_t timer = std::time(0);
     std::tm bt{};
@@ -23,20 +24,14 @@ std::tm Engine::Logger::localtime_xp_now()
     return bt;
 }
 
-std::string Engine::Logger::get_timestamp()
+std::string Debug::Logger::get_timestamp()
 {
+    char buffer[20];
     std::tm now = localtime_xp_now();
-    return std::format("[{0}-{1:02d}-{2:02d} {3:02d}:{4:02d}:{5:02d}]",
-        now.tm_year + 1900,
-        now.tm_mon + 1,
-        now.tm_mday,
-        now.tm_hour,
-        now.tm_min,
-        now.tm_sec
-    );
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &now);
+    return buffer;
 }
 
+const char* Debug::Logger::s_logLevelString[] = {"CRITICAL", "ERROR", "WARNING", "INFO", "VERBOSE", "DEBUG"};
 
-const char* Engine::Logger::s_logLevelString[] = { "CRITICAL", "ERROR", "WARNING", "INFO", "VERBOSE", "DEBUG" };
-
-std::ofstream Engine::Logger::s_log("logfile.txt", std::ios_base::app | std::ios_base::out);
+std::ofstream Debug::Logger::s_log("logfile.txt", std::ios_base::app | std::ios_base::out);

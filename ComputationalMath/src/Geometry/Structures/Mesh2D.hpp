@@ -1,8 +1,8 @@
 #pragma once
 
+#include "SimplexElements.hpp"
+#include "Vertex.hpp"
 #include <vector>
-#include "SimplexElements.h"
-#include "Vertex.h"
 
 namespace Geometry
 {
@@ -12,7 +12,7 @@ namespace Geometry
         std::vector<TriangleElement> Interior;
         std::vector<LineElement> Boundary;
 
-        Mesh2D() { }
+        Mesh2D() {}
 
         Mesh2D(size_t initialCapacityInterior, size_t initialCapacityBoundary);
 

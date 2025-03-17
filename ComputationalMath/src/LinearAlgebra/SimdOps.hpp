@@ -11,4 +11,3 @@ namespace LinearAlgebra
         int* Subtract(const int* left, const int* right, size_t length);
     }
 }
-    

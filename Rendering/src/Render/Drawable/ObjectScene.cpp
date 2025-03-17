@@ -14,19 +14,19 @@ void ObjectScene::Activate(Renderer& render, PlotCamera& camera)
 {
     if (m_is3d)
     {
-        camera.Reset(glm::vec3(2.5, -2.5, 2.5), glm::vec3(0,0,1));
+        camera.Reset(glm::vec3(2.5, -2.5, 2.5), glm::vec3(0, 0, 1));
         render.EnableDepth();
     }
-    else 
+    else
     {
-        camera.Reset(glm::vec3(0, 0, 2.5), glm::vec3(0,1, 0));
+        camera.Reset(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0));
         render.DisableDepth();
     }
 }
 
 void ObjectScene::Update(float deltaTime)
 {
-    for(auto& object : m_objects)
+    for (auto& object : m_objects)
     {
         object->Update(deltaTime);
     }
@@ -34,7 +34,7 @@ void ObjectScene::Update(float deltaTime)
 
 void ObjectScene::Draw(Renderer& render)
 {
-    for(auto& object : m_objects)
+    for (auto& object : m_objects)
     {
         object->Draw(render);
     }

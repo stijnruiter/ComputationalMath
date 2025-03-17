@@ -1,11 +1,11 @@
-#include "DrawableMesh.h"
+#include "DrawableMesh.hpp"
 
-std::vector<Geometry::Vertex3F> DrawableMesh::ToVertex3F(const std::vector<Geometry::Vertex2F> &vertices, const std::vector<float>& zValues)
+std::vector<Geometry::Vertex3F> DrawableMesh::ToVertex3F(const std::vector<Geometry::Vertex2F>& vertices, const std::vector<float>& zValues)
 {
     assert(vertices.size() == zValues.size());
     std::vector<Geometry::Vertex3F> newVertices;
     newVertices.reserve(vertices.size());
-    for(size_t i = 0; i < vertices.size(); i++)
+    for (size_t i = 0; i < vertices.size(); i++)
     {
         newVertices.push_back(Geometry::Vertex3F(vertices[i], zValues[i]));
     }
@@ -17,24 +17,24 @@ std::vector<float> DrawableMesh::Normalize(const std::vector<float>& data)
     std::vector<float> values(data.size());
     float minValue = 1e10f;
     float maxValue = -1e10f;
-    for(size_t i = 0; i < data.size(); i++)
+    for (size_t i = 0; i < data.size(); i++)
     {
         minValue = minValue > data[i] ? data[i] : minValue;
         maxValue = maxValue < data[i] ? data[i] : maxValue;
     }
-    for(size_t i = 0; i < data.size(); i++)
+    for (size_t i = 0; i < data.size(); i++)
     {
         values[i] = (data[i] - minValue) / (maxValue - minValue);
     }
     return values;
 }
 
-DrawableMesh::DrawableMesh(const Geometry::Mesh2D &mesh)
+DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh)
     : DrawableMesh(mesh, std::vector<float>(mesh.Vertices.size()))
 {
 }
 
-DrawableMesh::DrawableMesh(const Geometry::Mesh2D &mesh, const std::vector<float> &values)
+DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh, const std::vector<float>& values)
 {
     std::vector<Geometry::Vertex3F> vertices = ToVertex3F(mesh.Vertices, values);
 
@@ -56,7 +56,7 @@ DrawableMesh::DrawableMesh(const Geometry::Mesh2D &mesh, const std::vector<float
     m_boundaryEdgeBuffer = std::make_unique<IndexBuffer<Geometry::LineElement>>(mesh.Boundary);
 }
 
-void DrawableMesh::Draw(Renderer &render)
+void DrawableMesh::Draw(Renderer& render)
 {
     m_vao->Bind();
     render.EnableLinearAlphaBlend();

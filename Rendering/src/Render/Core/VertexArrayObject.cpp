@@ -1,7 +1,7 @@
 #include "VertexArrayObject.hpp"
 
-#include "Render/Debug/gl_debug.hpp"
 #include "Render/Debug/Logger.hpp"
+#include "Render/Debug/gl_debug.hpp"
 
 VertexArrayObject::VertexArrayObject()
 {
@@ -39,7 +39,7 @@ void VertexArrayObject::AddBuffer(const VertexBuffer& buffer)
 
         if (attribute.Location < 0)
         {
-            Engine::Logger::LogWarning("Shader location in VertexBuffer not valid.");
+            Debug::Logger::LogWarning("Shader location in VertexBuffer not valid.");
             offset += attribute.Size; // invalid location, dont set the vertex attrib, but still compute the offset for other data in the buffer
             continue;
         }
@@ -48,8 +48,9 @@ void VertexArrayObject::AddBuffer(const VertexBuffer& buffer)
         GLCHECK(glGetVertexAttribiv(attribute.Location, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &enabled));
         if (enabled == GL_TRUE)
         {
-            Engine::Logger::LogWarning("Shader location {0} was already enabled in this VertexArrayObject.\n"
-                "This location will now be overwritten. Are you sure this is correct ? ", attribute.Location);
+            Debug::Logger::LogWarning("Shader location {0} was already enabled in this VertexArrayObject.\n"
+                                       "This location will now be overwritten. Are you sure this is correct ? ",
+                                       attribute.Location);
         }
 #endif // DEBUG
 

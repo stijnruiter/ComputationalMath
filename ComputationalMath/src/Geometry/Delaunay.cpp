@@ -1,6 +1,6 @@
-#include "Delaunay.h"
+#include "Delaunay.hpp"
+#include "LinearAlgebra/Matrix.hpp"
 #include <stdexcept>
-#include "LinearAlgebra/Matrix.h"
 
 namespace Geometry
 {
@@ -10,8 +10,8 @@ namespace Geometry
     }
 
     Delaunay::Delaunay(Triangle boundingTriangle, int nVertexCapacity)
-        : m_vertices(0), 
-        m_triangulation(2 * nVertexCapacity + 7) // 2 * nTriangles + 1 = 2 * (nVertexCapacity + 3) + 1
+        : m_vertices(0),
+          m_triangulation(2 * nVertexCapacity + 7) // 2 * nTriangles + 1 = 2 * (nVertexCapacity + 3) + 1
     {
         m_vertices.reserve(nVertexCapacity + 3);
         m_vertices.push_back(boundingTriangle.V1);
@@ -20,7 +20,7 @@ namespace Geometry
         m_triangulation.AddTriangle(0, 1, 2);
     }
 
-    Delaunay Delaunay::CreateTriangulation(const std::vector<Vertex2F> &vertices)
+    Delaunay Delaunay::CreateTriangulation(const std::vector<Vertex2F>& vertices)
     {
         Delaunay delaunay(Triangle::ContainingTriangle(vertices, 1e5f), vertices.size());
         for (const Vertex2F& vertex : vertices)
@@ -48,11 +48,11 @@ namespace Geometry
         size_t vertexCount = m_vertices.size();
         mesh.Vertices.clear();
         mesh.Vertices.reserve(vertexCount - 3);
-        for(size_t i = 3; i < vertexCount; i++)
+        for (size_t i = 3; i < vertexCount; i++)
         {
             mesh.Vertices.push_back(m_vertices[i]);
         }
-        
+
         std::copy(m_vertices.begin() + 3, m_vertices.end(), mesh.Vertices.begin());
 
         mesh.Boundary.clear();
@@ -92,7 +92,7 @@ namespace Geometry
     Triangle Delaunay::GetSmallestAngleTriangle() const
     {
         size_t triangleCount = m_triangulation.GetElementCount();
-        if(triangleCount == 0)
+        if (triangleCount == 0)
             std::invalid_argument("Triangulation is empty");
 
         Triangle smallestAngleTriangle;
@@ -102,7 +102,7 @@ namespace Geometry
             TriangleElement element = m_triangulation.GetTriangleElement(i);
             if (element.I < 3 || element.J < 3 || element.K < 3)
                 continue;
-            
+
             Triangle triangle = GetTriangle(element);
             float angle = triangle.GetSmallestAngle();
 
@@ -123,7 +123,7 @@ namespace Geometry
             if (Triangle::ContainsVertex(point, m_vertices[indices.I], m_vertices[indices.J], m_vertices[indices.K]))
                 return i;
         }
-        
+
         throw std::invalid_argument("Point not inside triangulation.");
     }
 
@@ -156,7 +156,7 @@ namespace Geometry
     {
         /**
          * For triangle abc (order counter clockwise), the point d is inside circumcircle if det M > 0
-         * M = 
+         * M =
          * | Ax Ay Ax**2 + Ay**2 1 |
          * | Bx By Bx**2 + By**2 1 |
          * | Cx Cy Cx**2 + Cy**2 1 |
@@ -167,10 +167,7 @@ namespace Geometry
         float bLengthSquared = b.LengthSquared();
         float cLengthSquared = c.LengthSquared();
         float dLengthSquared = d.LengthSquared();
-        return a.X * Matrix<float>::Determinant(b.Y, bLengthSquared, 1, c.Y, cLengthSquared, 1, d.Y, dLengthSquared, 1)
-            - a.Y * Matrix<float>::Determinant(b.X, bLengthSquared, 1, c.X, cLengthSquared, 1, d.X, dLengthSquared, 1)
-            + aLengthSquared * Matrix<float>::Determinant(b.X, b.Y, 1, c.X, c.Y, 1, d.X, d.Y, 1)
-            - Matrix<float>::Determinant(b.X, b.Y, bLengthSquared, c.X, c.Y, cLengthSquared, d.X, d.Y, dLengthSquared);
+        return a.X * Matrix<float>::Determinant(b.Y, bLengthSquared, 1, c.Y, cLengthSquared, 1, d.Y, dLengthSquared, 1) - a.Y * Matrix<float>::Determinant(b.X, bLengthSquared, 1, c.X, cLengthSquared, 1, d.X, dLengthSquared, 1) + aLengthSquared * Matrix<float>::Determinant(b.X, b.Y, 1, c.X, c.Y, 1, d.X, d.Y, 1) - Matrix<float>::Determinant(b.X, b.Y, bLengthSquared, c.X, c.Y, cLengthSquared, d.X, d.Y, dLengthSquared);
     }
 
 }

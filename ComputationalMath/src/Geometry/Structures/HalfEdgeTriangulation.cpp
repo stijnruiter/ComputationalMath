@@ -1,4 +1,4 @@
-#include "HalfEdgeTriangulation.h"
+#include "HalfEdgeTriangulation.hpp"
 #include <cassert>
 #include <climits>
 
@@ -68,9 +68,18 @@ namespace Geometry
             assert(edge3.NextEdge == m_triangles[i]);
             mesh.Interior.push_back(TriangleElement(edge1.V1, edge2.V1, edge3.V1));
 
-            if(edge1.TwinEdge == (unsigned int)(-1)) { mesh.Boundary.push_back(LineElement(edge1.V1, edge1.V2)); }
-            if(edge2.TwinEdge == (unsigned int)(-1)) { mesh.Boundary.push_back(LineElement(edge2.V1, edge2.V2)); }
-            if(edge3.TwinEdge == (unsigned int)(-1)) { mesh.Boundary.push_back(LineElement(edge3.V1, edge3.V2)); }
+            if (edge1.TwinEdge == (unsigned int)(-1))
+            {
+                mesh.Boundary.push_back(LineElement(edge1.V1, edge1.V2));
+            }
+            if (edge2.TwinEdge == (unsigned int)(-1))
+            {
+                mesh.Boundary.push_back(LineElement(edge2.V1, edge2.V2));
+            }
+            if (edge3.TwinEdge == (unsigned int)(-1))
+            {
+                mesh.Boundary.push_back(LineElement(edge3.V1, edge3.V2));
+            }
         }
         return mesh;
     }
@@ -80,7 +89,7 @@ namespace Geometry
         unsigned int tmp;
         assert(GetEdgeIndex(vertexIndexStart, vertexIndexEnd, tmp) == false); // Edge already exists
         assert(edgeIndex == m_edges.size());
-        
+
         unsigned int twinIndex;
         if (GetEdgeIndex(vertexIndexEnd, vertexIndexStart, twinIndex))
         {
@@ -98,13 +107,13 @@ namespace Geometry
         // TODO: simplify/references
         size_t oldEdgeIndex1 = m_triangles[triangleIndex];
         HalfEdge oldEdge1 = m_edges[oldEdgeIndex1];
-        
+
         size_t oldEdgeIndex2 = oldEdge1.NextEdge;
         HalfEdge oldEdge2 = m_edges[oldEdgeIndex2];
-        
+
         size_t oldEdgeIndex3 = oldEdge2.NextEdge;
         HalfEdge oldEdge3 = m_edges[oldEdgeIndex3];
-        
+
         assert(oldEdge1.PrevEdge == oldEdgeIndex3);
         assert(oldEdge3.NextEdge == oldEdgeIndex1);
 
@@ -120,13 +129,13 @@ namespace Geometry
         m_edges.push_back(HalfEdge(oldEdge1.V2, newVertexIndex, oldEdgeIndex1, newEdgeIndex2, newEdgeIndex4, oldEdge1.ElementIndex));
         m_edges.push_back(HalfEdge(newVertexIndex, oldEdge1.V1, newEdgeIndex1, oldEdgeIndex1, newEdgeIndex5, oldEdge1.ElementIndex));
         m_triangles[oldEdge1.ElementIndex] = oldEdgeIndex1;
-        
+
         // Triangle 2
         m_edges[oldEdgeIndex2] = HalfEdge(oldEdge2.V1, oldEdge2.V2, newEdgeIndex4, newEdgeIndex3, oldEdge2.TwinEdge, m_elementCount);
         m_edges.push_back(HalfEdge(oldEdge2.V2, newVertexIndex, oldEdgeIndex2, newEdgeIndex4, newEdgeIndex6, m_elementCount));
         m_edges.push_back(HalfEdge(newVertexIndex, oldEdge2.V1, newEdgeIndex3, oldEdgeIndex2, newEdgeIndex1, m_elementCount));
         m_triangles.push_back(oldEdgeIndex2);
-        
+
         // Triangle 3
         m_edges[oldEdgeIndex3] = HalfEdge(oldEdge3.V1, oldEdge3.V2, newEdgeIndex6, newEdgeIndex5, oldEdge3.TwinEdge, m_elementCount + 1);
         m_edges.push_back(HalfEdge(oldEdge3.V2, newVertexIndex, oldEdgeIndex3, newEdgeIndex6, newEdgeIndex2, m_elementCount + 1));
@@ -145,7 +154,7 @@ namespace Geometry
         HalfEdge edge = m_edges[edgeIndex];
         size_t twinIndex = edge.TwinEdge;
         HalfEdge twin = m_edges[twinIndex];
-        
+
         size_t previousEdgeIndex = edge.PrevEdge;
         size_t previousTwinIndex = twin.PrevEdge;
         size_t nextEdgeIndex = edge.NextEdge;
@@ -154,18 +163,18 @@ namespace Geometry
         size_t edgeVertex = m_edges[nextEdgeIndex].V2;
         size_t twinVertex = m_edges[nextTwinIndex].V2;
 
-        HalfEdge temp = m_edges[previousEdgeIndex]; 
+        HalfEdge temp = m_edges[previousEdgeIndex];
         temp.PrevEdge = edgeIndex;
         temp.NextEdge = nextTwinIndex;
         temp.ElementIndex = edge.ElementIndex;
         m_edges[previousEdgeIndex] = temp;
-        
+
         temp = m_edges[nextTwinIndex];
         temp.PrevEdge = previousEdgeIndex;
         temp.NextEdge = edgeIndex;
         temp.ElementIndex = edge.ElementIndex;
         m_edges[nextTwinIndex] = temp;
-        
+
         m_edges[edgeIndex] = HalfEdge(twinVertex, edgeVertex, nextTwinIndex, previousEdgeIndex, twinIndex, edge.ElementIndex);
         m_triangles[edge.ElementIndex] = edgeIndex;
 
@@ -180,7 +189,7 @@ namespace Geometry
         temp.NextEdge = twinIndex;
         temp.ElementIndex = twin.ElementIndex;
         m_edges[nextEdgeIndex] = temp;
-        
+
         m_edges[twinIndex] = HalfEdge(edgeVertex, twinVertex, nextEdgeIndex, previousTwinIndex, edgeIndex, twin.ElementIndex);
         m_triangles[twin.ElementIndex] = twinIndex;
     }

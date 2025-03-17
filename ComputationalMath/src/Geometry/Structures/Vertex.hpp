@@ -3,7 +3,7 @@
 namespace Geometry
 {
     struct Vertex3F;
-    
+
     struct Vertex2F
     {
         float X;
@@ -16,7 +16,6 @@ namespace Geometry
         Vertex2F operator-(Vertex2F rhs) const;
         Vertex2F operator*(float scalar) const;
         friend Vertex2F operator*(float scalar, Vertex2F rhs);
-        bool operator==(Vertex2F other) const;
 
         float Length() const;
         float LengthSquared() const;

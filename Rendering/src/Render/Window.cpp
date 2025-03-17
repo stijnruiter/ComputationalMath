@@ -1,9 +1,9 @@
 #include "Window.hpp"
 
+#include "Debug/Logger.hpp"
 #include "glad\glad.h"
 #include <GLFW\glfw3.h>
 #include <string>
-#include "Debug/Logger.hpp"
 
 #include "Core/Renderer.hpp"
 #include "PlotCamera.hpp"
@@ -13,7 +13,7 @@ bool Window::InitializeGLFW()
     int success = glfwInit();
     if (!success)
     {
-        Engine::Logger::LogCritical("Unable to load GLFW.");
+        Debug::Logger::LogCritical("Unable to load GLFW.");
         return false;
     }
 
@@ -22,24 +22,21 @@ bool Window::InitializeGLFW()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     glfwSetErrorCallback([](int error, const char* description)
-    {
-        Engine::Logger::LogCritical("GLFW ERROR {0}: {1}", error, description);
-    });
+                         { Debug::Logger::LogCritical("GLFW ERROR {0}: {1}", error, description); });
     return true;
 }
 bool Window::InitializeGlad()
 {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        Engine::Logger::LogError("Unable to load GLAD.");
+        Debug::Logger::LogError("Unable to load GLAD.");
         return false;
     }
     return true;
 }
 
-Window::Window(int width, int height, std::string title) : 
-    m_width(width), m_height(height), m_title(title), m_currentScene(-1), m_scenes(0), 
-    m_camera(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0), 6.0)
+Window::Window(int width, int height, std::string title) : m_width(width), m_height(height), m_title(title), m_currentScene(-1), m_scenes(0),
+                                                           m_camera(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0), 6.0)
 {
     if (!InitializeGLFW())
         return;
@@ -47,17 +44,17 @@ Window::Window(int width, int height, std::string title) :
     m_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
     if (!m_window)
     {
-        Engine::Logger::LogCritical("Unable to create GLFW window");
+        Debug::Logger::LogCritical("Unable to create GLFW window");
         return;
     }
     glfwMakeContextCurrent(m_window);
-    
+
     InitializeGlad();
 
     AttachEventCallbacks();
 }
 
-Window::~Window() 
+Window::~Window()
 {
     m_currentScene = -1;
     glfwDestroyWindow(m_window);
@@ -71,7 +68,7 @@ void Window::AttachEventCallbacks()
     glfwSetWindowUserPointer(m_window, this);
 
     glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* glfwWindow, int width, int height)
-    {
+                                   {
         Window& window = *(Window*)glfwGetWindowUserPointer(glfwWindow);
         window.m_width = width;
         window.m_height = height;
@@ -79,28 +76,25 @@ void Window::AttachEventCallbacks()
         {
             FrameBufferResizeEvent frameBufferEvent(width, height);
             window.m_callbackFrameBuffer(frameBufferEvent);
-        }
-    });
+        } });
 
     glfwSetCursorPosCallback(m_window, [](GLFWwindow* glfwWindow, double x, double y)
-    {
+                             {
         Window& window = *(Window*)glfwGetWindowUserPointer(glfwWindow);
         if (window.m_callbackMouseMove)
         {
             MouseMoveEvent mouseEvent(x, y);
             window.m_callbackMouseMove(mouseEvent);
-        }
-    });
+        } });
 
     glfwSetKeyCallback(m_window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods)
-    {
+                       {
         Window& window = *(Window*)glfwGetWindowUserPointer(glfwWindow);
         if (window.m_keyEventCallback)
         {
             KeyEvent keyEvent(key, action);
             window.m_keyEventCallback(keyEvent);
-        }
-    });
+        } });
 }
 
 void Window::SetMouseCursor(bool enabled)
@@ -108,8 +102,8 @@ void Window::SetMouseCursor(bool enabled)
     if (enabled)
     {
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    } 
-    else 
+    }
+    else
     {
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
@@ -137,7 +131,6 @@ void Window::AddScene(std::unique_ptr<SceneBase> scene)
 void Window::SwitchScene(size_t sceneIndex)
 {
     m_currentScene = sceneIndex;
-
 }
 
 void Window::Close()
@@ -159,13 +152,16 @@ void Window::Run()
 
     double deltaTime = 0.0;
     double lastFrame = 0.0;
+
     size_t lastFrameScene = m_currentScene;
     m_scenes[m_currentScene]->Activate(renderer, m_camera);
+    
     while (!ShouldClose())
     {
         double currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        
         m_camera.Rotate(deltaTime);
         renderer.UpdateCamera(m_camera.GetTransformation());
 
@@ -174,7 +170,7 @@ void Window::Run()
             Close();
         }
 
-        if(lastFrameScene != m_currentScene)
+        if (lastFrameScene != m_currentScene)
         {
             lastFrameScene = m_currentScene;
             m_scenes[m_currentScene]->Activate(renderer, m_camera);

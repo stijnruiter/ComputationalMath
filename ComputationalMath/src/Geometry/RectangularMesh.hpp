@@ -1,6 +1,6 @@
 #pragma once
-#include <Geometry/Structures/Mesh2D.h>
-#include <Geometry/Structures/Rectangle.h>
+#include "Geometry/Structures/Mesh2D.hpp"
+#include "Geometry/Structures/Rectangle.hpp"
 #include <vector>
 
 namespace Geometry

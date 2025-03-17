@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Geometry/Structures/PlanarStraightLineGraph.h>
+#include <Geometry/Structures/PlanarStraightLineGraph.hpp>
 
-#include <Render/Drawable/DrawableObject.hpp>
+#include <Render/Core/IndexBuffer.hpp>
 #include <Render/Core/VertexArrayObject.hpp>
 #include <Render/Core/VertexBuffer.hpp>
-#include <Render/Core/IndexBuffer.hpp>
+#include <Render/Drawable/DrawableObject.hpp>
 
 #include <memory>
 

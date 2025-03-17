@@ -1,6 +1,6 @@
 #pragma once
-#include <stdlib.h>
 #include <iostream>
+#include <stdlib.h>
 
 namespace Geometry
 {

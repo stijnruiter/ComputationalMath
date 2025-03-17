@@ -4,14 +4,14 @@
 class VertexArrayObject
 {
 private:
-	unsigned int m_vertexArrayId;
+    unsigned int m_vertexArrayId;
 
 public:
-	VertexArrayObject();
-	~VertexArrayObject();
+    VertexArrayObject();
+    ~VertexArrayObject();
 
-	void Bind() const;
-	void Unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-	void AddBuffer(const VertexBuffer& buffer);
+    void AddBuffer(const VertexBuffer& buffer);
 };

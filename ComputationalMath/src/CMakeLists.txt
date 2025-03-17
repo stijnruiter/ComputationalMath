@@ -14,27 +14,26 @@ target_sources(ComputationalMath
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/FactorizationLU.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/Matrix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/SimdOps.cpp
 
   PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/HalfEdge.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/HalfEdgeTriangulation.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Mesh2D.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/PlanarStraightLineGraph.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Rectangle.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/SimplexElements.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Triangle.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/HalfEdge.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/HalfEdgeTriangulation.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Mesh2D.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/PlanarStraightLineGraph.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Rectangle.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/SimplexElements.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Triangle.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RectangularMesh.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RectangularMesh.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/FactorizationLU.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/Matrix.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/VectorBase.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/SimdOps.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/FactorizationLU.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/Matrix.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/VectorBase.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LinearAlgebra/SimdOps.hpp
 )
 
 target_include_directories(ComputationalMath

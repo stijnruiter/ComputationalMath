@@ -1,11 +1,11 @@
-#include "PlanarStraightLineGraph.h"
-#include <stdexcept>
+#include "PlanarStraightLineGraph.hpp"
 #include <cassert>
 #include <climits>
+#include <stdexcept>
 
 namespace Geometry
 {
-    PlanarStraightLineGraph::PlanarStraightLineGraph() { }
+    PlanarStraightLineGraph::PlanarStraightLineGraph() {}
 
     void PlanarStraightLineGraph::AddLineSegment(Vertex2F start, Vertex2F end)
     {
@@ -23,12 +23,12 @@ namespace Geometry
             throw std::invalid_argument("The polygon must have at least two vertices.");
 
         unsigned int currentLength = m_vertices.size();
-        for(unsigned int i = currentLength; i < currentLength + polygonLength - 1; i++)
+        for (unsigned int i = currentLength; i < currentLength + polygonLength - 1; i++)
         {
             m_segments.push_back(LineElement(i, i + 1));
         }
 
-        for (auto const& i : polygon) 
+        for (auto const& i : polygon)
         {
             m_vertices.push_back(i);
         }
@@ -55,10 +55,10 @@ namespace Geometry
         LineElement lineSegment = m_segments[lineSegmentIndex];
         Vertex2F startVertex = m_vertices[lineSegment.I];
         Vertex2F endVertex = m_vertices[lineSegment.J];
-        
+
         size_t splitVertexIndex = m_vertices.size();
         Vertex2F splitVertex = startVertex + alpha * (endVertex - startVertex);
-        
+
         m_vertices.push_back(splitVertex);
 
         RemoveLineSegment(lineSegmentIndex);
@@ -72,16 +72,16 @@ namespace Geometry
         return m_vertices.size();
     }
 
-    const std::vector<Vertex2F> &PlanarStraightLineGraph::GetVertices() const
+    const std::vector<Vertex2F>& PlanarStraightLineGraph::GetVertices() const
     {
         return m_vertices;
     }
-    
-    const std::vector<LineElement> &PlanarStraightLineGraph::GetLineSegments() const
+
+    const std::vector<LineElement>& PlanarStraightLineGraph::GetLineSegments() const
     {
         return m_segments;
     }
-    
+
     bool PlanarStraightLineGraph::AnyVertexWithinRange(Vertex2F vertex, float distance) const
     {
         for (const Vertex2F& p : m_vertices)

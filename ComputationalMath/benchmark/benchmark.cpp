@@ -1,6 +1,6 @@
 #include <memory>
 #include <benchmark/benchmark.h>
-#include <LinearAlgebra/Matrix.h>
+#include <LinearAlgebra/Matrix.hpp>
 
 static void BM_MatrixSum(benchmark::State& state)
 {

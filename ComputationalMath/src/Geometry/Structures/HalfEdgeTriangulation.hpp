@@ -1,9 +1,9 @@
 #pragma once
 
+#include "HalfEdge.hpp"
+#include "Mesh2D.hpp"
+#include "SimplexElements.hpp"
 #include <vector>
-#include "HalfEdge.h"
-#include "SimplexElements.h"
-#include "Mesh2D.h"
 
 namespace Geometry
 {
@@ -28,7 +28,7 @@ namespace Geometry
 
         Mesh2D ToMesh() const;
 
-    private: 
+    private:
         void InsertEdge(unsigned int vertexIndexStart, unsigned int vertexIndexEnd, unsigned int edgeIndex, unsigned int edgeIndexPrevious, unsigned int edgeIndexNext, unsigned int elementIndex);
         bool GetEdgeIndex(unsigned int vStart, unsigned int vEnd, unsigned int& index) const;
 

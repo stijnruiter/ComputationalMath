@@ -1,9 +1,9 @@
 #pragma once
-#include <Render/Drawable/DrawableObject.hpp>
+#include <Geometry/Structures/SimplexElements.hpp>
+#include <Render/Core/IndexBuffer.hpp>
 #include <Render/Core/VertexArrayObject.hpp>
 #include <Render/Core/VertexBuffer.hpp>
-#include <Render/Core/IndexBuffer.hpp>
-#include <Geometry/Structures/SimplexElements.h>
+#include <Render/Drawable/DrawableObject.hpp>
 
 #include <memory>
 

@@ -1,9 +1,9 @@
-#include "Triangle.h"
+#include "Triangle.hpp"
+#include "Rectangle.hpp"
 #include <cmath>
+#include <math.h>
 #include <numbers>
 #include <vector>
-#include <math.h>
-#include "Rectangle.h"
 
 namespace Geometry
 {
@@ -67,10 +67,8 @@ namespace Geometry
         float lengthSquared3 = (V3.X * V3.X + V3.Y * V3.Y);
 
         return Vertex2F(
-            (lengthSquared1 * (V2.Y - V3.Y) + lengthSquared2 * (V3.Y - V1.Y) + lengthSquared3 * (V1.Y - V2.Y))
-                / (2 * (V1.X * (V2.Y - V3.Y) + V2.X * (V3.Y - V1.Y) + V3.X * (V1.Y - V2.Y))),
-            (lengthSquared1 * (V2.X - V3.X) + lengthSquared2 * (V3.X - V1.X) + lengthSquared3 * (V1.X - V2.X))
-                / (2 * (V1.Y * (V2.X - V3.X) + V2.Y * (V3.X - V1.X) + V3.Y * (V1.X - V2.X))));
+            (lengthSquared1 * (V2.Y - V3.Y) + lengthSquared2 * (V3.Y - V1.Y) + lengthSquared3 * (V1.Y - V2.Y)) / (2 * (V1.X * (V2.Y - V3.Y) + V2.X * (V3.Y - V1.Y) + V3.X * (V1.Y - V2.Y))),
+            (lengthSquared1 * (V2.X - V3.X) + lengthSquared2 * (V3.X - V1.X) + lengthSquared3 * (V1.X - V2.X)) / (2 * (V1.Y * (V2.X - V3.X) + V2.Y * (V3.X - V1.X) + V3.Y * (V1.X - V2.X))));
     }
 
     float Triangle::GetSmallestAngle() const

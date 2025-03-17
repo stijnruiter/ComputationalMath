@@ -1,8 +1,8 @@
-#include "DrawableGraph.h"
+#include "DrawableGraph.hpp"
 
-#include "DrawableMesh.h"
+#include "DrawableMesh.hpp"
 
-DrawableGraph::DrawableGraph(const Geometry::PlanarStraightLineGraph &graph)
+DrawableGraph::DrawableGraph(const Geometry::PlanarStraightLineGraph& graph)
 {
     std::vector<float> zvalues = std::vector<float>(graph.GetVertexCount());
     std::vector<Geometry::Vertex3F> vertices = DrawableMesh::ToVertex3F(graph.GetVertices(), zvalues);
@@ -17,7 +17,7 @@ DrawableGraph::DrawableGraph(const Geometry::PlanarStraightLineGraph &graph)
     m_triangleBuffer = std::make_unique<IndexBuffer<Geometry::LineElement>>(graph.GetLineSegments());
 }
 
-void DrawableGraph::Draw(Renderer &render)
+void DrawableGraph::Draw(Renderer& render)
 {
     m_vao->Bind();
     render.EnableLinearAlphaBlend();

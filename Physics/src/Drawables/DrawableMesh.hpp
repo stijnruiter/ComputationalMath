@@ -1,18 +1,18 @@
 #pragma once
 
-#include <Geometry/Structures/Mesh2D.h>
+#include <Geometry/Structures/Mesh2D.hpp>
 
-#include <Render/Drawable/DrawableObject.hpp>
+#include <Render/Core/IndexBuffer.hpp>
 #include <Render/Core/VertexArrayObject.hpp>
 #include <Render/Core/VertexBuffer.hpp>
-#include <Render/Core/IndexBuffer.hpp>
+#include <Render/Drawable/DrawableObject.hpp>
 
 #include <memory>
 
 class DrawableMesh : public DrawableObject
 {
 public:
-    static std::vector<Geometry::Vertex3F> ToVertex3F(const std::vector<Geometry::Vertex2F> &vertices, const std::vector<float>& zValues);
+    static std::vector<Geometry::Vertex3F> ToVertex3F(const std::vector<Geometry::Vertex2F>& vertices, const std::vector<float>& zValues);
     static std::vector<float> Normalize(const std::vector<float>& data);
 
     DrawableMesh(const Geometry::Mesh2D& mesh);

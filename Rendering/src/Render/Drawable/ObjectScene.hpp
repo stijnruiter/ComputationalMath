@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Render/Drawable/SceneBase.hpp"
 #include "Render/Drawable/DrawableObject.hpp"
-#include <vector>
+#include "Render/Drawable/SceneBase.hpp"
 #include <memory>
+#include <vector>
 
 class ObjectScene : public SceneBase
 {

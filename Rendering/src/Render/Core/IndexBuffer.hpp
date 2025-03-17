@@ -1,32 +1,31 @@
 #pragma once
 
+#include "../Debug/gl_debug.hpp"
+#include <array>
 #include <glad\glad.h>
 #include <vector>
-#include <array>
-#include "../Debug/gl_debug.hpp"
 
-template<typename T>
+template <typename T>
 class IndexBuffer
 {
 private:
-	GLuint m_bufferId;
-	size_t m_count;
+    GLuint m_bufferId;
+    size_t m_count;
 
 public:
-	IndexBuffer(const T* indices, const size_t count, GLenum usage = GL_STATIC_DRAW);
-	IndexBuffer(const std::vector<T>& indices, GLenum usage = GL_STATIC_DRAW);
-	
-	template <std::size_t N>
-	IndexBuffer(const std::array<T, N>& indices, GLenum usage = GL_STATIC_DRAW);
-	~IndexBuffer();
+    IndexBuffer(const T* indices, const size_t count, GLenum usage = GL_STATIC_DRAW);
+    IndexBuffer(const std::vector<T>& indices, GLenum usage = GL_STATIC_DRAW);
 
-	void Bind() const;
-	void Unbind() const;
+    template <std::size_t N>
+    IndexBuffer(const std::array<T, N>& indices, GLenum usage = GL_STATIC_DRAW);
+    ~IndexBuffer();
 
-	size_t GetCount() const;
-	GLsizei GetPrimitiveSize() const;
+    void Bind() const;
+    void Unbind() const;
+
+    size_t GetCount() const;
+    GLsizei GetPrimitiveSize() const;
 };
-
 
 template <typename T>
 IndexBuffer<T>::IndexBuffer(const T* indices, const size_t count, GLenum usage)
@@ -35,20 +34,18 @@ IndexBuffer<T>::IndexBuffer(const T* indices, const size_t count, GLenum usage)
     GLCHECK(glGenBuffers(1, &m_bufferId));
     GLCHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferId));
     GLCHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(T), indices, usage));
-
 }
 
 template <typename T>
-IndexBuffer<T>::IndexBuffer(const std::vector<T> &indices, GLenum usage)
-	: IndexBuffer<T>(&indices[0], indices.size(), usage)
+IndexBuffer<T>::IndexBuffer(const std::vector<T>& indices, GLenum usage)
+    : IndexBuffer<T>(&indices[0], indices.size(), usage)
 {
-
 }
 
 template <typename T>
 template <typename std::size_t N>
-inline IndexBuffer<T>::IndexBuffer(const std::array<T, N> &indices, GLenum usage)
-	: IndexBuffer<T>(&indices[0], indices.size(), usage)
+inline IndexBuffer<T>::IndexBuffer(const std::array<T, N>& indices, GLenum usage)
+    : IndexBuffer<T>(&indices[0], indices.size(), usage)
 {
 }
 
@@ -81,5 +78,5 @@ size_t IndexBuffer<T>::GetCount() const
 template <typename T>
 inline GLsizei IndexBuffer<T>::GetPrimitiveSize() const
 {
-	return m_count * sizeof(T) / sizeof(GLuint);
+    return m_count * sizeof(T) / sizeof(GLuint);
 }

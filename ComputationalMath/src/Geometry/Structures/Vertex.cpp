@@ -1,10 +1,10 @@
+#include "Vertex.hpp"
 #include <cmath>
-#include "Vertex.h"
 
 namespace Geometry
 {
-    Vertex2F::Vertex2F() : X(0), Y(0) { }
-    Vertex2F::Vertex2F(float x, float y) : X(x), Y(y) { }
+    Vertex2F::Vertex2F() : X(0), Y(0) {}
+    Vertex2F::Vertex2F(float x, float y) : X(x), Y(y) {}
 
     Vertex2F Vertex2F::operator+(Vertex2F rhs) const
     {
@@ -73,7 +73,7 @@ namespace Geometry
         return Vertex3F(X, Y, 0.0f);
     }
 
-    Vertex3F::Vertex3F() 
+    Vertex3F::Vertex3F()
         : X(0), Y(0), Z(0)
     {
     }

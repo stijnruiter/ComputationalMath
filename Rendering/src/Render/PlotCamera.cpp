@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
 PlotCamera::PlotCamera()
     : m_initialEye(2.5, 2.5, 2.5), m_angle(0), m_rotationSpeed(1.0), m_up(0, 1, 0)
 {

@@ -1,11 +1,11 @@
 #include "Renderer.hpp"
 
-#include <glad/glad.h>
 #include "../Debug/gl_debug.hpp"
+#include <glad/glad.h>
 
+#include "Render/Shader/ScalarColorShader.hpp"
 #include "Render/Shader/SolidColorShader.hpp"
 #include "Render/Shader/VertexColorShader.hpp"
-#include "Render/Shader/ScalarColorShader.hpp"
 
 Renderer::Renderer()
     : m_solidColorShader("SOLID_COLOR_SHADER"), m_vertexColorShader("VERTEX_COLOR_SHADER"), m_scalarColorShader("SCALAR_COLOR_SHADER")
@@ -21,25 +21,24 @@ Renderer::~Renderer()
 
 void Renderer::SetClearColor(float red, float green, float blue, float alpha)
 {
-	GLCHECK(glClearColor(red, green, blue, alpha));
+    GLCHECK(glClearColor(red, green, blue, alpha));
 }
 
 void Renderer::Clear()
 {
-	GLCHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    GLCHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
-
-void Renderer::UpdateCamera(const CameraTransformation &transformation)
+void Renderer::UpdateCamera(const CameraTransformation& transformation)
 {
     m_solidColorShader.SetUniformMatrix4("model", transformation.Model, true);
     m_solidColorShader.SetUniformMatrix4("view", transformation.View, true);
     m_solidColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
-    
+
     m_vertexColorShader.SetUniformMatrix4("model", transformation.Model, true);
     m_vertexColorShader.SetUniformMatrix4("view", transformation.View, true);
     m_vertexColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
-    
+
     m_scalarColorShader.SetUniformMatrix4("model", transformation.Model, true);
     m_scalarColorShader.SetUniformMatrix4("view", transformation.View, true);
     m_scalarColorShader.SetUniformMatrix4("projection", transformation.Projection, true);
@@ -50,19 +49,19 @@ void Renderer::SetLineWidth(float width)
     GLCHECK(glLineWidth(width));
 }
 
-void Renderer::EnableLinearAlphaBlend() 
+void Renderer::EnableLinearAlphaBlend()
 {
     GLCHECK(glEnable(GL_BLEND));
     GLCHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }
 
-void Renderer::DisableAlphaBlend() 
+void Renderer::DisableAlphaBlend()
 {
     GLCHECK(glDisable(GL_BLEND));
 }
 
-void Renderer::EnableDepth() 
-{    
+void Renderer::EnableDepth()
+{
     GLCHECK(glEnable(GL_DEPTH_TEST));
 }
 

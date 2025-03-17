@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <Render/Core/CameraTransformation.hpp>
 #include <Render/Core/Renderer.hpp>
+#include <glm/glm.hpp>
 
 class PlotCamera
 {
@@ -13,7 +13,6 @@ private:
     CameraTransformation m_camera;
 
 private:
-
 public:
     PlotCamera();
     PlotCamera(glm::vec3 initialPosition, glm::vec3 up, float rotationSpeed = 1.0f);

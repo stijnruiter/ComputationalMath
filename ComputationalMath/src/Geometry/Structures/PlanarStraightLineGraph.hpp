@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Vertex.h"
-#include "SimplexElements.h"
+#include "SimplexElements.hpp"
+#include "Vertex.hpp"
 #include <vector>
 
 namespace Geometry
@@ -9,17 +9,16 @@ namespace Geometry
     class PlanarStraightLineGraph
     {
     public:
-
         PlanarStraightLineGraph();
 
         void AddLineSegment(Vertex2F start, Vertex2F end);
 
         void AddLineSegments(std::vector<Vertex2F> polygon);
-        
+
         void AddClosedLineSegments(std::vector<Vertex2F> polygon);
-        
+
         void RemoveLineSegment(unsigned int lineSegmentIndex);
-        
+
         void SplitLineSegment(int lineSegmentIndex, float alpha = 0.5f);
 
         unsigned int GetVertexCount() const;

@@ -5,7 +5,7 @@
 class DrawableObject
 {
 public:
-    virtual void Update(float deltaTime) { }
-    virtual void Draw(Renderer& renderer) { }
-    virtual ~DrawableObject() { }
+    virtual void Update(float deltaTime) {}
+    virtual void Draw(Renderer& renderer) {}
+    virtual ~DrawableObject() {}
 };

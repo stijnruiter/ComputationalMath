@@ -2,7 +2,7 @@
 
 #include "../Debug/gl_debug.hpp"
 
-VertexBuffer::VertexBuffer(const void* data, const size_t size, const GLenum usage) 
+VertexBuffer::VertexBuffer(const void* data, const size_t size, const GLenum usage)
     : m_stride(0)
 {
     GLCHECK(glGenBuffers(1, &m_bufferId));
@@ -28,7 +28,7 @@ void VertexBuffer::Unbind() const
 
 void VertexBuffer::DefineFloatAttribute(const int shaderLocation, const unsigned int count)
 {
-	m_attributes.push_back(AttributeDefinition(shaderLocation, GL_FLOAT, count, count * sizeof(float), GL_FALSE));
+    m_attributes.push_back(AttributeDefinition(shaderLocation, GL_FLOAT, count, count * sizeof(float), GL_FALSE));
 
     m_stride += count * sizeof(float);
 }
@@ -43,7 +43,7 @@ unsigned int VertexBuffer::GetStride() const
     return m_stride;
 }
 
-void VertexBuffer::SetData(const void *data, size_t size, GLenum usage)
+void VertexBuffer::SetData(const void* data, size_t size, GLenum usage)
 {
     Bind();
     GLCHECK(glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)size, data, usage));
