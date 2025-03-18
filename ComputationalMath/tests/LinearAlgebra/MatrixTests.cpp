@@ -25,13 +25,13 @@ namespace LinearAlgebra
         EXPECT_THROW(matrix.GetValue(4, 3), std::out_of_range);
     }
 
-    TEST(MatrixTests, Constructor_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues)
+    TEST(MatrixTests, Constructor_WhenSpanIsGiven_ShouldCreateMatrixWithCorrectValues)
     {
-        Matrix<int> matrix(3, 5, new int[15]{
-            1,   2,  3,  4,  5,
-            6,   7,  8,  9, 10,
-            11, 12, 13, 14, 15
-        });
+        int* data = new int[]{1, 2, 3, 4, 5,
+                              6, 7, 8, 9, 10,
+                              11, 12, 13, 14, 15};
+        Matrix<int> matrix(3, 5, std::span<int>{data, 15});
+        delete[] data;
         EXPECT_EQ(matrix.GetRowCount(), 3);
         EXPECT_EQ(matrix.GetColumnCount(), 5);
 
@@ -79,11 +79,8 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, LeftShiftStream_WhenNotEmpty_ShouldReturnMatrixStream)
     {
-        Matrix<int> vec(3, 2, new int[6]{
-            1, 2, 
-            3, 4, 
-            5, 6
-        });
+        std::vector<int> val({1, 2, 3, 4, 5, 6});
+        Matrix<int> vec(3, 2, std::span<int>{val});
         std::stringstream stream;
         stream << vec;
         EXPECT_EQ(stream.str(), "Mat3x2\n[[1, 2]\n[3, 4]\n[5, 6]]");
@@ -98,46 +95,46 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, Sum_WhenDataIsInteger_ShouldCreateMatrixWithCorrectValues)
     {
-        Matrix<int> matrix(3, 5, new int[15]{
-             1,  2,  3,  4,  5,
-             6,  7,  8,  9, 10,
-            11, 12, 13, 14, 15,
-        });
+        Matrix<int> matrix(3, 5, std::vector<int>({
+            1,  2,  3,  4,  5,
+            6,  7,  8,  9, 10,
+            11, 12, 13, 14, 15
+        }));
 
-        Matrix<int> matrix2(3, 5, new int[15]{
+        Matrix<int> matrix2(3, 5, std::vector<int>({
              1,  2,  3,  4,  5,
              6,  7,  8,  9, 10,
             11, 12, 13, 14, 15,
-        });
+        }));
         Matrix<int> result = matrix + matrix2;
-        Matrix<int> expect(3, 5, new int[15]{
+        Matrix<int> expect(3, 5, std::vector<int>({
             2,   4,  6,  8, 10,
             12, 14, 16, 18, 20,
             22, 24, 26, 28, 30,
-        });
+        }));
 
         EXPECT_EQ(result.ElementwiseEquals(expect), true);
     }
 
     TEST(MatrixTests, Sum_WhenDataIsFloat_ShouldCreateMatrixWithCorrectValues)
     {
-        Matrix<float> matrix(3, 5, new float[15]{
+        Matrix<float> matrix(3, 5, std::vector<float>({
              1,  2,  3,  4,  5,
              6,  7,  8,  9, 10,
             11, 12, 13, 14, 15
-        });
+        }));
 
-        Matrix<float> matrix2(3, 5, new float[15]{
+        Matrix<float> matrix2(3, 5, std::vector<float>({
              1,  2,  3,  4,  5,
              6,  7,  8,  9, 10,
             11, 12, 13, 14, 15
-        });
+        }));
         Matrix<float> result = matrix + matrix2;
-        Matrix<float> expect(3, 5, new float[15]{
+        Matrix<float> expect(3, 5, std::vector<float>({
              2,  4,  6,  8, 10,
             12, 14, 16, 18, 20,
             22, 24, 26, 28, 30
-        });
+        }));
 
         EXPECT_EQ(result.ElementwiseCompare(expect, 1e-5f), true);
     }
@@ -156,15 +153,15 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, Subtract_WhenDataIsGiven_ShouldCreateMatrixWithCorrectValues)
     {
-        Matrix<int> matrix(4, 2, new int[8]{1, 2, 3, 4, 5, 6, 7, 8});
-        Matrix<int> matrix2(4, 2, new int[8]{7, 3, 5, 4, 10, 2, 12, 6});
+        Matrix<int> matrix(4, 2, std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8});
+        Matrix<int> matrix2(4, 2, std::vector<int>{7, 3, 5, 4, 10, 2, 12, 6});
         Matrix<int> result1 = matrix - matrix;
         Matrix<int> result2 = matrix - matrix2;
         Matrix<int> result3 = matrix2 - matrix;
 
-        EXPECT_EQ(result1.ElementwiseEquals(Matrix<int>(4, 2, new int[8]{0, 0, 0, 0, 0, 0, 0, 0})), true);
-        EXPECT_EQ(result2.ElementwiseEquals(Matrix<int>(4, 2, new int[8]{-6, -1, -2, 0, -5, 4, -5, 2})), true);
-        EXPECT_EQ(result3.ElementwiseEquals(Matrix<int>(4, 2, new int[8]{6, 1, 2, 0, 5, -4, 5, -2})), true);
+        EXPECT_EQ(result1.ElementwiseEquals(Matrix<int>(4, 2, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0})), true);
+        EXPECT_EQ(result2.ElementwiseEquals(Matrix<int>(4, 2, std::vector<int>{-6, -1, -2, 0, -5, 4, -5, 2})), true);
+        EXPECT_EQ(result3.ElementwiseEquals(Matrix<int>(4, 2, std::vector<int>{6, 1, 2, 0, 5, -4, 5, -2})), true);
     }
 
     TEST(MatrixTests, Subtract_WhenDimensionMismatch_ShouldThrow)
@@ -181,13 +178,13 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, ProductMatrixMatrix_WhenInteger_ShouldBeElementEquals)
     {
-        Matrix<int> matrix(3, 5, new int[15]{
+        Matrix<int> matrix(3, 5, std::vector<int>({
             1,   2,  3,  4,  5,
             6,   7,  8,  9, 10,
             11, 12, 13, 14, 15
-        });
+        }));
 
-        Matrix<int> matrix2(5, 2, new int[15]{
+        Matrix<int> matrix2(5, 2, std::vector<int>{
             1,  2, 
             3,  4, 
             5,  6, 
@@ -196,7 +193,7 @@ namespace LinearAlgebra
         });
 
         Matrix<int> result = matrix * matrix2;
-        EXPECT_EQ(result.ElementwiseEquals(Matrix<int>(3, 2, new int[6]{
+        EXPECT_EQ(result.ElementwiseEquals(Matrix<int>(3, 2, std::vector<int>{
             95,  110, 
             220, 260, 
             345, 410
@@ -205,13 +202,13 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, ProductMatrixMatrix_WhenFloat_ShouldApproximatelyEquals)
     {
-        Matrix<float> matrix(3, 5, new float[15]{
+        Matrix<float> matrix(3, 5, std::vector<float>{
             1,   2,  3,  4,  5,
             6,   7,  8,  9, 10,
             11, 12, 13, 14, 15
         });
 
-        Matrix<float> matrix2(5, 2, new float[15]{
+        Matrix<float> matrix2(5, 2, std::vector<float>{
             1, 2, 
             3, 4, 
             5, 6, 
@@ -220,7 +217,7 @@ namespace LinearAlgebra
         });
 
         Matrix<float> result = matrix * matrix2;
-        EXPECT_EQ(result.ElementwiseCompare(Matrix<float>(3, 2, new float[6]{
+        EXPECT_EQ(result.ElementwiseCompare(Matrix<float>(3, 2, std::vector<float>{
              95.0f, 110.0f, 
             220   , 260, 
             345   , 410
@@ -238,13 +235,13 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, ProductMatrixScalar_WhenFloat_ShouldApproximatelyEquals)
     {
-        Matrix<float> matrix(3, 5, new float[15]{
+        Matrix<float> matrix(3, 5, std::vector<float>{
              1,  2,  3,  4,  5,
              6,  7,  8,  9, 10,
             11, 12, 13, 14, 15
         });
 
-        Matrix<float> expectedResult(3, 5, new float[15]{
+        Matrix<float> expectedResult(3, 5, std::vector<float>{
              5, 10, 15, 20, 25, 
             30, 35, 40, 45, 50, 
             55, 60, 65, 70, 75
@@ -258,14 +255,14 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, ProductMatrixColumn_WhenFloat_ShouldApproximatelyEquals)
     {
-        Matrix<float> matrix(3, 5, new float[15]{
+        Matrix<float> matrix(3, 5, std::vector<float>{
             1,   2,  3,  4,  5,
             6,   7,  8,  9, 10,
             11, 12, 13, 14, 15,
         });
-        ColumnVector<float> rhs(5, new float[5]{-5, 3, 2, 8, 4});
+        ColumnVector<float> rhs({-5, 3, 2, 8, 4});
         ColumnVector<float> result = matrix * rhs;
-        ColumnVector<float> expectedResult(3, new float[3]{59, 119, 179});
+        ColumnVector<float> expectedResult({59, 119, 179});
 
         EXPECT_EQ(result.ElementwiseCompare(expectedResult, 1e-5f), true);
     }
@@ -281,14 +278,14 @@ namespace LinearAlgebra
 
     TEST(MatrixTests, ProductRowMatrix_WhenFloat_ShouldApproximatelyEquals)
     {
-        Matrix<float> matrix(3, 5, new float[15]{
-            1,   2,  3,  4,  5,
-            6,   7,  8,  9, 10,
-            11, 12, 13, 14, 15
+        Matrix<float> matrix({
+            {1,   2,  3,  4,  5},
+            {6,   7,  8,  9, 10},
+            {11, 12, 13, 14, 15}
         });
-        RowVector<float> lhs(3, new float[3]{-2, 3, 2});
+        RowVector<float> lhs({-2, 3, 2});
         RowVector<float> result = lhs * matrix;
-        RowVector<float> expectedResult(5, new float[5]{38, 41, 44, 47, 50});
+        RowVector<float> expectedResult({38, 41, 44, 47, 50});
         EXPECT_EQ(result.ElementwiseCompare(expectedResult, 1e-5f), true);
     }
 
@@ -307,7 +304,7 @@ namespace LinearAlgebra
             1, 2, 3, 4, 5,
             6, 7, 8, 9, 10,
             11, 12, 13, 14, 15};
-        Matrix<int> storage(3, 5, entries);
+        Matrix<int> storage(3, 5, std::span{entries, 15});
         for (size_t i = 0; i < 5; i++)
         {
             ColumnVector<int> column = storage.GetColumn(i);
@@ -317,10 +314,7 @@ namespace LinearAlgebra
             EXPECT_EQ(column[2], entries[i + 10]);
         }
         EXPECT_THROW(storage.GetColumn(6), std::out_of_range);
-        int* range = new int[16]{
-            1, 2, 3, 4,
-            5, 6, 7, 8,
-            9, 1, 2, 3};
+        delete[] entries;
     }
 
     TEST(MatrixTests, GetRow_WhenIndexIsGiven_ShouldReturnRowAtIndex)
@@ -330,7 +324,7 @@ namespace LinearAlgebra
             6,   7,  8,  9, 10,
             11, 12, 13, 14, 15,
         };
-        Matrix<int> storage(3, 5, entries);
+        Matrix<int> storage(3, 5, std::span{entries, 15});
         for (size_t i = 0; i < 3; i++)
         {
             RowVector<int> row = storage.GetRow(i);
@@ -342,6 +336,7 @@ namespace LinearAlgebra
             EXPECT_EQ(row.GetValue(4), entries[i * 5 + 4]);
         }
         EXPECT_THROW(storage.GetRow(3), std::out_of_range);
+        delete[] entries;
     }
 
     TEST(MatrixTests, Constructor_WhenInitializeListsOfIdenticalLength_ShouldHaveCorrectValues)

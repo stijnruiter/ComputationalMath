@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 #include "VectorBase.hpp"
 
@@ -15,7 +16,8 @@ class Matrix
 public:
     Matrix();
     Matrix(size_t rowCount, size_t columnCount);
-    Matrix(size_t rowCount, size_t columnCount, const T* data);
+    Matrix(size_t rowCount, size_t columnCount, std::span<T> data);
+    Matrix(size_t rowCount, size_t columnCount, const std::vector<T>& data);
     Matrix(const Matrix<T>& mat);
     Matrix(const std::initializer_list<RowVector<T>>& values);
 
@@ -61,6 +63,9 @@ private:
     void ThrowIfColumnOutOfRange(size_t column) const;
     void AssertNoOverflow() const;
 
+    std::span<T> AsSpan();
+    const std::span<T> AsSpan() const;
+
 private:
     size_t m_length;
     size_t m_rowCount;
@@ -85,17 +90,40 @@ inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount)
 }
 
 template <typename T>
-inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, const T* data)
+inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, std::span<T> data)
     : Matrix<T>(rowCount, columnCount)
 {
+    if (rowCount * columnCount != data.size())
+        throw std::out_of_range("Data length different then row x column");
+
     T* destination = m_storage.get();
-    std::copy(data, data + m_length, destination);
+    std::copy(data.begin(), data.end(), destination);
 }
 
 template <typename T>
-inline Matrix<T>::Matrix(const Matrix<T>& mat)
-    : Matrix(mat.m_rowCount, mat.m_columnCount, mat.m_storage.get())
+inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, const std::vector<T>& data)
+    : Matrix<T>(rowCount, columnCount)
 {
+    if (rowCount * columnCount != data.size())
+        throw std::out_of_range("Data length different then row x column");
+
+    T* destination = m_storage.get();
+    std::copy(data.begin(), data.end(), destination);
+}
+
+// template <typename T>
+// inline Matrix<T>::Matrix(size_t rowCount, size_t columnCount, const std::vector<T>& data)
+//     : Matrix<T>(rowCount, columnCount, std::span<T>(data))
+// {
+// }
+
+template <typename T>
+inline Matrix<T>::Matrix(const Matrix<T>& mat)
+    : Matrix(mat.m_rowCount, mat.m_columnCount)
+{
+    const T* source = mat.Data();
+    T* destination = Data();
+    std::copy(source, source + m_length, destination);
 }
 
 template <typename T>
@@ -144,8 +172,7 @@ inline RowVector<T> Matrix<T>::GetRow(size_t row) const
 {
     // TODO: implement view to avoid copies
     ThrowIfRowOutOfRange(row);
-    T* start = m_storage.get() + row * m_columnCount;
-    return RowVector<T>(m_columnCount, start);
+    return RowVector<T>(AsSpan().subspan(row * m_columnCount, m_columnCount));
 }
 
 template <typename T>
@@ -440,4 +467,16 @@ inline void Matrix<T>::AssertNoOverflow() const
 {
     if (m_columnCount != 0 && m_length / m_columnCount != m_rowCount)
         throw std::overflow_error("NxM count size overflow");
+}
+
+template <typename T>
+inline std::span<T> Matrix<T>::AsSpan()
+{
+    return std::span<T>{m_storage.get(), m_length};
+}
+
+template <typename T>
+inline const std::span<T> Matrix<T>::AsSpan() const
+{
+    return std::span<T>{m_storage.get(), m_length};
 }

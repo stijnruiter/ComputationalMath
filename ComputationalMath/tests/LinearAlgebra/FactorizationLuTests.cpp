@@ -105,8 +105,8 @@ namespace LinearAlgebra
                              {2, 1, 0, 0},
                              {3, 4, 1, 0},
                              {1, 2, 3, 1}}),
-                ColumnVector<int>(4, new int[4]{1, 5, 3, 4}),
-                ColumnVector<int>(4, new int[4]{1, 3, -12, 33})));
+                ColumnVector<int>({1, 5, 3, 4}),
+                ColumnVector<int>({1, 3, -12, 33})));
 
         class ForwardSubstitutionVectorTests : public ::testing::TestWithParam<std::tuple<Matrix<int>, ColumnVector<int>, ColumnVector<int>>>
         {
@@ -136,8 +136,8 @@ namespace LinearAlgebra
                              {0, 2, 4, 2},
                              {0, 0, 6, 5},
                              {0, 0, 0, 2}}),
-                ColumnVector<int>(4, new int[4]{3, 6, 3, 6}),
-                ColumnVector<int>(4, new int[4]{-7, 4, -2, 3})));
+                ColumnVector<int>({3, 6, 3, 6}),
+                ColumnVector<int>({-7, 4, -2, 3})));
 
         class BackwardSubstitutionVectorTests : public ::testing::TestWithParam<std::tuple<Matrix<int>, ColumnVector<int>, ColumnVector<int>>>
         {

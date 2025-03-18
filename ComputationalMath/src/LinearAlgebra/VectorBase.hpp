@@ -3,12 +3,17 @@
 #include <initializer_list>
 #include <memory>
 #include <numeric>
+#include <span>
+#include <vector>
 #include <stdexcept>
 
 #include <iostream>
 
 template <typename T>
 class VectorBase;
+
+template <typename T>
+class VectorIterator;
 
 template <typename T>
 class RowVector;
@@ -62,15 +67,25 @@ public:
 
     VectorBase();
     VectorBase(size_t length);
-    VectorBase(size_t length, const T* data);
+    VectorBase(const std::span<T> data);
+    VectorBase(const std::vector<T>& data);
     VectorBase(const std::initializer_list<T>& values);
 
     T* Data();
     const T* Data() const;
     void Fill(const T& value);
 
+    friend class VectorIterator<T>;
+
+    VectorIterator<T> begin() { return VectorIterator(*this, 0); }
+    VectorIterator<T> end() { return VectorIterator(*this, m_length); }
+
+    std::span<T> AsSpan();
+    const std::span<T> AsSpan() const;
+
 protected:
-    void ThrowIfOutOfRange(size_t index) const;
+    void
+    ThrowIfOutOfRange(size_t index) const;
     void ThrowIfDimensionsMismatch(size_t otherLength) const;
 
     void ElementwiseSumVector(const VectorBase<T>& other, VectorBase<T>& result) const;
@@ -79,6 +94,27 @@ protected:
 protected:
     std::shared_ptr<T[]> m_data;
     size_t m_length;
+};
+
+template <typename T>
+class VectorIterator
+{
+public:
+    VectorIterator(VectorBase<T>& vector, int start)
+        : m_vector(vector), i(start) {};
+
+    VectorIterator<T>& operator++()
+    {
+        ++i;
+        return *this;
+    }
+    T operator*() { return m_vector[i]; }
+
+    bool operator!=(const VectorIterator<T>& other) { return (i != other.i); }
+
+private:
+    VectorBase<T> m_vector;
+    size_t i;
 };
 
 template <typename T>
@@ -141,10 +177,17 @@ inline VectorBase<T>::VectorBase(size_t length) : m_length(length)
 }
 
 template <typename T>
-inline VectorBase<T>::VectorBase(size_t length, const T* data) : VectorBase<T>(length)
+inline VectorBase<T>::VectorBase(std::span<T> data) : VectorBase<T>(data.size())
 {
     T* storageDestination = m_data.get();
-    std::copy(data, data + length, storageDestination);
+    std::copy(data.begin(), data.end(), storageDestination);
+}
+
+template <typename T>
+inline VectorBase<T>::VectorBase(const std::vector<T>& data) : VectorBase<T>(data.size())
+{
+    T* storageDestination = m_data.get();
+    std::copy(data.begin(), data.end(), storageDestination);
 }
 
 template <typename T>
@@ -171,6 +214,18 @@ inline void VectorBase<T>::Fill(const T& value)
 {
     T* storageDestination = this->m_data.get();
     std::fill(storageDestination, storageDestination + this->m_length, value);
+}
+
+template <typename T>
+inline std::span<T> VectorBase<T>::AsSpan()
+{
+    return std::span<T>{m_data.get(), m_length};
+}
+
+template <typename T>
+inline const std::span<T> VectorBase<T>::AsSpan() const
+{
+    return std::span<T>{m_data.get(), m_length};
 }
 
 template <typename T>
@@ -257,7 +312,7 @@ template <typename T>
 inline RowVector<T> ColumnVector<T>::Transposed() const
 {
     // TODO: view
-    return RowVector<T>(this->m_length, this->m_data.get());
+    return RowVector<T>(this->AsSpan());
 }
 
 template <typename T>
@@ -319,5 +374,5 @@ template <typename T>
 inline ColumnVector<T> RowVector<T>::Transposed() const
 {
     // TODO: view
-    return ColumnVector<T>(this->m_length, this->m_data.get());
+    return ColumnVector<T>(this->AsSpan());
 }
