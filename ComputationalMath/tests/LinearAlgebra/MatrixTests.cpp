@@ -89,8 +89,8 @@ namespace LinearAlgebra
     TEST(MatrixTests, GetValue_WhenIndexOutOfRange_ShouldThrow)
     {
         Matrix<int> matrix(3, 5);
-        EXPECT_THROW(matrix(3, 4), std::out_of_range);
-        EXPECT_THROW(matrix(2, 5), std::out_of_range);
+        EXPECT_THROW(matrix.GetValue(3, 4), std::out_of_range);
+        EXPECT_THROW(matrix.GetValue(2, 5), std::out_of_range);
     }
 
     TEST(MatrixTests, Sum_WhenDataIsInteger_ShouldCreateMatrixWithCorrectValues)

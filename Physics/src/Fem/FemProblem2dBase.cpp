@@ -30,9 +30,9 @@ void FemProblem2dBase::Add_Matrix_NablaA_NablaV(float scalar)
         float detJ = jacobian.Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1)); // TODO: fix
         Matrix<float> invJT = LinearAlgebra::Factorization::InverseMatrix(jacobian, 1e-5f).Transposed();
 
-        ColumnVector<float> nablaPhi0 = invJT * ColumnVector<float>(2, new float[2]{-1, -1});
-        ColumnVector<float> nablaPhi1 = invJT * ColumnVector<float>(2, new float[2]{1, 0});
-        ColumnVector<float> nablaPhi2 = invJT * ColumnVector<float>(2, new float[2]{0, 1});
+        ColumnVector<float> nablaPhi0 = invJT * ColumnVector<float>({-1, -1});
+        ColumnVector<float> nablaPhi1 = invJT * ColumnVector<float>({1, 0});
+        ColumnVector<float> nablaPhi2 = invJT * ColumnVector<float>({0, 1});
 
         m_matrix(element.I, element.I) += 0.5f * detJ * nablaPhi0.Transposed() * nablaPhi0;
         m_matrix(element.J, element.I) += 0.5f * detJ * nablaPhi1.Transposed() * nablaPhi0;

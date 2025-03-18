@@ -21,7 +21,7 @@ public:
     Matrix(const Matrix<T>& mat);
     Matrix(const std::initializer_list<RowVector<T>>& values);
 
-    T& GetValue(size_t row, size_t column) const;
+    T GetValue(size_t row, size_t column) const;
     void SetValue(size_t row, size_t column, const T& value);
 
     RowVector<T> GetRow(size_t row) const;
@@ -49,7 +49,8 @@ public:
                          const T& m31, const T& m32, const T& m33);
 
 public:
-    T& operator()(size_t row, size_t column) const;
+    T& operator()(size_t row, size_t column);
+    const T& operator()(size_t row, size_t column) const;
     Matrix<T> operator+(const Matrix<T>& mat) const;
     Matrix<T> operator-(const Matrix<T>& mat) const;
 
@@ -154,7 +155,7 @@ inline Matrix<T>::Matrix(const std::initializer_list<RowVector<T>>& values)
 }
 
 template <typename T>
-inline T& Matrix<T>::GetValue(size_t row, size_t column) const
+inline T Matrix<T>::GetValue(size_t row, size_t column) const
 {
     ThrowIfOutOfRange(row, column);
     return m_storage.get()[row * m_columnCount + column];
@@ -287,10 +288,22 @@ inline T Matrix<T>::Determinant(const T& m11, const T& m12, const T& m13,
 }
 
 template <typename T>
-inline T& Matrix<T>::operator()(size_t row, size_t column) const
+inline T& Matrix<T>::operator()(size_t row, size_t column)
 {
-    return GetValue(row, column);
+    return m_storage.get()[row * m_columnCount + column];
 }
+
+template <typename T>
+inline const T& Matrix<T>::operator()(size_t row, size_t column) const
+{
+    return m_storage.get()[row * m_columnCount + column];
+}
+
+// template <typename T>
+// inline const T& Matrix<T>::operator()(size_t row, size_t column) const
+// {
+//     return m_storage.get()[row * m_columnCount + column];
+// }
 
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const Matrix<T>& e)

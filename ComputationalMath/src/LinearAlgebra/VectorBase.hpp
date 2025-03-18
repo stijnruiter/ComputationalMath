@@ -367,7 +367,7 @@ inline T RowVector<T>::operator*(const ColumnVector<T>& vector) const
     this->ThrowIfDimensionsMismatch(vector.GetLength());
     T* lhsPtr = this->m_data.get();
     const T* rhsPtr = vector.Data();
-    return std::inner_product(lhsPtr, lhsPtr + this->m_length, rhsPtr, 0);
+    return std::inner_product(lhsPtr, lhsPtr + this->m_length, rhsPtr, 0.0f);
 }
 
 template <typename T>
