@@ -12,7 +12,7 @@ std::vector<Geometry::Vertex3F> DrawableMesh::ToVertex3F(
     return newVertices;
 }
 
-std::vector<float> DrawableMesh::Normalize(const float* data, size_t length)
+std::vector<float> DrawableMesh::NormalizeData(const float* data, size_t length)
 {
     std::vector<float> values(length);
     float minValue = 1e10f;
@@ -22,9 +22,16 @@ std::vector<float> DrawableMesh::Normalize(const float* data, size_t length)
         minValue = minValue > data[i] ? data[i] : minValue;
         maxValue = maxValue < data[i] ? data[i] : maxValue;
     }
+    float diff = maxValue - minValue;
+    if (diff < 1e-8f)
+    {
+        std::copy(data, data + length, values.begin());
+        return values;
+    }
+
     for (size_t i = 0; i < length; i++)
     {
-        values[i] = (data[i] - minValue) / (maxValue - minValue);
+        values[i] = (data[i] - minValue) / diff;
     }
     return values;
 }
@@ -55,7 +62,7 @@ DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh, const float* values, si
     m_vertexBuffer->DefineFloatAttribute(0, 3);
     m_vao->AddBuffer(*m_vertexBuffer);
 
-    m_valuesBuffer = std::make_unique<VertexBuffer>(Normalize(values, mesh.Vertices.size()));
+    m_valuesBuffer = std::make_unique<VertexBuffer>(NormalizeData(values, mesh.Vertices.size()));
     m_valuesBuffer->DefineFloatAttribute(1, 1);
     m_vao->AddBuffer(*m_valuesBuffer);
 

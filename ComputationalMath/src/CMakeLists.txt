@@ -9,7 +9,8 @@ target_sources(ComputationalMath
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/SimplexElements.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Triangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.cpp
-
+    
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/MeshGenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.cpp
 
@@ -26,7 +27,7 @@ target_sources(ComputationalMath
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Triangle.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Structures/Vertex.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RectangularMesh.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/MeshGenerator.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/Delaunay.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/RefinedDelaunay.hpp
 

@@ -1,10 +1,13 @@
 # Computational Mathematics
 
-Finite Element Method using C++ and visualization with OpenGL. This repository is my implementation of numerical analysis procedures, which is ported from [FEMSharp](https://github.com/stijnruiter/FemSharp), a C#/.NET repository I've created earlier. 
+Finite Element Method using C++ and visualization with OpenGL. This repository is my implementation of numerical analysis procedures, which is ported from [FEMSharp](https://github.com/stijnruiter/FemSharp). 
 
-For educational purposes, I will implement all numerical methods myself, and only use the GLFW/GLAD libraries of OpenGL binding and Google Test/Benchmark for testing.
+For educational purposes, I will implement all numerical methods myself, and only use the GLFW/GLAD libraries of OpenGL binding and Google Test and Benchmark for testing.
 
 ## Current state
+The main entry point of this repository is located in the Physics directory, which solves and renders various numerical problems (see below), which can be toggled by pressing _1_. Rotating is possible with the arrow keys. 
+
+![FEM simulations and Delaunay triangulations.](FemDemo.gif)
 
 ### Linear Algebra
 - Dense Row vector data structure
@@ -24,31 +27,43 @@ For educational purposes, I will implement all numerical methods myself, and onl
     - Simple boundary conditions using lambda function 
 
 ## Up next
+__Linear Algebra__
 - Stack allocated Linear Algebra structures
     - Currently, all matrices are heap allocated
     - _Could be interesting for smaller common vector/matrices, e.g. 4x4 matrix_
 - Column/Row major matrix switching
 - Sparse matrices
+- Introducte SSE/AVX2 instructions in the Linear Algebra precedures
+- Cache friendly precedures
 
-
+__Numerical methods__
 - Finite Element Method with deforming meshes
 - Material Point Method using B-splines
 - Method of Moments 
 
 ### Finite Element Problem Sets
-Currently, the project is  able to solve the Helmholtz equation with a source and Laplace's equation with boundary conditions. For the simulations, a 2-dimensional rectangular grid is used, where $\Omega=[x_1, x_2]\times[y_1, y_2]$. The implemented FEM problems are then defined as
+Currently, the project is three FEM scenes implemented, solving the partial differential equation and rendering the solution. The problems are the well-known Helmholtz equation with a source, Laplace's equation with boundary conditions, and the heat equation without source, a simple time dependent problem. For the simulations, a 2-dimensional rectangular grid is used, where $\Omega=[x_1, x_2]\times[y_1, y_2]$. The implemented FEM problems are then defined below.
 
+
+##### Helmholtz equation:
 $$\begin{align*} 
 -\nabla^2 u + k\cdot u &= f\\ 
 \nabla u \cdot\mathbf{\dot{n}}&=0 \text{ on  } \partial\Omega,
 \end{align*}$$
 
-and 
+##### Laplace's equation:
 
 $$\begin{align*} 
--\nabla^2 u = f,\\ 
-\frac{\partial u}{\partial n}(x,y_1) = \frac{\partial u}{\partial n}(x,y_2)=0,\\
-u(x_1, y) = u(x_2, y) =0.
+-\nabla^2 u &= f,\\ 
+\frac{\partial u}{\partial n}(x,y_1) &= \frac{\partial u}{\partial n}(x,y_2)=0,\\
+u(x_1, y) &= u(x_2, y) =0.
+\end{align*}$$
+
+##### Heat equation:
+
+$$\begin{align*}
+\frac{\partial T}{\partial t}&=k\nabla^2 T\\
+\nabla u \cdot\mathbf{\dot{n}}&=0 \text{ on  } \partial\Omega,
 \end{align*}$$
 
 ## References

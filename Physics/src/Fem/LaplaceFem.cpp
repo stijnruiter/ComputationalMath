@@ -1,14 +1,21 @@
 #include "LaplaceFem.hpp"
+#include "FemAssembler.hpp"
+#include <LinearAlgebra/FactorizationLU.hpp>
 
-LaplaceFem::LaplaceFem(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh) 
-    : FemProblem2dBase(mesh), m_bounds(bounds)
+LaplaceFem::LaplaceFem(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh)
+    : m_mesh(mesh), m_bounds(bounds),
+      m_matrix(FemAssembler::InitializeMatrix(mesh)),
+      m_columnVector(FemAssembler::InitializeVector(mesh))
 {
-    Add_Matrix_NablaA_NablaV(1.0f);
+    FemAssembler::Add_Matrix_NablaA_NablaV(m_mesh, m_matrix, 1.0f);
 
-    ApplyNaturalBoundaryConditions([this](Geometry::Vertex2F vertex1, Geometry::Vertex2F vertex2)
-                                   { return this->NaturalBoundaryCondition(vertex1, vertex2); });
-    ApplyEssentialBoundaryCondition([this](Geometry::Vertex2F vertex, float& value)
-                                    { return this->EssentialBoundaryCondition(vertex, value); });
+    FemAssembler::AddNaturalBoundaryConditions(m_mesh, m_columnVector,
+                                               [this](Geometry::Vertex2F vertex1, Geometry::Vertex2F vertex2)
+                                               { return this->NaturalBoundaryCondition(vertex1, vertex2); });
+
+    FemAssembler::ApplyEssentialBoundaryCondition(m_mesh, m_matrix, m_columnVector,
+                                                  [this](Geometry::Vertex2F vertex, float& value)
+                                                  { return this->EssentialBoundaryCondition(vertex, value); });
 }
 
 float LaplaceFem::NaturalBoundaryCondition(Geometry::Vertex2F vertex1, Geometry::Vertex2F vertex2)
@@ -31,4 +38,9 @@ bool LaplaceFem::EssentialBoundaryCondition(Geometry::Vertex2F vertex1, float& r
 float LaplaceFem::AnalyticSolutionFunction(Geometry::Vertex2F position) const
 {
     return position.Y;
+}
+
+ColumnVector<float> LaplaceFem::Solve() const
+{
+    return LinearAlgebra::Factorization::LUSolve(m_matrix, m_columnVector, 1e-5f);
 }

@@ -36,7 +36,7 @@ bool Window::InitializeGlad()
 }
 
 Window::Window(int width, int height, std::string title) : m_width(width), m_height(height), m_title(title), m_currentScene(-1), m_scenes(0),
-                                                           m_camera(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0), 6.0)
+                                                           m_camera(glm::vec3(0, 0, 2.5), glm::vec3(0, 1, 0), 30.0)
 {
     if (!InitializeGLFW())
         return;
@@ -161,21 +161,27 @@ void Window::Run()
         double currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        
-        m_camera.Rotate(deltaTime);
-        renderer.UpdateCamera(m_camera.GetTransformation());
 
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
             Close();
         }
+        if (IsKeyPressed(GLFW_KEY_LEFT))
+        {
+            m_camera.Rotate(-deltaTime);
+        }
+        if (IsKeyPressed(GLFW_KEY_RIGHT))
+        {
+            m_camera.Rotate(+deltaTime);
+        }
+
+        renderer.UpdateCamera(m_camera.GetTransformation());
 
         if (lastFrameScene != m_currentScene)
         {
             lastFrameScene = m_currentScene;
             m_scenes[m_currentScene]->Activate(renderer, m_camera);
         }
-
         renderer.Clear();
         if (m_currentScene >= 0)
         {

@@ -23,6 +23,7 @@ namespace LinearAlgebra
             Matrix<T> Factorization;
             int PermutationCount;
             size_t* Pivots;
+            ~FactorizationResult() { delete[] Pivots; }
         };
 
         template <typename T>

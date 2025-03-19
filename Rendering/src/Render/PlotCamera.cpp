@@ -19,7 +19,7 @@ PlotCamera::PlotCamera(glm::vec3 initialPosition, glm::vec3 up, float rotationSp
 void PlotCamera::Rotate(float delta)
 {
     m_angle += delta * m_rotationSpeed;
-    m_camera.Model = glm::rotate(glm::mat4(1.0), glm::radians(-m_angle), glm::vec3(0, 0, 1));
+    m_camera.Model = glm::rotate(glm::mat4(1.0), glm::radians(m_angle), glm::vec3(0, 0, 1));
 }
 
 void PlotCamera::Reset()

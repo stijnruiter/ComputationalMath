@@ -4,8 +4,8 @@
 #include <memory>
 #include <numeric>
 #include <span>
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 #include <iostream>
 
@@ -108,7 +108,7 @@ public:
         ++i;
         return *this;
     }
-    T operator*() { return m_vector[i]; }
+    T& operator*() { return m_vector[i]; }
 
     bool operator!=(const VectorIterator<T>& other) { return (i != other.i); }
 

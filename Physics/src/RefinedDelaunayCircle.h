@@ -8,6 +8,7 @@
 #include "Drawables/Axis.hpp"
 #include "Drawables/DrawableGraph.hpp"
 #include "Drawables/DrawableMesh.hpp"
+#include <Geometry/MeshGenerator.hpp>
 
 Geometry::PlanarStraightLineGraph CreateGraph()
 {
@@ -49,6 +50,13 @@ std::unique_ptr<ObjectScene> CreateDelaunayScene()
     scene->AddObject(CreateRefinedDelaunay(graph));
     scene->AddObject(std::make_unique<DrawableGraph>(graph));
 
+    scene->AddObject(std::make_unique<Axis>());
+    return scene;
+}
+std::unique_ptr<ObjectScene> CreateCircularScene()
+{
+    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(false);
+    scene->AddObject(std::make_unique<DrawableMesh>(Geometry::CreateCircularMesh(0, 0, 0.8f, 0.1)));
     scene->AddObject(std::make_unique<Axis>());
     return scene;
 }

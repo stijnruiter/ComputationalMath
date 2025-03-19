@@ -2,14 +2,16 @@
 
 #include "Drawables/Axis.hpp"
 #include "Drawables/DrawableMesh.hpp"
-#include "Fem/FemProblem2dBase.hpp"
-#include <Geometry/RectangularMesh.hpp>
+#include "Drawables/DrawableTimeDependentFemMesh.hpp"
+#include <Geometry/MeshGenerator.hpp>
+#include <Geometry/RefinedDelaunay.hpp>
 #include <Geometry/Structures/Rectangle.hpp>
 #include <Render/Drawable/ObjectScene.hpp>
+#include <algorithm>
 #include <type_traits>
 
 template <typename T, typename... _Args>
-typename std::enable_if<std::is_base_of<FemProblem2dBase, T>::value, std::unique_ptr<ObjectScene>>::type CreateFemScene(_Args&&... __args)
+std::unique_ptr<ObjectScene> CreateFemScene(_Args&&... __args)
 {
     using namespace Geometry;
     Rectangle bounds(-0.75f, 0.75f, -0.75f, 0.75f);
@@ -19,6 +21,22 @@ typename std::enable_if<std::is_base_of<FemProblem2dBase, T>::value, std::unique
 
     std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(true);
     scene->AddObject(std::make_unique<DrawableMesh>(mesh, solution));
+    scene->AddObject(std::make_unique<Axis>());
+    return scene;
+}
+
+template <typename T, typename... _Args>
+std::unique_ptr<ObjectScene> CreateTimeFemScene(_Args&&... __args)
+{
+    using namespace Geometry;
+
+    Rectangle bounds(-0.75f, 0.75f, -0.75f, 0.75f);
+    Mesh2D mesh = Geometry::CreateRectangularMesh(bounds, 25, 25);
+    // Mesh2D mesh = Geometry::CreateCircularMesh(0, 0, 0.75f, 0.1);
+    T fem(mesh, std::forward<_Args>(__args)...);
+    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(true);
+    std::unique_ptr<DrawableTimeDependentFemMesh> drawableFem = std::make_unique<DrawableTimeDependentFemMesh>(fem);
+    scene->AddObject(std::move(drawableFem));
     scene->AddObject(std::make_unique<Axis>());
     return scene;
 }
