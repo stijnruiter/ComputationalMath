@@ -14,15 +14,6 @@
 /// </summary>
 class HeatEquationWithoutSource
 {
-private:
-    Geometry::Mesh2D m_mesh;
-    float m_k, m_dt;
-    float m_time;
-
-    LinearAlgebra::Matrix<float> m_massMatrix;
-    LinearAlgebra::Matrix<float> m_stiffnessMatrix;
-    LinearAlgebra::ColumnVector<float> m_currentSolution;
-
 public:
     HeatEquationWithoutSource(const Geometry::Mesh2D& mesh, float k, float dt, const FemAssembler::VertexValueFunc& initialValues);
 
@@ -32,4 +23,13 @@ public:
     const LinearAlgebra::ColumnVector<float>& CurrentSolution() const { return m_currentSolution; }
 
     float CurrentTime() const { return m_time; }
+
+private:
+    Geometry::Mesh2D m_mesh;
+    float m_k, m_dt;
+    float m_time;
+
+    LinearAlgebra::Matrix<float> m_massMatrix;
+    LinearAlgebra::Matrix<float> m_stiffnessMatrix;
+    LinearAlgebra::ColumnVector<float> m_currentSolution;
 };

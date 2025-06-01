@@ -357,7 +357,6 @@ namespace LinearAlgebra
         if (m_columnCount != mat.m_columnCount || m_rowCount != mat.m_rowCount)
             throw std::invalid_argument("Dimensions mismatch");
 
-        // TODO: SIMD
         T* lhs = m_storage.get();
         T* rhs = mat.m_storage.get();
 
@@ -374,7 +373,6 @@ namespace LinearAlgebra
         if (m_columnCount != mat.m_rowCount)
             throw std::invalid_argument("Matrix mismatch");
 
-        // TODO: SIMD
         Matrix product(m_rowCount, mat.m_columnCount);
         for (size_t i = 0; i < m_rowCount; i++)
         {

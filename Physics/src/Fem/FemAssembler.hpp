@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Geometry/Structures/Mesh2D.hpp>
-#include <LinearAlgebra/FactorizationLU.hpp>
 #include <LinearAlgebra/Matrix.hpp>
 #include <functional>
 

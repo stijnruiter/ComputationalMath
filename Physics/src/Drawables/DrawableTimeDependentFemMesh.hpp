@@ -4,8 +4,6 @@
 
 class DrawableTimeDependentFemMesh : public DrawableMesh
 {
-private:
-    HeatEquationWithoutSource m_femProblem;
 
 public:
     explicit DrawableTimeDependentFemMesh(const HeatEquationWithoutSource& fem);
@@ -13,4 +11,7 @@ public:
     void Update(float deltaTime) override;
 
     void UpdateValues();
+
+private:
+    HeatEquationWithoutSource m_femProblem;
 };

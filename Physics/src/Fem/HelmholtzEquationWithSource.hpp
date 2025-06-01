@@ -13,6 +13,13 @@
 /// </summary>
 class HelmholtzEquationWithSourceFEM
 {
+public:
+    HelmholtzEquationWithSourceFEM(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh, float k);
+
+    LinearAlgebra::ColumnVector<float> Solve() const;
+    float SourceFunction(Geometry::Vertex2F vertex) const;
+    float AnalyticSolutionFunction(Geometry::Vertex2F position) const;
+
 private:
     Geometry::Mesh2D m_mesh;
     Geometry::Rectangle m_bounds;
@@ -20,11 +27,4 @@ private:
 
     LinearAlgebra::Matrix<float> m_matrix;
     LinearAlgebra::ColumnVector<float> m_columnVector;
-
-public:
-    HelmholtzEquationWithSourceFEM(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh, float k);
-
-    LinearAlgebra::ColumnVector<float> Solve() const;
-    float SourceFunction(Geometry::Vertex2F vertex) const;
-    float AnalyticSolutionFunction(Geometry::Vertex2F position) const;
 };

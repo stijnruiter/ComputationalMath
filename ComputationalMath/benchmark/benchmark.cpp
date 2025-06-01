@@ -9,8 +9,8 @@ static void BM_MatrixSum(benchmark::State& state)
     for (auto stat : state)
     {
         state.PauseTiming();
-        size_t size = state.range(); 
-        LinearAlgebra::Matrix<int> mat1(size, size); // TODO: properly initialize
+        const size_t size = state.range();
+        LinearAlgebra::Matrix<int> mat1(size, size);
         LinearAlgebra::Matrix<int> mat2(size, size);
         mat1.Fill(5);
         mat1.Fill(3);

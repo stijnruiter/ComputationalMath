@@ -12,12 +12,6 @@
 /// </summary>
 class LaplaceFem
 {
-private:
-    Geometry::Mesh2D m_mesh;
-    Geometry::Rectangle m_bounds;
-    LinearAlgebra::Matrix<float> m_matrix;
-    LinearAlgebra::ColumnVector<float> m_columnVector;
-
 public:
     LaplaceFem(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh);
 
@@ -28,4 +22,11 @@ public:
     float AnalyticSolutionFunction(Geometry::Vertex2F position) const;
 
     LinearAlgebra::ColumnVector<float> Solve() const;
+
+private:
+    Geometry::Mesh2D m_mesh;
+    Geometry::Rectangle m_bounds;
+    LinearAlgebra::Matrix<float> m_matrix;
+    LinearAlgebra::ColumnVector<float> m_columnVector;
+
 };

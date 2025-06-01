@@ -90,8 +90,8 @@ namespace LinearAlgebra
         ThrowIfOutOfRange(size_t index) const;
         void ThrowIfDimensionsMismatch(size_t otherLength) const;
 
-    void ElementwiseSumVector(const VectorBase& other, VectorBase& result) const;
-    void ElementwiseSubtractVector(const VectorBase& other, VectorBase& result) const;
+        void ElementwiseSumVector(const VectorBase& other, VectorBase& result) const;
+        void ElementwiseSubtractVector(const VectorBase& other, VectorBase& result) const;
 
     protected:
         std::shared_ptr<T[]> m_data;

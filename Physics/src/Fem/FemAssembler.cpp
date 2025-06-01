@@ -35,7 +35,7 @@ namespace FemAssembler
             const Geometry::Vertex2F vertex2 = mesh.Vertices[element.K];
 
             Matrix<float> jacobian = Jacobian(vertex0, vertex1, vertex2);
-            const float detJ = jacobian.Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1)); // TODO: fix
+            const float detJ = Matrix<float>::Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1));
             Matrix<float> invJT = Factorization::InverseMatrix(jacobian, 1e-5f).Transposed();
 
             ColumnVector<float> nablaPhi0 = invJT * ColumnVector<float>({-1, -1});
@@ -63,7 +63,7 @@ namespace FemAssembler
             const Geometry::Vertex2F vertex2 = mesh.Vertices[element.K];
 
             Matrix<float> jacobian = Jacobian(vertex0, vertex1, vertex2);
-            const float detJ = jacobian.Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1)); // TODO: fix
+            const float detJ = Matrix<float>::Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1));
 
             matrix(element.I, element.I) += scalar * detJ / 12;
             matrix(element.J, element.I) += scalar * detJ / 24;
@@ -86,7 +86,7 @@ namespace FemAssembler
             const Geometry::Vertex2F vertex2 = mesh.Vertices[element.K];
 
             Matrix<float> jacobian = Jacobian(vertex0, vertex1, vertex2);
-            const float detJ = jacobian.Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1)); // TODO: fix
+            const float detJ = Matrix<float>::Determinant(jacobian(0, 0), jacobian(0, 1), jacobian(1, 0), jacobian(1, 1)); 
 
             const float f0 = sourceF(vertex0) / 24;
             const float f1 = sourceF(vertex1) / 24;

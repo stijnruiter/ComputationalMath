@@ -3,7 +3,7 @@
 #include <mutex>
 #include <format>
 
-void Render::Debug::Logger::Log(LogLevel level, const std::string& message)
+void Render::Debug::Logger::Log(const LogLevel level, const std::string& message)
 {
     s_log << get_timestamp() << " [" << s_logLevelString[level] << "]: " << message << std::endl;
 }
@@ -27,7 +27,7 @@ std::tm Render::Debug::Logger::localtime_xp_now()
 std::string Render::Debug::Logger::get_timestamp()
 {
     char buffer[20];
-    std::tm now = localtime_xp_now();
+    const std::tm now = localtime_xp_now();
     std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &now);
     return buffer;
 }

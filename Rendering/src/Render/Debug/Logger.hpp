@@ -16,16 +16,6 @@ namespace Render::Debug
 
     class Logger
     {
-
-    private:
-        // TODO: enum LogLevel to string
-        static const char* s_logLevelString[];
-        static std::ofstream s_log;
-        static std::tm localtime_xp_now();
-        static std::string get_timestamp();
-
-        static void Log(LogLevel level, const std::string& message);
-
     public:
         template <class... Args>
         static void LogCritical(const std::string& fmt_string, Args&&... args) { Log(Critical, std::vformat(fmt_string, std::make_format_args(args...))); }
@@ -44,5 +34,14 @@ namespace Render::Debug
 
         template <class... Args>
         static void LogDebug(const std::string& fmt_string, Args&&... args) { Log(Debug, std::vformat(fmt_string, std::make_format_args(args...))); }
+
+    private:
+        // TODO: enum LogLevel to string
+        static const char* s_logLevelString[];
+        static std::ofstream s_log;
+        static std::tm localtime_xp_now();
+        static std::string get_timestamp();
+
+        static void Log(LogLevel level, const std::string& message);
     };
 }

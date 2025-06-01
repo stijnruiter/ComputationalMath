@@ -25,6 +25,6 @@ namespace Geometry
 
         static Triangle ContainingTriangle(const std::vector<Vertex2F>& vertices, float dilate);
 
-        Vertex2F GetCirclumcenter() const;
+        Vertex2F GetCircumcenter() const;
     };
 }

@@ -55,7 +55,7 @@ namespace Geometry
         return Triangle(v1, v2, v3);
     }
 
-    Vertex2F Triangle::GetCirclumcenter() const
+    Vertex2F Triangle::GetCircumcenter() const
     {
         const float lengthSquared1 =  V1.X * V1.X + V1.Y * V1.Y;
         const float lengthSquared2 =  V2.X * V2.X + V2.Y * V2.Y;

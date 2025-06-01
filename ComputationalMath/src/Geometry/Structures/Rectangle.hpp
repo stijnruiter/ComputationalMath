@@ -7,7 +7,6 @@ namespace Geometry
 {
     struct Rectangle
     {
-    public:
         float Left;
         float Right;
         float Bottom;

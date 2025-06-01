@@ -42,7 +42,7 @@ namespace Geometry
             }
 
             const Triangle smallestTriangle = GetSmallestAngleTriangle();
-            const Vertex2F circumCenter = smallestTriangle.GetCirclumcenter();
+            const Vertex2F circumCenter = smallestTriangle.GetCircumcenter();
 
             if (const float angle = smallestTriangle.GetSmallestAngle(); angle >= alphaRadians)
                 return;
