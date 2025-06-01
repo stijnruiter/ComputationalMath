@@ -28,21 +28,21 @@ namespace Render::Debug
 
     public:
         template <class... Args>
-        static void LogCritical(const std::string& fmt_string, Args&&... args) { Log(LogLevel::Critical, std::vformat(fmt_string, std::make_format_args(args...))); }
+        static void LogCritical(const std::string& fmt_string, Args&&... args) { Log(Critical, std::vformat(fmt_string, std::make_format_args(args...))); }
 
         template <class... Args>
-        static void LogError(const std::string& fmt_string, Args&&... args) { Log(LogLevel::Error, std::vformat(fmt_string, std::make_format_args(args...))); }
+        static void LogError(const std::string& fmt_string, Args&&... args) { Log(Error, std::vformat(fmt_string, std::make_format_args(args...))); }
 
         template <class... Args>
-        static void LogWarning(const std::string& fmt_string, Args&&... args) { Log(LogLevel::Warning, std::vformat(fmt_string, std::make_format_args(args...))); }
+        static void LogWarning(const std::string& fmt_string, Args&&... args) { Log(Warning, std::vformat(fmt_string, std::make_format_args(args...))); }
 
         template <class... Args>
-        static void LogInfo(const std::string& fmt_string, Args&&... args) { Log(LogLevel::Info, std::vformat(fmt_string, std::make_format_args(args...))); }
+        static void LogInfo(const std::string& fmt_string, Args&&... args) { Log(Info, std::vformat(fmt_string, std::make_format_args(args...))); }
 
         template <class... Args>
-        static void LogVerbose(const std::string& fmt_string, Args&&... args) { Log(LogLevel::Verbose, std::vformat(fmt_string, std::make_format_args(args...))); }
+        static void LogVerbose(const std::string& fmt_string, Args&&... args) { Log(Verbose, std::vformat(fmt_string, std::make_format_args(args...))); }
 
         template <class... Args>
-        static void LogDebug(const std::string& fmt_string, Args&&... args) { Log(LogLevel::Debug, std::vformat(fmt_string, std::make_format_args(args...))); }
+        static void LogDebug(const std::string& fmt_string, Args&&... args) { Log(Debug, std::vformat(fmt_string, std::make_format_args(args...))); }
     };
 }

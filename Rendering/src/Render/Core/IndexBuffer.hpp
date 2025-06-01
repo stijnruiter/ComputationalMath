@@ -45,9 +45,9 @@ namespace Render
     }
 
     template <typename T>
-    template <typename std::size_t N>
-    inline IndexBuffer<T>::IndexBuffer(const std::array<T, N>& indices, GLenum usage)
-        : IndexBuffer<T>(&indices[0], indices.size(), usage)
+    template <std::size_t N>
+    IndexBuffer<T>::IndexBuffer(const std::array<T, N>& indices, GLenum usage)
+        : IndexBuffer(&indices[0], indices.size(), usage)
     {
     }
 

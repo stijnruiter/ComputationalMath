@@ -21,9 +21,9 @@ private:
 public:
     LaplaceFem(const Geometry::Rectangle& bounds, const Geometry::Mesh2D& mesh);
 
-    float NaturalBoundaryCondition(Geometry::Vertex2F vertex1, Geometry::Vertex2F vertex2);
+    float NaturalBoundaryCondition(Geometry::Vertex2F vertex1, Geometry::Vertex2F vertex2) const;
 
-    bool EssentialBoundaryCondition(Geometry::Vertex2F vertex1, float& result);
+    bool EssentialBoundaryCondition(Geometry::Vertex2F vertex1, float& result) const;
 
     float AnalyticSolutionFunction(Geometry::Vertex2F position) const;
 

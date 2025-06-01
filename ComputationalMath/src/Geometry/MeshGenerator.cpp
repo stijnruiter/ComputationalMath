@@ -9,15 +9,13 @@
 
 namespace Geometry
 {
-
-    Mesh2D CreateCircularMesh(float cx, float cy, float radius, float maxh)
+    Mesh2D CreateCircularMesh(const float cx, const float cy, const float radius, const float maxh)
     {
         PlanarStraightLineGraph graph;
-        int nPointsOnCircle = (int)std::ceil(M_PI / std::asin(0.5f * maxh / radius));
+        int nPointsOnCircle = static_cast<int>(std::ceil(M_PI / std::asin(0.5f * maxh / radius)));
         nPointsOnCircle = nPointsOnCircle < 3 ? 3 : nPointsOnCircle;
-        float angle = 2.0f * M_PI / nPointsOnCircle;
+        const float angle = 2.0f * M_PI / nPointsOnCircle;
         std::vector<Vertex2F> verticesOnCircle(nPointsOnCircle);
-        float counter = 0.0f;
         for (size_t i = 0; i < nPointsOnCircle; i++)
         {
             verticesOnCircle[i] = Vertex2F(cx + radius * std::cos(i * angle), cy + radius * std::sin(i * angle));
@@ -33,19 +31,19 @@ namespace Geometry
         return delaunay.ToMesh();
     }
 
-    Mesh2D CreateRectangularMesh(const Geometry::Rectangle& rect, unsigned int nx, unsigned int ny)
+    Mesh2D CreateRectangularMesh(const Rectangle& rect, const unsigned int nx, const unsigned int ny)
     {
         Mesh2D mesh;
 
-        float dx = rect.GetWidth() / nx;
-        float dy = rect.GetHeight() / ny;
+        const float dx = rect.GetWidth() / nx;
+        const float dy = rect.GetHeight() / ny;
 
         for (unsigned int j = 0; j <= ny; j++)
         {
             for (unsigned int i = 0; i <= nx; i++)
             {
-                float x = rect.Left + dx * i;
-                float y = rect.Bottom + dy * j;
+                const float x = rect.Left + dx * i;
+                const float y = rect.Bottom + dy * j;
                 mesh.Vertices.push_back(Vertex2F(x, y));
             }
         }
@@ -58,10 +56,10 @@ namespace Geometry
                 // |  |
                 // 0--1
 
-                unsigned int corner0 = i + (nx + 1) * j;
-                unsigned int corner1 = i + 1 + (nx + 1) * j;
-                unsigned int corner2 = i + 1 + (nx + 1) * (j + 1);
-                unsigned int corner3 = i + (nx + 1) * (j + 1);
+                const unsigned int corner0 = i + (nx + 1) * j;
+                const unsigned int corner1 = i + 1 + (nx + 1) * j;
+                const unsigned int corner2 = i + 1 + (nx + 1) * (j + 1);
+                const unsigned int corner3 = i + (nx + 1) * (j + 1);
 
                 mesh.Interior.push_back(TriangleElement(corner0, corner1, corner2));
                 mesh.Interior.push_back(TriangleElement(corner0, corner2, corner3));

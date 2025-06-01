@@ -56,7 +56,7 @@ namespace Render
             }
 #endif // DEBUG
 
-            GLCHECK(glVertexAttribPointer(attribute.Location, attribute.Count, attribute.Type, attribute.Normalized, buffer.GetStride(), (void*)offset));
+            GLCHECK(glVertexAttribPointer(attribute.Location, attribute.Count, attribute.Type, attribute.Normalized, buffer.GetStride(), reinterpret_cast<void*>(offset)));
             GLCHECK(glEnableVertexAttribArray(attribute.Location));
 
             offset += attribute.Size;

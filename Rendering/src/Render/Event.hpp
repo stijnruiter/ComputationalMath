@@ -5,25 +5,22 @@ namespace Render
 {
     struct FrameBufferResizeEvent
     {
-    public:
         const unsigned int Width, Height;
-        FrameBufferResizeEvent(unsigned int Width, unsigned int Height) : Width(Width), Height(Height) {}
+        FrameBufferResizeEvent(const unsigned int width, const unsigned int height) : Width(width), Height(height) {}
     };
     typedef std::function<void(FrameBufferResizeEvent& eventArgs)> FrameBufferResizeEventCallback;
 
     struct KeyEvent
     {
-    public:
         const int Key, Action;
-        KeyEvent(int Key, int Action) : Key(Key), Action(Action) {}
+        KeyEvent(const int key, const int action) : Key(key), Action(action) {}
     };
     typedef std::function<void(KeyEvent& eventArgs)> KeyEventCallback;
 
     struct MouseMoveEvent
     {
-    public:
         const double X, Y;
-        MouseMoveEvent(double X, double Y) : X(X), Y(Y) {}
+        MouseMoveEvent(const double x, const double y) : X(x), Y(y) {}
     };
     typedef std::function<void(MouseMoveEvent& eventArgs)> MouseMoveEventCallback;
 }

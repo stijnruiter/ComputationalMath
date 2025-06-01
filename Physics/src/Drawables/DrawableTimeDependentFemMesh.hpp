@@ -8,9 +8,9 @@ private:
     HeatEquationWithoutSource m_femProblem;
 
 public:
-    DrawableTimeDependentFemMesh(const HeatEquationWithoutSource& fem);
+    explicit DrawableTimeDependentFemMesh(const HeatEquationWithoutSource& fem);
 
-    virtual void Update(float deltaTime) override;
+    void Update(float deltaTime) override;
 
     void UpdateValues();
 };

@@ -13,7 +13,6 @@ namespace Render
         float m_angle, m_rotationSpeed;
         CameraTransformation m_camera;
 
-    private:
     public:
         PlotCamera();
         PlotCamera(glm::vec3 initialPosition, glm::vec3 up, float rotationSpeed = 1.0f);

@@ -40,7 +40,7 @@ namespace Render
         void Bind() const;
         void Unbind() const;
 
-        void DefineFloatAttribute(const int shaderLocation, const unsigned int count);
+        void DefineFloatAttribute(int shaderLocation, unsigned int count);
 
         std::vector<AttributeDefinition> GetAttributes() const;
         unsigned int GetStride() const;
@@ -49,13 +49,13 @@ namespace Render
     };
 
     template <typename T>
-    VertexBuffer::VertexBuffer(const std::vector<T>& vector, GLenum usage)
+    VertexBuffer::VertexBuffer(const std::vector<T>& vector, const GLenum usage)
         : VertexBuffer(&vector[0], vector.size() * sizeof(T), usage)
     {
     }
 
     template <typename T, std::size_t N>
-    VertexBuffer::VertexBuffer(const std::array<T, N>& array, GLenum usage)
+    VertexBuffer::VertexBuffer(const std::array<T, N>& array, const GLenum usage)
         : VertexBuffer(&array[0], array.size() * sizeof(T), usage)
     {
     }

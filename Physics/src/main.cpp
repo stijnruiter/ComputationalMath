@@ -14,7 +14,7 @@ int main()
     window.AddScene(CreateCircularScene());
     window.AddScene(CreateFemScene<HelmholtzEquationWithSourceFEM>(1));
     window.AddScene(CreateFemScene<LaplaceFem>());
-    window.AddScene(CreateTimeFemScene<HeatEquationWithoutSource>(0.05f, 1e-3f, [](Geometry::Vertex2F vertex)
+    window.AddScene(CreateTimeFemScene<HeatEquationWithoutSource>(0.05f, 1e-3f, [](const Geometry::Vertex2F vertex)
                                                                   { return (vertex.Length() <= 0.25) ? 1.0f : 0.0f; }));
 
     size_t sceneIndex = 0;

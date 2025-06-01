@@ -10,12 +10,12 @@ namespace Render
     class ObjectScene : public SceneBase
     {
     public:
-        ObjectScene(bool is3d);
+        explicit ObjectScene(bool is3d);
 
         void AddObject(std::unique_ptr<DrawableObject> object);
-        virtual void Activate(Renderer& render, PlotCamera& camera) override;
-        virtual void Update(float deltaTime) override;
-        virtual void Draw(Renderer& render) override;
+        void Activate(Renderer& render, PlotCamera& camera) override;
+        void Update(float deltaTime) override;
+        void Draw(Renderer& render) override;
 
     private:
         std::vector<std::unique_ptr<DrawableObject>> m_objects;

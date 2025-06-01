@@ -24,7 +24,7 @@ private:
     LinearAlgebra::ColumnVector<float> m_currentSolution;
 
 public:
-    HeatEquationWithoutSource(const Geometry::Mesh2D& mesh, float k, float dt, FemAssembler::VertexValueFunc initialValues);
+    HeatEquationWithoutSource(const Geometry::Mesh2D& mesh, float k, float dt, const FemAssembler::VertexValueFunc& initialValues);
 
     const Geometry::Mesh2D& GetGraph() const { return m_mesh; }
     void SolveNextTimeStep();

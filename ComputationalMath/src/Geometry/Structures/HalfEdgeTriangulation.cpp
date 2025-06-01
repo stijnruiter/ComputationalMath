@@ -4,18 +4,18 @@
 
 namespace Geometry
 {
-    HalfEdgeTriangulation::HalfEdgeTriangulation(unsigned int initialSize)
-        : m_triangles(0), m_edges(0), m_elementCount(0), m_edgeCount(0)
+    HalfEdgeTriangulation::HalfEdgeTriangulation(const unsigned int initialSize)
+        : m_edges(0), m_triangles(0), m_elementCount(0), m_edgeCount(0)
     {
         m_triangles.reserve(initialSize);
         m_edges.reserve(initialSize * 3);
     }
 
-    void HalfEdgeTriangulation::AddTriangle(unsigned int vertexIndex1, unsigned int vertexIndex2, unsigned int vertexIndex3)
+    void HalfEdgeTriangulation::AddTriangle(const unsigned int vertexIndex1, const unsigned int vertexIndex2, const unsigned int vertexIndex3)
     {
-        unsigned int edgeIndex1 = m_elementCount;
-        unsigned int edgeIndex2 = edgeIndex1 + 1;
-        unsigned int edgeIndex3 = edgeIndex1 + 2;
+        const unsigned int edgeIndex1 = m_elementCount;
+        const unsigned int edgeIndex2 = edgeIndex1 + 1;
+        const unsigned int edgeIndex3 = edgeIndex1 + 2;
 
         m_triangles.push_back(edgeIndex1);
         InsertEdge(vertexIndex1, vertexIndex2, edgeIndex1, edgeIndex3, edgeIndex2, m_elementCount);
@@ -26,18 +26,18 @@ namespace Geometry
         m_edgeCount += 3;
     }
 
-    TriangleElement HalfEdgeTriangulation::GetTriangleElement(unsigned int elementIndex) const
+    TriangleElement HalfEdgeTriangulation::GetTriangleElement(const unsigned int elementIndex) const
     {
         return GetTriangleElementFromEdge(m_triangles[elementIndex]);
     }
 
-    TriangleElement HalfEdgeTriangulation::GetTriangleElementFromEdge(unsigned int edgeIndex) const
+    TriangleElement HalfEdgeTriangulation::GetTriangleElementFromEdge(const unsigned int edgeIndex) const
     {
-        HalfEdge edge = m_edges[edgeIndex];
+        const HalfEdge edge = m_edges[edgeIndex];
         return TriangleElement(edge.V1, edge.V2, m_edges[edge.NextEdge].V2);
     }
 
-    const HalfEdge& HalfEdgeTriangulation::GetEdge(unsigned int edgeIndex) const
+    const HalfEdge& HalfEdgeTriangulation::GetEdge(const unsigned int edgeIndex) const
     {
         return m_edges[edgeIndex];
     }
@@ -52,7 +52,7 @@ namespace Geometry
         return m_edgeCount;
     }
 
-    bool HalfEdgeTriangulation::IsValidEdge(unsigned int edgeIndex) const
+    bool HalfEdgeTriangulation::IsValidEdge(const unsigned int edgeIndex) const
     {
         return edgeIndex < m_edgeCount;
     }
@@ -62,21 +62,21 @@ namespace Geometry
         Mesh2D mesh(m_elementCount, 3);
         for (unsigned int i = 0; i < m_elementCount; i++)
         {
-            HalfEdge edge1 = m_edges[m_triangles[i]];
-            HalfEdge edge2 = m_edges[edge1.NextEdge];
-            HalfEdge edge3 = m_edges[edge2.NextEdge];
+            const HalfEdge edge1 = m_edges[m_triangles[i]];
+            const HalfEdge edge2 = m_edges[edge1.NextEdge];
+            const HalfEdge edge3 = m_edges[edge2.NextEdge];
             assert(edge3.NextEdge == m_triangles[i]);
             mesh.Interior.push_back(TriangleElement(edge1.V1, edge2.V1, edge3.V1));
 
-            if (edge1.TwinEdge == (unsigned int)(-1))
+            if (edge1.TwinEdge == UINT_MAX)
             {
                 mesh.Boundary.push_back(LineElement(edge1.V1, edge1.V2));
             }
-            if (edge2.TwinEdge == (unsigned int)(-1))
+            if (edge2.TwinEdge == UINT_MAX)
             {
                 mesh.Boundary.push_back(LineElement(edge2.V1, edge2.V2));
             }
-            if (edge3.TwinEdge == (unsigned int)(-1))
+            if (edge3.TwinEdge == UINT_MAX)
             {
                 mesh.Boundary.push_back(LineElement(edge3.V1, edge3.V2));
             }
@@ -84,7 +84,7 @@ namespace Geometry
         return mesh;
     }
 
-    void HalfEdgeTriangulation::InsertEdge(unsigned int vertexIndexStart, unsigned int vertexIndexEnd, unsigned int edgeIndex, unsigned int edgeIndexPrevious, unsigned int edgeIndexNext, unsigned int elementIndex)
+    auto HalfEdgeTriangulation::InsertEdge(const unsigned int vertexIndexStart, const unsigned int vertexIndexEnd, const unsigned int edgeIndex, const unsigned int edgeIndexPrevious, const unsigned int edgeIndexNext, const unsigned int elementIndex) -> void
     {
         unsigned int tmp;
         assert(GetEdgeIndex(vertexIndexStart, vertexIndexEnd, tmp) == false); // Edge already exists
@@ -99,30 +99,30 @@ namespace Geometry
         m_edges.push_back(HalfEdge(vertexIndexStart, vertexIndexEnd, edgeIndexPrevious, edgeIndexNext, twinIndex, elementIndex));
     }
 
-    TriangleElement HalfEdgeTriangulation::RefineTriangle(unsigned int triangleIndex, unsigned int newVertexIndex)
+    TriangleElement HalfEdgeTriangulation::RefineTriangle(const unsigned int triangleIndex, const unsigned int newVertexIndex)
     {
         assert(m_elementCount < UINT_MAX - 2);
         assert(m_edgeCount < UINT_MAX - 6);
 
         // TODO: simplify/references
-        size_t oldEdgeIndex1 = m_triangles[triangleIndex];
-        HalfEdge oldEdge1 = m_edges[oldEdgeIndex1];
+        const size_t oldEdgeIndex1 = m_triangles[triangleIndex];
+        const HalfEdge oldEdge1 = m_edges[oldEdgeIndex1];
 
-        size_t oldEdgeIndex2 = oldEdge1.NextEdge;
-        HalfEdge oldEdge2 = m_edges[oldEdgeIndex2];
+        const size_t oldEdgeIndex2 = oldEdge1.NextEdge;
+        const HalfEdge oldEdge2 = m_edges[oldEdgeIndex2];
 
-        size_t oldEdgeIndex3 = oldEdge2.NextEdge;
-        HalfEdge oldEdge3 = m_edges[oldEdgeIndex3];
+        const size_t oldEdgeIndex3 = oldEdge2.NextEdge;
+        const HalfEdge oldEdge3 = m_edges[oldEdgeIndex3];
 
         assert(oldEdge1.PrevEdge == oldEdgeIndex3);
         assert(oldEdge3.NextEdge == oldEdgeIndex1);
 
-        size_t newEdgeIndex1 = m_edgeCount;
-        size_t newEdgeIndex2 = m_edgeCount + 1;
-        size_t newEdgeIndex3 = m_edgeCount + 2;
-        size_t newEdgeIndex4 = m_edgeCount + 3;
-        size_t newEdgeIndex5 = m_edgeCount + 4;
-        size_t newEdgeIndex6 = m_edgeCount + 5;
+        const size_t newEdgeIndex1 = m_edgeCount;
+        const size_t newEdgeIndex2 = m_edgeCount + 1;
+        const size_t newEdgeIndex3 = m_edgeCount + 2;
+        const size_t newEdgeIndex4 = m_edgeCount + 3;
+        const size_t newEdgeIndex5 = m_edgeCount + 4;
+        const size_t newEdgeIndex6 = m_edgeCount + 5;
 
         // Replace "old" triangle with Triangle 1
         m_edges[oldEdgeIndex1] = HalfEdge(oldEdge1.V1, oldEdge1.V2, newEdgeIndex2, newEdgeIndex1, oldEdge1.TwinEdge, oldEdge1.ElementIndex);
@@ -151,17 +151,17 @@ namespace Geometry
     void HalfEdgeTriangulation::FlipEdge(unsigned int edgeIndex)
     {
         // TODO: optimize
-        HalfEdge edge = m_edges[edgeIndex];
-        size_t twinIndex = edge.TwinEdge;
-        HalfEdge twin = m_edges[twinIndex];
+        const HalfEdge edge = m_edges[edgeIndex];
+        const size_t twinIndex = edge.TwinEdge;
+        const HalfEdge twin = m_edges[twinIndex];
 
-        size_t previousEdgeIndex = edge.PrevEdge;
-        size_t previousTwinIndex = twin.PrevEdge;
-        size_t nextEdgeIndex = edge.NextEdge;
-        size_t nextTwinIndex = twin.NextEdge;
+        const size_t previousEdgeIndex = edge.PrevEdge;
+        const size_t previousTwinIndex = twin.PrevEdge;
+        const size_t nextEdgeIndex = edge.NextEdge;
+        const size_t nextTwinIndex = twin.NextEdge;
 
-        size_t edgeVertex = m_edges[nextEdgeIndex].V2;
-        size_t twinVertex = m_edges[nextTwinIndex].V2;
+        const size_t edgeVertex = m_edges[nextEdgeIndex].V2;
+        const size_t twinVertex = m_edges[nextTwinIndex].V2;
 
         HalfEdge temp = m_edges[previousEdgeIndex];
         temp.PrevEdge = edgeIndex;
@@ -194,7 +194,7 @@ namespace Geometry
         m_triangles[twin.ElementIndex] = twinIndex;
     }
 
-    bool HalfEdgeTriangulation::GetEdgeIndex(unsigned int vStart, unsigned int vEnd, unsigned int& index) const
+    bool HalfEdgeTriangulation::GetEdgeIndex(const unsigned int vStart, const unsigned int vEnd, unsigned int& index) const
     {
         for (unsigned int i = 0; i < m_edgeCount; i++)
         {

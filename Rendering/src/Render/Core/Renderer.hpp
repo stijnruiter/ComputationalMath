@@ -44,7 +44,7 @@ namespace Render
     };
 
     template <typename T>
-    inline void Renderer::Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program)
+    void Renderer::Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program)
     {
         program.Use();
         vao.Bind();

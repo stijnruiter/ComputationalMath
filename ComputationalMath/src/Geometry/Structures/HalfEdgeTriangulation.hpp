@@ -10,7 +10,7 @@ namespace Geometry
     class HalfEdgeTriangulation
     {
     public:
-        HalfEdgeTriangulation(unsigned int initialSize);
+        explicit HalfEdgeTriangulation(unsigned int initialSize);
 
         void AddTriangle(unsigned int vertexIndex1, unsigned int vertexIndex2, unsigned int vertexIndex3);
         TriangleElement RefineTriangle(unsigned int triangleIndex, unsigned int newVertexIndex);

@@ -33,7 +33,7 @@ namespace Render
         KeyEventCallback m_keyEventCallback;
 
     public:
-        Window(int width, int height, std::string title);
+        Window(int width, int height, const std::string& title);
         ~Window();
 
         void SetMouseCursor(bool enabled);

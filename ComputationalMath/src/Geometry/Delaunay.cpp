@@ -9,7 +9,7 @@ namespace Geometry
         return Triangle(m_vertices[element.I], m_vertices[element.J], m_vertices[element.K]);
     }
 
-    Delaunay::Delaunay(Triangle boundingTriangle, int nVertexCapacity)
+    Delaunay::Delaunay(const Triangle& boundingTriangle, const int nVertexCapacity)
         : m_vertices(0),
           m_triangulation(2 * nVertexCapacity + 7) // 2 * nTriangles + 1 = 2 * (nVertexCapacity + 3) + 1
     {

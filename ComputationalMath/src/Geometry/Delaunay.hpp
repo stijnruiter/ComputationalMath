@@ -23,7 +23,7 @@ namespace Geometry
     protected:
         inline Triangle GetTriangle(TriangleElement element) const;
 
-        Delaunay(Triangle boundingTriangle, int nVertexCapacity);
+        Delaunay(const Triangle& boundingTriangle, int nVertexCapacity);
 
         unsigned int FindElement(Vertex2F point) const;
 

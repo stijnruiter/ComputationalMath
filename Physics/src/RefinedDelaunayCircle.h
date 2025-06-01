@@ -10,9 +10,9 @@
 #include "Drawables/DrawableMesh.hpp"
 #include <Geometry/MeshGenerator.hpp>
 
-Geometry::PlanarStraightLineGraph CreateGraph()
+inline Geometry::PlanarStraightLineGraph CreateGraph()
 {
-    std::vector<Geometry::Vertex2F> vertices = {
+    const std::vector<Geometry::Vertex2F> vertices = {
         {-0.822222222f, 0.862222222f},
         {0.257777778f, 0.76f},
         {0.057777778f, 0.053333333f},
@@ -35,16 +35,16 @@ Geometry::PlanarStraightLineGraph CreateGraph()
     return graph;
 }
 
-std::unique_ptr<DrawableMesh> CreateRefinedDelaunay(const Geometry::PlanarStraightLineGraph& graph)
+inline std::unique_ptr<DrawableMesh> CreateRefinedDelaunay(const Geometry::PlanarStraightLineGraph& graph)
 {
     Geometry::RefinedDelaunay delaunayMesh = Geometry::RefinedDelaunay::CreateTriangulation(graph);
     delaunayMesh.Refine(25);
     return std::make_unique<DrawableMesh>(delaunayMesh.ToMesh());
 }
 
-std::unique_ptr<Render::ObjectScene> CreateDelaunayScene()
+inline std::unique_ptr<Render::ObjectScene> CreateDelaunayScene()
 {
-    std::unique_ptr<Render::ObjectScene> scene = std::make_unique<Render::ObjectScene>(false);
+    auto scene = std::make_unique<Render::ObjectScene>(false);
 
     Geometry::PlanarStraightLineGraph graph = CreateGraph();
     scene->AddObject(CreateRefinedDelaunay(graph));
@@ -53,9 +53,9 @@ std::unique_ptr<Render::ObjectScene> CreateDelaunayScene()
     scene->AddObject(std::make_unique<Axis>());
     return scene;
 }
-std::unique_ptr<Render::ObjectScene> CreateCircularScene()
+inline std::unique_ptr<Render::ObjectScene> CreateCircularScene()
 {
-    std::unique_ptr<Render::ObjectScene> scene = std::make_unique<Render::ObjectScene>(false);
+    auto scene = std::make_unique<Render::ObjectScene>(false);
     scene->AddObject(std::make_unique<DrawableMesh>(Geometry::CreateCircularMesh(0, 0, 0.8f, 0.1)));
     scene->AddObject(std::make_unique<Axis>());
     return scene;

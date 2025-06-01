@@ -2,7 +2,7 @@
 
 namespace Render
 {
-    ObjectScene::ObjectScene(bool is3d)
+    ObjectScene::ObjectScene(const bool is3d)
         : m_objects(0), m_is3d(is3d)
     {
     }
@@ -26,7 +26,7 @@ namespace Render
         }
     }
 
-    void ObjectScene::Update(float deltaTime)
+    void ObjectScene::Update(const float deltaTime)
     {
         for (auto& object : m_objects)
         {
@@ -36,7 +36,7 @@ namespace Render
 
     void ObjectScene::Draw(Renderer& render)
     {
-        for (auto& object : m_objects)
+        for (const auto& object : m_objects)
         {
             object->Draw(render);
         }

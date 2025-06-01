@@ -6,7 +6,7 @@
 namespace Geometry
 {
     Vertex2F::Vertex2F() : X(0), Y(0) {}
-    Vertex2F::Vertex2F(float x, float y) : X(x), Y(y) {}
+    Vertex2F::Vertex2F(const float x, const float y) : X(x), Y(y) {}
 
     Vertex2F::Vertex2F(const std::initializer_list<float>& value)
     {
@@ -24,17 +24,17 @@ namespace Geometry
         return rhs;
     }
 
-    Vertex2F Vertex2F::operator-(Vertex2F rhs) const
+    Vertex2F Vertex2F::operator-(const Vertex2F rhs) const
     {
         return Vertex2F(X - rhs.X, Y - rhs.Y);
     }
 
-    Vertex2F Vertex2F::operator*(float scalar) const
+    Vertex2F Vertex2F::operator*(const float scalar) const
     {
         return Vertex2F(scalar * X, scalar * Y);
     }
 
-    Vertex2F operator*(float scalar, Vertex2F rhs)
+    Vertex2F operator*(const float scalar, Vertex2F rhs)
     {
         rhs.X *= scalar;
         rhs.Y *= scalar;
@@ -53,28 +53,28 @@ namespace Geometry
 
     void Vertex2F::Normalize()
     {
-        float length = Length();
+        const float length = Length();
         X /= length;
         Y /= length;
     }
 
     Vertex2F Vertex2F::Normalized() const
     {
-        float length = Length();
+        const float length = Length();
         return Vertex2F(X / length, Y / length);
     }
 
-    float Vertex2F::DotProduct(Vertex2F lhs, Vertex2F rhs)
+    float Vertex2F::DotProduct(const Vertex2F lhs, const Vertex2F rhs)
     {
         return lhs.X * rhs.X + lhs.Y * rhs.Y;
     }
 
-    float Vertex2F::Distance(Vertex2F lhs, Vertex2F rhs)
+    float Vertex2F::Distance(const Vertex2F lhs, const Vertex2F rhs)
     {
         return (lhs - rhs).Length();
     }
 
-    float Vertex2F::DistanceTo(Vertex2F other) const
+    float Vertex2F::DistanceTo(const Vertex2F other) const
     {
         return Vertex2F(X - other.X, Y - other.Y).Length();
     }
@@ -89,12 +89,12 @@ namespace Geometry
     {
     }
 
-    Vertex3F::Vertex3F(float x, float y, float z)
+    Vertex3F::Vertex3F(const float x, const float y, const float z)
         : X(x), Y(y), Z(z)
     {
     }
 
-    Vertex3F::Vertex3F(Vertex2F vertex2, float z)
+    Vertex3F::Vertex3F(const Vertex2F vertex2, const float z)
         : X(vertex2.X), Y(vertex2.Y), Z(z)
     {
     }

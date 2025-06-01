@@ -64,17 +64,17 @@ namespace LinearAlgebra::Factorization
             {
                 std::swap(factorization.Pivots[i], factorization.Pivots[result.Index]);
                 factorization.Factorization.SwapRows(i, result.Index);
-                factorization.PermutationCount++;
+                ++factorization.PermutationCount;
             }
 
-            for (size_t j = i + 1; j < factorization.Factorization.GetRowCount(); j++)
+            for (size_t j = i + 1; j < factorization.Factorization.GetRowCount(); ++j)
             {
                 factorization.Factorization(j, i) /= factorization.Factorization(i, i);
-                for (size_t k = i + 1; k < factorization.Factorization.GetColumnCount(); k++)
+                for (size_t k = i + 1; k < factorization.Factorization.GetColumnCount(); ++k)
                 {
                     factorization.Factorization(j, k) -= factorization.Factorization(j, i) * factorization.Factorization(i, k);
                 }
-            };
+            }
         }
 
         return factorization;
@@ -83,8 +83,8 @@ namespace LinearAlgebra::Factorization
     template <typename T>
     Matrix<T> ExtractUpperMatrix(const Matrix<T>& matrix)
     {
-        size_t rowCount = matrix.GetRowCount();
-        size_t columnCount = matrix.GetColumnCount();
+        const size_t rowCount = matrix.GetRowCount();
+        const size_t columnCount = matrix.GetColumnCount();
         const T* source = matrix.Data();
 
         Matrix<T> result(rowCount, columnCount);
@@ -153,7 +153,7 @@ namespace LinearAlgebra::Factorization
         if (results.Factorization.GetColumnCount() != results.Factorization.GetRowCount())
             throw std::invalid_argument("Cannot compute determinant of non-square matrix");
 
-        T determinant = (results.PermutationCount % 2 == 0 ? 1 : -1);
+        T determinant = results.PermutationCount % 2 == 0 ? 1 : -1;
 
         for (size_t i = 0; i < results.Factorization.GetRowCount(); i++)
         {
@@ -169,8 +169,8 @@ namespace LinearAlgebra::Factorization
     template <typename T>
     void ForwardSubstitutionInPlace(const Matrix<T>& matrix, ColumnVector<T>& rhs)
     {
-        size_t columnCount = matrix.GetColumnCount();
-        size_t rowCount = matrix.GetRowCount();
+        const size_t columnCount = matrix.GetColumnCount();
+        const size_t rowCount = matrix.GetRowCount();
         if (columnCount != rhs.GetLength())
             throw std::invalid_argument("Matrix and Vector dimensions mismatch");
         if (columnCount != rowCount)
@@ -198,8 +198,8 @@ namespace LinearAlgebra::Factorization
     template <typename T>
     void ForwardSubstitutionInPlace(const Matrix<T>& matrix, Matrix<T>& rhs)
     {
-        size_t columnCount = matrix.GetColumnCount();
-        size_t rowCount = matrix.GetRowCount();
+        const size_t columnCount = matrix.GetColumnCount();
+        const size_t rowCount = matrix.GetRowCount();
         if (columnCount != rowCount)
             throw std::invalid_argument("Non-square matrix");
         if (columnCount != rhs.GetColumnCount() || rowCount != rhs.GetRowCount())
@@ -228,21 +228,18 @@ namespace LinearAlgebra::Factorization
     template <typename T>
     void BackwardSubstitutionInPlace(const Matrix<T>& matrix, ColumnVector<T>& rhs)
     {
-        size_t columnCount = matrix.GetColumnCount();
-        size_t rowCount = matrix.GetRowCount();
+        const size_t columnCount = matrix.GetColumnCount();
+        const size_t rowCount = matrix.GetRowCount();
         if (columnCount != rhs.GetLength())
             throw std::invalid_argument("Matrix and Vector dimensions mismatch");
         if (columnCount != rowCount)
             throw std::invalid_argument("Non-square matrix");
 
         // Sweeping backwards, starting at last row
-        const T* matrixData = matrix.Data();
-        T* rhsData = rhs.Data();
-
-        for (size_t i = (rowCount - 1); i < rowCount; i--) // unsigned i overflow > rowCount
+        for (size_t i = rowCount - 1; i < rowCount; --i) // unsigned i overflow > rowCount
         {
             T sum = 0;
-            for (size_t k = i + 1; k < rowCount; k++)
+            for (size_t k = i + 1; k < rowCount; ++k)
             {
                 sum += matrix(i, k) * rhs[k];
             }
@@ -264,15 +261,12 @@ namespace LinearAlgebra::Factorization
             throw std::invalid_argument("Matrix Matrix mismatch");
 
         // Sweeping backwards, starting at last row
-        const T* matrixData = matrix.Data();
-        T* rhsData = rhs.Data();
-
-        for (size_t i = (rowCount - 1); i < rowCount; i--) // unsigned i overflow > rowCount
+        for (size_t i = rowCount - 1; i < rowCount; --i) // unsigned i overflow > rowCount
         {
             for (size_t j = 0; j < columnCount; j++)
             {
                 T sum = 0;
-                for (size_t k = i + 1; k < rowCount; k++)
+                for (size_t k = i + 1; k < rowCount; ++k)
                 {
                     sum += matrix(i, k) * rhs(k, j);
                 }

@@ -26,12 +26,12 @@ namespace LinearAlgebra
         using VectorBase<T>::VectorBase;
 
     public:
-        bool ElementwiseEquals(const ColumnVector<T>& vector) const;
-        bool ElementwiseCompare(const ColumnVector<T>& vector, float epsilon) const;
-        ColumnVector<T> operator+(const ColumnVector<T>& vector) const;
-        ColumnVector<T> operator-(const ColumnVector<T>& vector) const;
-        ColumnVector<T> operator*(const T& scalar) const;
-        friend ColumnVector<T> operator*(const T& scalar, const ColumnVector<T>& vector) { return vector * scalar; }
+        bool ElementwiseEquals(const ColumnVector& vector) const;
+        bool ElementwiseCompare(const ColumnVector& vector, float epsilon) const;
+        ColumnVector operator+(const ColumnVector& vector) const;
+        ColumnVector operator-(const ColumnVector& vector) const;
+        ColumnVector operator*(const T& scalar) const;
+        friend ColumnVector<T> operator*(const T& scalar, const ColumnVector& vector) { return vector * scalar; }
         // Matrix<T> operator*(const RowVector<T>& vector) const;
 
         RowVector<T> Transposed() const;
@@ -43,13 +43,13 @@ namespace LinearAlgebra
         using VectorBase<T>::VectorBase;
 
     public:
-        bool ElementwiseEquals(const RowVector<T>& vector) const;
-        bool ElementwiseCompare(const RowVector<T>& vector, float epsilon) const;
+        bool ElementwiseEquals(const RowVector& vector) const;
+        bool ElementwiseCompare(const RowVector& vector, float epsilon) const;
 
-        RowVector<T> operator+(const RowVector<T>& vector) const;
-        RowVector<T> operator-(const RowVector<T>& vector) const;
-        RowVector<T> operator*(const T& scalar) const;
-        friend RowVector<T> operator*(const T& scalar, const RowVector<T>& vector) { return vector * scalar; };
+        RowVector operator+(const RowVector& vector) const;
+        RowVector operator-(const RowVector& vector) const;
+        RowVector operator*(const T& scalar) const;
+        friend RowVector operator*(const T& scalar, const RowVector& vector) { return vector * scalar; };
         T operator*(const ColumnVector<T>& vector) const;
 
         ColumnVector<T> Transposed() const;
@@ -68,9 +68,9 @@ namespace LinearAlgebra
         void SetValue(size_t index, const T& value);
 
         VectorBase();
-        VectorBase(size_t length);
-        VectorBase(const std::span<T> data);
-        VectorBase(const std::vector<T>& data);
+        explicit VectorBase(size_t length);
+        explicit VectorBase(std::span<T> data);
+        explicit VectorBase(const std::vector<T>& data);
         VectorBase(const std::initializer_list<T>& values);
 
         T* Data();
@@ -83,15 +83,15 @@ namespace LinearAlgebra
         VectorIterator<T> end() { return VectorIterator(*this, m_length); }
 
         std::span<T> AsSpan();
-        const std::span<T> AsSpan() const;
+        std::span<T> AsSpan() const;
 
     protected:
         void
         ThrowIfOutOfRange(size_t index) const;
         void ThrowIfDimensionsMismatch(size_t otherLength) const;
 
-    void ElementwiseSumVector(const VectorBase<T>& other, VectorBase<T>& result) const;
-    void ElementwiseSubtractVector(const VectorBase<T>& other, VectorBase<T>& result) const;
+    void ElementwiseSumVector(const VectorBase& other, VectorBase& result) const;
+    void ElementwiseSubtractVector(const VectorBase& other, VectorBase& result) const;
 
     protected:
         std::shared_ptr<T[]> m_data;
@@ -102,17 +102,17 @@ namespace LinearAlgebra
     class VectorIterator
     {
     public:
-        VectorIterator(VectorBase<T>& vector, int start)
+        VectorIterator(VectorBase<T>& vector, const int start)
             : m_vector(vector), i(start) {};
 
-        VectorIterator<T>& operator++()
+        VectorIterator& operator++()
         {
             ++i;
             return *this;
         }
         T& operator*() { return m_vector[i]; }
 
-        bool operator!=(const VectorIterator<T>& other) { return (i != other.i); }
+        bool operator!=(const VectorIterator& other) { return i != other.i; }
 
     private:
         VectorBase<T> m_vector;
@@ -120,13 +120,13 @@ namespace LinearAlgebra
     };
 
     template <typename T>
-    inline T& VectorBase<T>::operator[](size_t index)
+    T& VectorBase<T>::operator[](const size_t index)
     {
         return m_data.get()[index];
     }
 
     template <typename T>
-    inline const T& VectorBase<T>::operator[](size_t index) const
+    const T& VectorBase<T>::operator[](const size_t index) const
     {
         return m_data.get()[index];
     }
@@ -147,105 +147,105 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline size_t VectorBase<T>::GetLength() const
+    size_t VectorBase<T>::GetLength() const
     {
         return m_length;
     }
 
     template <typename T>
-    inline T& VectorBase<T>::GetValue(size_t index) const
+    T& VectorBase<T>::GetValue(size_t index) const
     {
         ThrowIfOutOfRange(index);
         return m_data.get()[index];
     }
 
     template <typename T>
-    inline void VectorBase<T>::SetValue(size_t index, const T& value)
+    void VectorBase<T>::SetValue(size_t index, const T& value)
     {
         ThrowIfOutOfRange(index);
         m_data.get()[index] = value;
     }
 
     template <typename T>
-    inline VectorBase<T>::VectorBase() : m_length(0)
+    VectorBase<T>::VectorBase() : m_length(0)
     {
         m_data.reset();
     }
 
     template <typename T>
-    inline VectorBase<T>::VectorBase(size_t length) : m_length(length)
+    VectorBase<T>::VectorBase(const size_t length) : m_length(length)
     {
         m_data.reset(new T[m_length]);
     }
 
     template <typename T>
-    inline VectorBase<T>::VectorBase(std::span<T> data) : VectorBase<T>(data.size())
+    VectorBase<T>::VectorBase(std::span<T> data) : VectorBase(data.size())
     {
         T* storageDestination = m_data.get();
         std::copy(data.begin(), data.end(), storageDestination);
     }
 
     template <typename T>
-    inline VectorBase<T>::VectorBase(const std::vector<T>& data) : VectorBase<T>(data.size())
+    VectorBase<T>::VectorBase(const std::vector<T>& data) : VectorBase(data.size())
     {
         T* storageDestination = m_data.get();
         std::copy(data.begin(), data.end(), storageDestination);
     }
 
     template <typename T>
-    inline VectorBase<T>::VectorBase(const std::initializer_list<T>& values) : VectorBase<T>(values.size())
+    VectorBase<T>::VectorBase(const std::initializer_list<T>& values) : VectorBase(values.size())
     {
         T* storageDestination = m_data.get();
         std::copy(values.begin(), values.end(), storageDestination);
     }
 
     template <typename T>
-    inline T* VectorBase<T>::Data()
+    T* VectorBase<T>::Data()
     {
         return m_data.get();
     }
 
     template <typename T>
-    inline const T* VectorBase<T>::Data() const
+    const T* VectorBase<T>::Data() const
     {
         return m_data.get();
     }
 
     template <typename T>
-    inline void VectorBase<T>::Fill(const T& value)
+    void VectorBase<T>::Fill(const T& value)
     {
         T* storageDestination = this->m_data.get();
         std::fill(storageDestination, storageDestination + this->m_length, value);
     }
 
     template <typename T>
-    inline std::span<T> VectorBase<T>::AsSpan()
+    std::span<T> VectorBase<T>::AsSpan()
     {
         return std::span<T>{m_data.get(), m_length};
     }
 
     template <typename T>
-    inline const std::span<T> VectorBase<T>::AsSpan() const
+    std::span<T> VectorBase<T>::AsSpan() const
     {
         return std::span<T>{m_data.get(), m_length};
     }
 
     template <typename T>
-    inline void VectorBase<T>::ThrowIfOutOfRange(size_t index) const
+    void VectorBase<T>::ThrowIfOutOfRange(const size_t index) const
     {
         if (index >= m_length)
             throw std::out_of_range("Out of range");
     }
 
     template <typename T>
-    inline void VectorBase<T>::ThrowIfDimensionsMismatch(size_t otherLength) const
+    void VectorBase<T>::ThrowIfDimensionsMismatch(const size_t otherLength) const
     {
         if (m_length != otherLength)
             throw std::invalid_argument("Dimensions mismatch");
     }
 
     template <typename T>
-    inline void VectorBase<T>::ElementwiseSumVector(const VectorBase<T>& other, VectorBase<T>& result) const
+    void VectorBase<T>::ElementwiseSumVector(const VectorBase& other, VectorBase& result) const
     {
         T* resultPointer = result.m_data.get();
         T* lhs = this->m_data.get();
@@ -255,7 +255,7 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline void VectorBase<T>::ElementwiseSubtractVector(const VectorBase<T>& other, VectorBase<T>& result) const
+    void VectorBase<T>::ElementwiseSubtractVector(const VectorBase& other, VectorBase& result) const
     {
         T* resultPointer = result.m_data.get();
         T* lhs = this->m_data.get();
@@ -265,7 +265,7 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline bool ColumnVector<T>::ElementwiseEquals(const ColumnVector<T>& vector) const
+    bool ColumnVector<T>::ElementwiseEquals(const ColumnVector& vector) const
     {
         T* lhs = this->m_data.get();
         T* rhs = vector.m_data.get();
@@ -273,7 +273,7 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline bool ColumnVector<T>::ElementwiseCompare(const ColumnVector<T>& vector, float epsilon) const
+    bool ColumnVector<T>::ElementwiseCompare(const ColumnVector& vector, float epsilon) const
     {
         T* lhs = this->m_data.get();
         T* rhs = vector.m_data.get();
@@ -282,27 +282,27 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline ColumnVector<T> ColumnVector<T>::operator+(const ColumnVector<T>& vector) const
+    ColumnVector<T> ColumnVector<T>::operator+(const ColumnVector& vector) const
     {
         this->ThrowIfDimensionsMismatch(vector.m_length);
-        ColumnVector<T> result(this->m_length);
+        ColumnVector result(this->m_length);
         this->ElementwiseSumVector(vector, result);
         return result;
     }
 
     template <typename T>
-    inline ColumnVector<T> ColumnVector<T>::operator-(const ColumnVector<T>& vector) const
+    ColumnVector<T> ColumnVector<T>::operator-(const ColumnVector& vector) const
     {
         this->ThrowIfDimensionsMismatch(vector.m_length);
-        ColumnVector<T> result(this->m_length);
+        ColumnVector result(this->m_length);
         this->ElementwiseSubtractVector(vector, result);
         return result;
     }
 
     template <typename T>
-    inline ColumnVector<T> ColumnVector<T>::operator*(const T& scalar) const
+    ColumnVector<T> ColumnVector<T>::operator*(const T& scalar) const
     {
-        ColumnVector<T> result(this->m_length);
+        ColumnVector result(this->m_length);
         T* srcPtr = this->m_data.get();
         T* dstPtr = result.m_data.get();
         std::transform(srcPtr, srcPtr + this->m_length, dstPtr, [&scalar](T& right)
@@ -311,14 +311,14 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline RowVector<T> ColumnVector<T>::Transposed() const
+    RowVector<T> ColumnVector<T>::Transposed() const
     {
         // TODO: view
         return RowVector<T>(this->AsSpan());
     }
 
     template <typename T>
-    inline bool RowVector<T>::ElementwiseEquals(const RowVector<T>& vector) const
+    bool RowVector<T>::ElementwiseEquals(const RowVector& vector) const
     {
         T* lhs = this->m_data.get();
         T* rhs = vector.m_data.get();
@@ -326,7 +326,7 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline bool RowVector<T>::ElementwiseCompare(const RowVector<T>& vector, float epsilon) const
+    bool RowVector<T>::ElementwiseCompare(const RowVector& vector, float epsilon) const
     {
         T* lhs = this->m_data.get();
         T* rhs = vector.m_data.get();
@@ -335,27 +335,27 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline RowVector<T> RowVector<T>::operator+(const RowVector<T>& vector) const
+    RowVector<T> RowVector<T>::operator+(const RowVector& vector) const
     {
         this->ThrowIfDimensionsMismatch(vector.m_length);
-        RowVector<T> result(this->m_length);
+        RowVector result(this->m_length);
         this->ElementwiseSumVector(vector, result);
         return result;
     }
 
     template <typename T>
-    inline RowVector<T> RowVector<T>::operator-(const RowVector<T>& vector) const
+    RowVector<T> RowVector<T>::operator-(const RowVector& vector) const
     {
         this->ThrowIfDimensionsMismatch(vector.m_length);
-        RowVector<T> result(this->m_length);
+        RowVector result(this->m_length);
         this->ElementwiseSubtractVector(vector, result);
         return result;
     }
 
     template <typename T>
-    inline RowVector<T> RowVector<T>::operator*(const T& scalar) const
+    RowVector<T> RowVector<T>::operator*(const T& scalar) const
     {
-        RowVector<T> result(this->m_length);
+        RowVector result(this->m_length);
         T* srcPtr = this->m_data.get();
         T* dstPtr = result.m_data.get();
         std::transform(srcPtr, srcPtr + this->m_length, dstPtr, [&scalar](T& right)
@@ -364,7 +364,7 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline T RowVector<T>::operator*(const ColumnVector<T>& vector) const
+    T RowVector<T>::operator*(const ColumnVector<T>& vector) const
     {
         this->ThrowIfDimensionsMismatch(vector.GetLength());
         T* lhsPtr = this->m_data.get();
@@ -373,7 +373,7 @@ namespace LinearAlgebra
     }
 
     template <typename T>
-    inline ColumnVector<T> RowVector<T>::Transposed() const
+    ColumnVector<T> RowVector<T>::Transposed() const
     {
         // TODO: view
         return ColumnVector<T>(this->AsSpan());

@@ -10,10 +10,10 @@
 
 namespace Render
 {
+    // ReSharper disable once CppMemberFunctionMayBeStatic
     bool Window::InitializeGLFW()
     {
-        int success = glfwInit();
-        if (!success)
+        if (const int success = glfwInit(); !success)
         {
             Debug::Logger::LogCritical("Unable to load GLFW.");
             return false;
@@ -28,6 +28,7 @@ namespace Render
         return true;
     }
 
+    // ReSharper disable once CppMemberFunctionMayBeStatic
     bool Window::InitializeGlad()
     {
         if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
@@ -38,16 +39,16 @@ namespace Render
         return true;
     }
 
-    Window::Window(int width, int height, std::string title) : m_width(width), m_height(height),
-                                                                             m_title(title), m_currentScene(-1),
-                                                                             m_scenes(0),
+    Window::Window(const int width, const int height, const std::string& title) : m_width(width), m_height(height),
+                                                                             m_title(title), m_scenes(0),
+                                                                             m_currentScene(-1),
                                                                              m_camera(glm::vec3(0, 0, 2.5),
-                                                                                      glm::vec3(0, 1, 0), 30.0)
+                                                                                           glm::vec3(0, 1, 0), 30.0)
     {
         if (!InitializeGLFW())
             return;
 
-        m_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+        m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         if (!m_window)
         {
             Debug::Logger::LogCritical("Unable to create GLFW window");
@@ -73,9 +74,9 @@ namespace Render
     {
         glfwSetWindowUserPointer(m_window, this);
 
-        glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* glfwWindow, int width, int height)
+        glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* glfwWindow, const int width, const int height)
                                        {
-            Window &window = *(Window *) glfwGetWindowUserPointer(glfwWindow);
+            Window &window = *static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
             window.m_width = width;
             window.m_height = height;
             if (window.m_callbackFrameBuffer) {
@@ -83,24 +84,23 @@ namespace Render
                 window.m_callbackFrameBuffer(frameBufferEvent);
             } });
 
-        glfwSetCursorPosCallback(m_window, [](GLFWwindow* glfwWindow, double x, double y)
+        glfwSetCursorPosCallback(m_window, [](GLFWwindow* glfwWindow, const double x, const double y)
                                  {
-            Window &window = *(Window *) glfwGetWindowUserPointer(glfwWindow);
-            if (window.m_callbackMouseMove) {
+            if (const Window &window = *static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));window.m_callbackMouseMove) {
                 MouseMoveEvent mouseEvent(x, y);
                 window.m_callbackMouseMove(mouseEvent);
             } });
 
-        glfwSetKeyCallback(m_window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods)
+        glfwSetKeyCallback(m_window, [](GLFWwindow* glfwWindow, const int key, int scancode, const int action, int mods)
                            {
-            Window &window = *(Window *) glfwGetWindowUserPointer(glfwWindow);
-            if (window.m_keyEventCallback) {
+            if (const Window &window = *static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));window.m_keyEventCallback) {
                 KeyEvent keyEvent(key, action);
                 window.m_keyEventCallback(keyEvent);
             } });
     }
 
-    void Window::SetMouseCursor(bool enabled)
+    // ReSharper disable once CppMemberFunctionMayBeConst
+    void Window::SetMouseCursor(const bool enabled)
     {
         if (enabled)
         {
@@ -112,11 +112,13 @@ namespace Render
         }
     }
 
+    // ReSharper disable once CppMemberFunctionMayBeConst
     bool Window::ShouldClose()
     {
         return glfwWindowShouldClose(m_window);
     }
 
+    // ReSharper disable once CppMemberFunctionMayBeConst
     void Window::SwapBuffers()
     {
         glfwSwapBuffers(m_window);
@@ -131,17 +133,18 @@ namespace Render
         }
     }
 
-    void Window::SwitchScene(size_t sceneIndex)
+    void Window::SwitchScene(const size_t sceneIndex)
     {
         m_currentScene = sceneIndex;
     }
 
+    // ReSharper disable once CppMemberFunctionMayBeConst
     void Window::Close()
     {
         glfwSetWindowShouldClose(m_window, true);
     }
 
-    bool Window::IsKeyPressed(int key) const
+    bool Window::IsKeyPressed(const int key) const
     {
         return glfwGetKey(m_window, key) == GLFW_PRESS;
     }
@@ -161,7 +164,7 @@ namespace Render
 
         while (!ShouldClose())
         {
-            double currentFrame = glfwGetTime();
+            const double currentFrame = glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 

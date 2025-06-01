@@ -29,5 +29,5 @@ namespace Render::Debug
     x;                       \
     ASSERT(Debug::GLCheckErrors())
 #else
-#define GLCHECK(x) x;
+#define GLCHECK(x) x
 #endif

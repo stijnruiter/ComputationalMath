@@ -19,6 +19,6 @@ namespace Geometry
         TriangleElement();
         TriangleElement(unsigned int i, unsigned int j, unsigned int k);
         TriangleElement(const std::initializer_list<unsigned int>& elements);
-        friend std::ostream& operator<<(std::ostream& os, const TriangleElement& Triangle);
+        friend std::ostream& operator<<(std::ostream& os, const TriangleElement& triangle);
     };
 }

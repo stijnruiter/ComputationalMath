@@ -8,7 +8,7 @@ namespace Render
 {
     unsigned int ShaderProgram::LoadFromSource(const GLenum shaderType, const std::string& source) const
     {
-        unsigned int shaderId = glCreateShader(shaderType);
+        const unsigned int shaderId = glCreateShader(shaderType);
         if (shaderId == 0)
         {
             Debug::Logger::LogError("Unable to create shader {0}, type {1}.", m_debugIdentifier, shaderType);
@@ -16,8 +16,8 @@ namespace Render
             return 0;
         }
 
-        const char* charSouce = source.c_str();
-        GLCHECK(glShaderSource(shaderId, 1, &charSouce, NULL));
+        const char* charSource = source.c_str();
+        GLCHECK(glShaderSource(shaderId, 1, &charSource, NULL));
         GLCHECK(glCompileShader(shaderId));
 
         if (!CheckShaderCompileStatus(shaderId))
@@ -37,7 +37,7 @@ namespace Render
         {
             GLint length;
             GLCHECK(glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length));
-            GLchar* infoLog = new GLchar[length];
+            auto infoLog = new GLchar[length];
             GLCHECK(glGetShaderInfoLog(shaderId, length, NULL, infoLog));
 
             Debug::Logger::LogError("Shader compilation of {0} failed.\n{1}", m_debugIdentifier, infoLog);
@@ -57,7 +57,7 @@ namespace Render
         {
             GLint length;
             GLCHECK(glGetProgramiv(shaderProgramId, GL_INFO_LOG_LENGTH, &length));
-            GLchar* infoLog = new GLchar[length];
+            auto infoLog = new GLchar[length];
             GLCHECK(glGetProgramInfoLog(shaderProgramId, length, NULL, infoLog));
             Debug::Logger::LogError("Linking of shader {0} failed.\n{1}", m_debugIdentifier, infoLog);
 
@@ -82,8 +82,8 @@ namespace Render
 
     void ShaderProgram::Create(const std::string& vertexSource, const std::string& fragmentSource)
     {
-        unsigned int vertexShader = LoadFromSource(GL_VERTEX_SHADER, vertexSource);
-        unsigned int fragmentShader = LoadFromSource(GL_FRAGMENT_SHADER, fragmentSource);
+        const unsigned int vertexShader = LoadFromSource(GL_VERTEX_SHADER, vertexSource);
+        const unsigned int fragmentShader = LoadFromSource(GL_FRAGMENT_SHADER, fragmentSource);
         if (vertexShader == 0 || fragmentShader == 0)
         {
             GLCHECK(glDeleteShader(vertexShader));
@@ -91,7 +91,7 @@ namespace Render
             return;
         }
 
-        unsigned int shaderProgramId = glCreateProgram();
+        const unsigned int shaderProgramId = glCreateProgram();
         if (shaderProgramId == 0)
         {
             Debug::Logger::LogError("Unable to create shader program {0}.", m_debugIdentifier);
@@ -115,9 +115,9 @@ namespace Render
         m_programId = shaderProgramId;
     }
 
-    int ShaderProgram::GetAttribLocation(const std::string& attribName)
+    int ShaderProgram::GetAttribLocation(const std::string& attribName) const
     {
-        int location = glGetAttribLocation(m_programId, attribName.c_str());
+        const int location = glGetAttribLocation(m_programId, attribName.c_str());
         if (location < 0)
         {
             Debug::Logger::LogError("Unable to retrieve attribute location for '{0}'.", attribName);
@@ -127,9 +127,9 @@ namespace Render
         return location;
     }
 
-    int ShaderProgram::GetUniformLocation(const std::string& uniformName)
+    int ShaderProgram::GetUniformLocation(const std::string& uniformName) const
     {
-        int location = glGetUniformLocation(m_programId, uniformName.c_str());
+        const int location = glGetUniformLocation(m_programId, uniformName.c_str());
         if (location < 0)
         {
             Debug::Logger::LogError("Unable to retrieve attribute location for '{0}'.", uniformName);
@@ -139,9 +139,9 @@ namespace Render
         return location;
     }
 
-    void ShaderProgram::SetUniformMatrix4(const std::string& uniformName, const glm::mat4& mat, bool transpose)
+    void ShaderProgram::SetUniformMatrix4(const std::string& uniformName, const glm::mat4& mat, const bool transpose) const
     {
-        int uniformLocation = GetUniformLocation(uniformName);
+        const int uniformLocation = GetUniformLocation(uniformName);
         if (uniformLocation < 0)
             return;
 
@@ -149,18 +149,19 @@ namespace Render
         GLCHECK(glUniformMatrix4fv(uniformLocation, 1, transpose, glm::value_ptr(mat)));
     }
 
-    void ShaderProgram::SetUniformVector3(const std::string& uniformName, const glm::vec3& vec)
+    void ShaderProgram::SetUniformVector3(const std::string& uniformName, const glm::vec3& vec) const
     {
-        int uniformLocation = GetUniformLocation(uniformName);
+        const int uniformLocation = GetUniformLocation(uniformName);
         if (uniformLocation < 0)
             return;
 
         Use();
         GLCHECK(glUniform3fv(uniformLocation, 1, glm::value_ptr(vec)));
     }
-    void ShaderProgram::SetUniformVector4(const std::string& uniformName, const glm::vec4& vec)
+
+    void ShaderProgram::SetUniformVector4(const std::string& uniformName, const glm::vec4& vec) const
     {
-        int uniformLocation = GetUniformLocation(uniformName);
+        const int uniformLocation = GetUniformLocation(uniformName);
         if (uniformLocation < 0)
             return;
 
@@ -173,6 +174,7 @@ namespace Render
         GLCHECK(glUseProgram(m_programId));
     }
 
+    // ReSharper disable once CppMemberFunctionMayBeStatic
     void ShaderProgram::Unuse() const
     {
         GLCHECK(glUseProgram(0));
