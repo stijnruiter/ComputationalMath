@@ -2,7 +2,6 @@
 #include "Rectangle.hpp"
 #include <cmath>
 #include <math.h>
-#include <numbers>
 #include <vector>
 
 namespace Geometry

@@ -7,7 +7,7 @@
 
 int main()
 {
-    Window window(800, 600, "Physics");
+    Render::Window window(800, 600, "Physics");
     window.SetMouseCursor(true);
 
     window.AddScene(CreateDelaunayScene());
@@ -18,7 +18,7 @@ int main()
                                                                   { return (vertex.Length() <= 0.25) ? 1.0f : 0.0f; }));
 
     size_t sceneIndex = 0;
-    window.SetCallbackOnKey([&sceneIndex, &window](const KeyEvent& eventArgs)
+    window.SetCallbackOnKey([&sceneIndex, &window](const Render::KeyEvent& eventArgs)
                             {
             if (eventArgs.Action == GLFW_PRESS && eventArgs.Key == GLFW_KEY_1)
             {

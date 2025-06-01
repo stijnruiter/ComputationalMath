@@ -1,7 +1,6 @@
 #pragma once
-#include <glad/glad.h>
 
-namespace Debug
+namespace Render::Debug
 {
     void GLClearErrors();
     bool GLCheckErrors();

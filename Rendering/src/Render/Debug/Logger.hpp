@@ -2,7 +2,7 @@
 #include <format>
 #include <fstream>
 
-namespace Debug
+namespace Render::Debug
 {
     enum LogLevel
     {

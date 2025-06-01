@@ -51,7 +51,7 @@
 // BM_MatrixTranspose3/16384 1167336150 ns    492187500 ns            2
 
 template<typename T>
-static void Transpose1(const Matrix<T>& mat, Matrix<T>& output)
+static void Transpose1(const LinearAlgebra::Matrix<T>& mat, LinearAlgebra::Matrix<T>& output)
 {
     for (size_t i = 0; i < mat.GetRowCount(); i++)
     {
@@ -63,7 +63,7 @@ static void Transpose1(const Matrix<T>& mat, Matrix<T>& output)
 }
 
 template<typename T>
-static void Transpose2(const Matrix<T>& mat, Matrix<T>& output)
+static void Transpose2(const LinearAlgebra::Matrix<T>& mat, LinearAlgebra::Matrix<T>& output)
 {
     const T* src = mat.Data();
     T* dst = output.Data();
@@ -81,7 +81,7 @@ static void Transpose2(const Matrix<T>& mat, Matrix<T>& output)
 }
 
 template<typename T>
-static void Transpose3(const Matrix<T>& mat, Matrix<T>& output)
+static void Transpose3(const LinearAlgebra::Matrix<T>& mat, LinearAlgebra::Matrix<T>& output)
 {
     const T* src = mat.Data();
     T* dst = output.Data();
@@ -104,12 +104,12 @@ static void Transpose3(const Matrix<T>& mat, Matrix<T>& output)
 #define TransposeBenchmark(x)                               \
 static void BM_MatrixTranspose##x(benchmark::State& state)  \
 {                                                           \
-    for (auto stat : state)                                 \   
+    for (auto stat : state)                                 \
     {                                                       \
         state.PauseTiming();                                \
         size_t size = state.range();                        \
-        Matrix<int> mat1(size, size + 1);                   \
-        Matrix<int> mat2(size + 1, size);                   \
+        LinearAlgebra::Matrix<int> mat1(size, size + 1);    \
+        LinearAlgebra::Matrix<int> mat2(size + 1, size);    \
         mat1.Fill(5);                                       \
         state.ResumeTiming();                               \
         Transpose##x(mat1, mat2);                           \

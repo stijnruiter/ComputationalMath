@@ -3,6 +3,8 @@
 
 namespace FemAssembler
 {
+    using namespace LinearAlgebra;
+
     Matrix<float> InitializeMatrix(const Geometry::Mesh2D& mesh)
     {
         Matrix<float> result(mesh.Vertices.size(), mesh.Vertices.size());

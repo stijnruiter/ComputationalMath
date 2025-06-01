@@ -40,7 +40,7 @@ float LaplaceFem::AnalyticSolutionFunction(Geometry::Vertex2F position) const
     return position.Y;
 }
 
-ColumnVector<float> LaplaceFem::Solve() const
+LinearAlgebra::ColumnVector<float> LaplaceFem::Solve() const
 {
     return LinearAlgebra::Factorization::LUSolve(m_matrix, m_columnVector, 1e-5f);
 }

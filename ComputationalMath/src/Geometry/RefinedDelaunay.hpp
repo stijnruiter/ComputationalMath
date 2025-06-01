@@ -4,9 +4,6 @@
 #include "Structures/PlanarStraightLineGraph.hpp"
 #include "Structures/Triangle.hpp"
 
-#include <math.h>
-#include <stdexcept>
-
 namespace Geometry
 {
     /**

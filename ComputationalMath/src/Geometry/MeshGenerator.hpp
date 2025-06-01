@@ -5,5 +5,5 @@
 namespace Geometry
 {
     Mesh2D CreateCircularMesh(float cx, float cy, float radius, float maxh);
-    Mesh2D CreateRectangularMesh(const Geometry::Rectangle& rect, unsigned int nx, unsigned int ny);
+    Mesh2D CreateRectangularMesh(const Rectangle& rect, unsigned int nx, unsigned int ny);
 }

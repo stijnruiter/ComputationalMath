@@ -25,21 +25,21 @@ Axis::Axis()
                                                   Geometry::LineElement(2, 3),
                                                   Geometry::LineElement(4, 5)});
 
-    m_vao = std::make_unique<VertexArrayObject>();
+    m_vao = std::make_unique<Render::VertexArrayObject>();
     m_vao->Bind();
 
-    m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
+    m_vertexBuffer = std::make_unique<Render::VertexBuffer>(vertices);
     m_vertexBuffer->DefineFloatAttribute(0, 3);
     m_vao->AddBuffer(*m_vertexBuffer);
 
-    m_colorBuffer = std::make_unique<VertexBuffer>(colors);
+    m_colorBuffer = std::make_unique<Render::VertexBuffer>(colors);
     m_colorBuffer->DefineFloatAttribute(1, 3);
     m_vao->AddBuffer(*m_colorBuffer);
 
-    m_indexBuffer = std::make_unique<IndexBuffer<Geometry::LineElement>>(indices);
+    m_indexBuffer = std::make_unique<Render::IndexBuffer<Geometry::LineElement>>(indices);
 }
 
-void Axis::Draw(Renderer& render)
+void Axis::Draw(Render::Renderer& render)
 {
     m_vao->Bind();
     render.UseVertexColor();

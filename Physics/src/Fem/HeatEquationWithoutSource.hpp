@@ -19,9 +19,9 @@ private:
     float m_k, m_dt;
     float m_time;
 
-    Matrix<float> m_massMatrix;
-    Matrix<float> m_stiffnessMatrix;
-    ColumnVector<float> m_currentSolution;
+    LinearAlgebra::Matrix<float> m_massMatrix;
+    LinearAlgebra::Matrix<float> m_stiffnessMatrix;
+    LinearAlgebra::ColumnVector<float> m_currentSolution;
 
 public:
     HeatEquationWithoutSource(const Geometry::Mesh2D& mesh, float k, float dt, FemAssembler::VertexValueFunc initialValues);
@@ -29,7 +29,7 @@ public:
     const Geometry::Mesh2D& GetGraph() const { return m_mesh; }
     void SolveNextTimeStep();
 
-    const ColumnVector<float>& CurrentSolution() const { return m_currentSolution; }
+    const LinearAlgebra::ColumnVector<float>& CurrentSolution() const { return m_currentSolution; }
 
     float CurrentTime() const { return m_time; }
 };

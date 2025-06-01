@@ -1,10 +1,11 @@
 #include "RefinedDelaunay.hpp"
 #include <cassert>
 #include <climits>
+#include <math.h>
 
 namespace Geometry
 {
-    RefinedDelaunay Geometry::RefinedDelaunay::CreateTriangulation(const PlanarStraightLineGraph& graph)
+    RefinedDelaunay RefinedDelaunay::CreateTriangulation(const PlanarStraightLineGraph& graph)
     {
         if (graph.GetVertexCount() <= 3)
             throw std::invalid_argument("Graph is empty.");

@@ -4,7 +4,7 @@
 
 #include <LinearAlgebra/FactorizationLU.hpp>
 
-ColumnVector<float> HelmholtzEquationWithSourceFEM::Solve() const
+LinearAlgebra::ColumnVector<float> HelmholtzEquationWithSourceFEM::Solve() const
 {
     return LinearAlgebra::Factorization::LUSolve(m_matrix, m_columnVector, 1e-5f);
 }

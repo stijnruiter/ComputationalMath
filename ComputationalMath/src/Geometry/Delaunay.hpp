@@ -4,7 +4,6 @@
 #include "Geometry/Structures/SimplexElements.hpp"
 #include "Geometry/Structures/Triangle.hpp"
 #include "Geometry/Structures/Vertex.hpp"
-#include <limits>
 #include <vector>
 
 namespace Geometry

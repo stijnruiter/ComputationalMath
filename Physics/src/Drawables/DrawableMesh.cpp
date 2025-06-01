@@ -46,7 +46,7 @@ DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh, const std::vector<float
 {
 }
 
-DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh, const ColumnVector<float>& values)
+DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh, const LinearAlgebra::ColumnVector<float>& values)
     : DrawableMesh(mesh, values.Data(), values.GetLength())
 {
 }
@@ -55,23 +55,23 @@ DrawableMesh::DrawableMesh(const Geometry::Mesh2D& mesh, const float* values, si
 {
     assert(mesh.Vertices.size() == length);
     std::vector<Geometry::Vertex3F> vertices = ToVertex3F(mesh.Vertices, values);
-    m_vao = std::make_unique<VertexArrayObject>();
+    m_vao = std::make_unique<Render::VertexArrayObject>();
     m_vao->Bind();
 
-    m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
+    m_vertexBuffer = std::make_unique<Render::VertexBuffer>(vertices);
     m_vertexBuffer->DefineFloatAttribute(0, 3);
     m_vao->AddBuffer(*m_vertexBuffer);
 
-    m_valuesBuffer = std::make_unique<VertexBuffer>(NormalizeData(values, mesh.Vertices.size()));
+    m_valuesBuffer = std::make_unique<Render::VertexBuffer>(NormalizeData(values, mesh.Vertices.size()));
     m_valuesBuffer->DefineFloatAttribute(1, 1);
     m_vao->AddBuffer(*m_valuesBuffer);
 
-    m_triangleBuffer = std::make_unique<IndexBuffer<Geometry::TriangleElement>>(mesh.Interior);
-    m_interiorEdgeBuffer = std::make_unique<IndexBuffer<Geometry::LineElement>>(mesh.GetAllEdges());
-    m_boundaryEdgeBuffer = std::make_unique<IndexBuffer<Geometry::LineElement>>(mesh.Boundary);
+    m_triangleBuffer = std::make_unique<Render::IndexBuffer<Geometry::TriangleElement>>(mesh.Interior);
+    m_interiorEdgeBuffer = std::make_unique<Render::IndexBuffer<Geometry::LineElement>>(mesh.GetAllEdges());
+    m_boundaryEdgeBuffer = std::make_unique<Render::IndexBuffer<Geometry::LineElement>>(mesh.Boundary);
 }
 
-void DrawableMesh::Draw(Renderer& render)
+void DrawableMesh::Draw(Render::Renderer& render)
 {
     m_vao->Bind();
     render.EnableLinearAlphaBlend();

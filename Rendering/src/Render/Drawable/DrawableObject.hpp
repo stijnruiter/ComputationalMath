@@ -2,10 +2,13 @@
 
 #include "Render/Core/Renderer.hpp"
 
-class DrawableObject
+namespace Render
 {
-public:
-    virtual void Update(float deltaTime) {}
-    virtual void Draw(Renderer& renderer) {}
-    virtual ~DrawableObject() {}
-};
+    class DrawableObject
+    {
+    public:
+        virtual void Update(float deltaTime) {}
+        virtual void Draw(Renderer& renderer) {}
+        virtual ~DrawableObject() {}
+    };
+}

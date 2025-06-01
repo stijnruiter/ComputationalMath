@@ -12,23 +12,23 @@ namespace Geometry
 
     Mesh2D CreateCircularMesh(float cx, float cy, float radius, float maxh)
     {
-        Geometry::PlanarStraightLineGraph graph;
+        PlanarStraightLineGraph graph;
         int nPointsOnCircle = (int)std::ceil(M_PI / std::asin(0.5f * maxh / radius));
         nPointsOnCircle = nPointsOnCircle < 3 ? 3 : nPointsOnCircle;
         float angle = 2.0f * M_PI / nPointsOnCircle;
-        std::vector<Geometry::Vertex2F> verticesOnCircle(nPointsOnCircle);
+        std::vector<Vertex2F> verticesOnCircle(nPointsOnCircle);
         float counter = 0.0f;
         for (size_t i = 0; i < nPointsOnCircle; i++)
         {
-            verticesOnCircle[i] = Geometry::Vertex2F(cx + radius * std::cos(i * angle), cy + radius * std::sin(i * angle));
+            verticesOnCircle[i] = Vertex2F(cx + radius * std::cos(i * angle), cy + radius * std::sin(i * angle));
         }
         graph.AddClosedLineSegments(verticesOnCircle);
-        Geometry::RefinedDelaunay delaunay = Geometry::RefinedDelaunay::CreateTriangulation(graph);
-        delaunay.InsertPoint(Geometry::Vertex2F(cx, cy));
-        delaunay.InsertPoint(Geometry::Vertex2F(cx + 0.1, cy));
-        delaunay.InsertPoint(Geometry::Vertex2F(cx, cy + 0.1));
-        delaunay.InsertPoint(Geometry::Vertex2F(cx - 0.1, cy));
-        delaunay.InsertPoint(Geometry::Vertex2F(cx, cy - 0.1));
+        RefinedDelaunay delaunay = RefinedDelaunay::CreateTriangulation(graph);
+        delaunay.InsertPoint(Vertex2F(cx, cy));
+        delaunay.InsertPoint(Vertex2F(cx + 0.1, cy));
+        delaunay.InsertPoint(Vertex2F(cx, cy + 0.1));
+        delaunay.InsertPoint(Vertex2F(cx - 0.1, cy));
+        delaunay.InsertPoint(Vertex2F(cx, cy - 0.1));
         delaunay.Refine(25);
         return delaunay.ToMesh();
     }

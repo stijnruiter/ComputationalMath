@@ -42,9 +42,9 @@ std::unique_ptr<DrawableMesh> CreateRefinedDelaunay(const Geometry::PlanarStraig
     return std::make_unique<DrawableMesh>(delaunayMesh.ToMesh());
 }
 
-std::unique_ptr<ObjectScene> CreateDelaunayScene()
+std::unique_ptr<Render::ObjectScene> CreateDelaunayScene()
 {
-    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(false);
+    std::unique_ptr<Render::ObjectScene> scene = std::make_unique<Render::ObjectScene>(false);
 
     Geometry::PlanarStraightLineGraph graph = CreateGraph();
     scene->AddObject(CreateRefinedDelaunay(graph));
@@ -53,9 +53,9 @@ std::unique_ptr<ObjectScene> CreateDelaunayScene()
     scene->AddObject(std::make_unique<Axis>());
     return scene;
 }
-std::unique_ptr<ObjectScene> CreateCircularScene()
+std::unique_ptr<Render::ObjectScene> CreateCircularScene()
 {
-    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(false);
+    std::unique_ptr<Render::ObjectScene> scene = std::make_unique<Render::ObjectScene>(false);
     scene->AddObject(std::make_unique<DrawableMesh>(Geometry::CreateCircularMesh(0, 0, 0.8f, 0.1)));
     scene->AddObject(std::make_unique<Axis>());
     return scene;

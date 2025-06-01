@@ -9,14 +9,14 @@
 
 #include <memory>
 
-class DrawableGraph : public DrawableObject
+class DrawableGraph : public Render::DrawableObject
 {
 public:
     DrawableGraph(const Geometry::PlanarStraightLineGraph& graph);
-    virtual void Draw(Renderer& render) override;
+    void Draw(Render::Renderer& render) override;
 
 private:
-    std::unique_ptr<VertexArrayObject> m_vao;
-    std::unique_ptr<VertexBuffer> m_vertexBuffer;
-    std::unique_ptr<IndexBuffer<Geometry::LineElement>> m_triangleBuffer;
+    std::unique_ptr<Render::VertexArrayObject> m_vao;
+    std::unique_ptr<Render::VertexBuffer> m_vertexBuffer;
+    std::unique_ptr<Render::IndexBuffer<Geometry::LineElement>> m_triangleBuffer;
 };

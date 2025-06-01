@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace SolidColorShader
+namespace Render::SolidColorShader
 {
     const std::string GLSL_SHADER_VERTEX = R"(
         #version 330 core

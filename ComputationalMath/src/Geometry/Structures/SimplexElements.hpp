@@ -1,7 +1,6 @@
 #pragma once
 #include <initializer_list>
 #include <iostream>
-#include <stdlib.h>
 
 namespace Geometry
 {
