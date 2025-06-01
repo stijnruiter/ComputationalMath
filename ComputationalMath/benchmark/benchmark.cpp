@@ -1,5 +1,4 @@
-#include "../src/LinearAlgebra/FactorizationLU.hpp"
-
+#include <LinearAlgebra/FactorizationLU.hpp>
 #include <LinearAlgebra/Matrix.hpp>
 #include <benchmark/benchmark.h>
 #include <memory>
