@@ -1,4 +1,7 @@
 #include "FemAssembler.hpp"
+
+#include "LinearAlgebra/FactorizationLU.hpp"
+
 #include <unordered_set>
 
 namespace FemAssembler

@@ -1,15 +1,18 @@
 #include "DrawableTimeDependentFemMesh.hpp"
 
 DrawableTimeDependentFemMesh::DrawableTimeDependentFemMesh(const HeatEquationWithoutSource& fem)
-    : m_femProblem(fem), DrawableMesh(fem.GetGraph())
+    : DrawableMesh(fem.GetGraph()), m_femProblem(fem)
 {
+    m_femProblem.StartComputation();
 }
 
 void DrawableTimeDependentFemMesh::Update(float deltaTime)
 {
-    m_femProblem.SolveNextTimeStep();
-    std::cout << "Time: " << m_femProblem.CurrentTime() << "s" << std::endl;
-    UpdateValues();
+    if (m_femProblem.PollNextTimeStepReady())
+    {
+        std::cout << "Time: " << m_femProblem.CurrentTime() << "s" << std::endl;
+        UpdateValues();
+    }
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

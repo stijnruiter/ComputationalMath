@@ -9,11 +9,6 @@ namespace Render
 {
     class Renderer
     {
-    private:
-        ShaderProgram m_solidColorShader;
-        ShaderProgram m_vertexColorShader;
-        ShaderProgram m_scalarColorShader;
-
     public:
         Renderer();
         ~Renderer();
@@ -41,9 +36,15 @@ namespace Render
         void DrawElements(const IndexBuffer<T>& elements);
 
         void UpdateCamera(const CameraTransformation& transformation);
+
+    private:
+        ShaderProgram m_solidColorShader;
+        ShaderProgram m_vertexColorShader;
+        ShaderProgram m_scalarColorShader;
     };
 
     template <typename T>
+    // ReSharper disable once CppMemberFunctionMayBeStatic
     void Renderer::Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program)
     {
         program.Use();
@@ -53,14 +54,16 @@ namespace Render
     }
 
     template <typename T>
-    inline void Renderer::DrawLines(const IndexBuffer<T>& elements)
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    void Renderer::DrawLines(const IndexBuffer<T>& elements)
     {
         elements.Bind();
         GLCHECK(glDrawElements(GL_LINES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
     }
 
     template <typename T>
-    inline void Renderer::DrawElements(const IndexBuffer<T>& elements)
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    void Renderer::DrawElements(const IndexBuffer<T>& elements)
     {
         elements.Bind();
         GLCHECK(glDrawElements(GL_TRIANGLES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
