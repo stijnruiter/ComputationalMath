@@ -11,7 +11,7 @@ namespace Geometry
         Vertex2F V2;
         Vertex2F V3;
 
-        Triangle();
+        Triangle() = default;
         Triangle(Vertex2F v1, Vertex2F v2, Vertex2F v3);
 
         bool ContainsVertex(Vertex2F vertex) const;
@@ -25,6 +25,6 @@ namespace Geometry
 
         static Triangle ContainingTriangle(const std::vector<Vertex2F>& vertices, float dilate);
 
-        Vertex2F GetCirclumcenter() const;
+        Vertex2F GetCircumcenter() const;
     };
 }

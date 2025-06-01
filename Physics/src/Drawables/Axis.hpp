@@ -7,15 +7,15 @@
 
 #include <memory>
 
-class Axis : public DrawableObject
+class Axis : public Render::DrawableObject
 {
 public:
     Axis();
-    virtual void Draw(Renderer& render) override;
+    void Draw(Render::Renderer& render) override;
 
 private:
-    std::unique_ptr<VertexArrayObject> m_vao;
-    std::unique_ptr<VertexBuffer> m_vertexBuffer;
-    std::unique_ptr<VertexBuffer> m_colorBuffer;
-    std::unique_ptr<IndexBuffer<Geometry::LineElement>> m_indexBuffer;
+    std::unique_ptr<Render::VertexArrayObject> m_vao;
+    std::unique_ptr<Render::VertexBuffer> m_vertexBuffer;
+    std::unique_ptr<Render::VertexBuffer> m_colorBuffer;
+    std::unique_ptr<Render::IndexBuffer<Geometry::LineElement>> m_indexBuffer;
 };

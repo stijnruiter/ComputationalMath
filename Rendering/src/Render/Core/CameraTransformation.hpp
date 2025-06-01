@@ -2,7 +2,10 @@
 
 #include <glm/glm.hpp>
 
-struct CameraTransformation
+namespace Render
 {
-    glm::mat4 Model, View, Projection;
-};
+    struct CameraTransformation
+    {
+        glm::mat4 Model, View, Projection;
+    };
+}

@@ -1,17 +1,20 @@
 #pragma once
 #include "VertexBuffer.hpp"
 
-class VertexArrayObject
+namespace Render
 {
-private:
-    unsigned int m_vertexArrayId;
+    class VertexArrayObject
+    {
+    private:
+        unsigned int m_vertexArrayId;
 
-public:
-    VertexArrayObject();
-    ~VertexArrayObject();
+    public:
+        VertexArrayObject();
+        ~VertexArrayObject();
 
-    void Bind() const;
-    void Unbind() const;
+        void Bind() const;
+        void Unbind() const;
 
-    void AddBuffer(const VertexBuffer& buffer);
-};
+        void AddBuffer(const VertexBuffer& buffer);
+    };
+}

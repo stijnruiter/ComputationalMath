@@ -1,7 +1,8 @@
 #include "gl_debug.hpp"
 #include "Logger.hpp"
+#include "glad/glad.h"
 
-void Debug::GLClearErrors()
+void Render::Debug::GLClearErrors()
 {
     GLenum err;
     while ((err = glGetError()) != GL_NO_ERROR)
@@ -11,7 +12,7 @@ void Debug::GLClearErrors()
     }
 }
 
-bool Debug::GLCheckErrors()
+bool Render::Debug::GLCheckErrors()
 {
     GLenum err;
     if ((err = glGetError()) != GL_NO_ERROR)

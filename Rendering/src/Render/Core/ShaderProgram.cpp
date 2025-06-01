@@ -4,174 +4,179 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-unsigned int ShaderProgram::LoadFromSource(const GLenum shaderType, const std::string& source) const
+namespace Render
 {
-    unsigned int shaderId = glCreateShader(shaderType);
-    if (shaderId == 0)
+    unsigned int ShaderProgram::LoadFromSource(const GLenum shaderType, const std::string& source) const
     {
-        Debug::Logger::LogError("Unable to create shader {0}, type {1}.", m_debugIdentifier, shaderType);
-        Debug::GLCheckErrors();
-        return 0;
+        const unsigned int shaderId = glCreateShader(shaderType);
+        if (shaderId == 0)
+        {
+            Debug::Logger::LogError("Unable to create shader {0}, type {1}.", m_debugIdentifier, shaderType);
+            Debug::GLCheckErrors();
+            return 0;
+        }
+
+        const char* charSource = source.c_str();
+        GLCHECK(glShaderSource(shaderId, 1, &charSource, NULL));
+        GLCHECK(glCompileShader(shaderId));
+
+        if (!CheckShaderCompileStatus(shaderId))
+        {
+            GLCHECK(glDeleteShader(shaderId));
+            return 0;
+        }
+
+        return shaderId;
     }
 
-    const char* charSouce = source.c_str();
-    GLCHECK(glShaderSource(shaderId, 1, &charSouce, NULL));
-    GLCHECK(glCompileShader(shaderId));
-
-    if (!CheckShaderCompileStatus(shaderId))
+    bool ShaderProgram::CheckShaderCompileStatus(const unsigned int shaderId) const
     {
-        GLCHECK(glDeleteShader(shaderId));
-        return 0;
+        GLint status;
+        GLCHECK(glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status));
+        if (status == GL_FALSE)
+        {
+            GLint length;
+            GLCHECK(glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length));
+            auto infoLog = new GLchar[length];
+            GLCHECK(glGetShaderInfoLog(shaderId, length, NULL, infoLog));
+
+            Debug::Logger::LogError("Shader compilation of {0} failed.\n{1}", m_debugIdentifier, infoLog);
+            DEBUG_BREAK();
+
+            delete[] infoLog;
+            return false;
+        }
+        return true;
     }
 
-    return shaderId;
-}
-
-bool ShaderProgram::CheckShaderCompileStatus(const unsigned int shaderId) const
-{
-    GLint status;
-    GLCHECK(glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status));
-    if (status == GL_FALSE)
+    bool ShaderProgram::CheckShaderProgramLinkStatus(const unsigned int shaderProgramId) const
     {
-        GLint length;
-        GLCHECK(glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length));
-        GLchar* infoLog = new GLchar[length];
-        GLCHECK(glGetShaderInfoLog(shaderId, length, NULL, infoLog));
+        GLint status;
+        GLCHECK(glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &status));
+        if (status == GL_FALSE)
+        {
+            GLint length;
+            GLCHECK(glGetProgramiv(shaderProgramId, GL_INFO_LOG_LENGTH, &length));
+            auto infoLog = new GLchar[length];
+            GLCHECK(glGetProgramInfoLog(shaderProgramId, length, NULL, infoLog));
+            Debug::Logger::LogError("Linking of shader {0} failed.\n{1}", m_debugIdentifier, infoLog);
 
-        Debug::Logger::LogError("Shader compilation of {0} failed.\n{1}", m_debugIdentifier, infoLog);
-        DEBUG_BREAK();
-
-        delete[] infoLog;
-        return false;
+            DEBUG_BREAK();
+            delete[] infoLog;
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
-bool ShaderProgram::CheckShaderProgramLinkStatus(const unsigned int shaderProgramId) const
-{
-    GLint status;
-    GLCHECK(glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &status));
-    if (status == GL_FALSE)
+    ShaderProgram::ShaderProgram(const std::string& debugIdentifier)
     {
-        GLint length;
-        GLCHECK(glGetProgramiv(shaderProgramId, GL_INFO_LOG_LENGTH, &length));
-        GLchar* infoLog = new GLchar[length];
-        GLCHECK(glGetProgramInfoLog(shaderProgramId, length, NULL, infoLog));
-        Debug::Logger::LogError("Linking of shader {0} failed.\n{1}", m_debugIdentifier, infoLog);
-
-        DEBUG_BREAK();
-        delete[] infoLog;
-        return false;
+        m_programId = 0;
+        this->m_debugIdentifier = debugIdentifier;
     }
-    return true;
-}
 
-ShaderProgram::ShaderProgram(const std::string& debugIdentifier)
-{
-    m_programId = 0;
-    this->m_debugIdentifier = debugIdentifier;
-}
-
-ShaderProgram::~ShaderProgram()
-{
-    GLCHECK(glDeleteProgram(this->m_programId));
-    m_programId = 0;
-}
-
-void ShaderProgram::Create(const std::string& vertexSource, const std::string& fragmentSource)
-{
-    unsigned int vertexShader = LoadFromSource(GL_VERTEX_SHADER, vertexSource);
-    unsigned int fragmentShader = LoadFromSource(GL_FRAGMENT_SHADER, fragmentSource);
-    if (vertexShader == 0 || fragmentShader == 0)
+    ShaderProgram::~ShaderProgram()
     {
+        GLCHECK(glDeleteProgram(this->m_programId));
+        m_programId = 0;
+    }
+
+    void ShaderProgram::Create(const std::string& vertexSource, const std::string& fragmentSource)
+    {
+        const unsigned int vertexShader = LoadFromSource(GL_VERTEX_SHADER, vertexSource);
+        const unsigned int fragmentShader = LoadFromSource(GL_FRAGMENT_SHADER, fragmentSource);
+        if (vertexShader == 0 || fragmentShader == 0)
+        {
+            GLCHECK(glDeleteShader(vertexShader));
+            GLCHECK(glDeleteShader(fragmentShader));
+            return;
+        }
+
+        const unsigned int shaderProgramId = glCreateProgram();
+        if (shaderProgramId == 0)
+        {
+            Debug::Logger::LogError("Unable to create shader program {0}.", m_debugIdentifier);
+            Debug::GLCheckErrors();
+            return;
+        }
+
+        GLCHECK(glAttachShader(shaderProgramId, vertexShader));
+        GLCHECK(glAttachShader(shaderProgramId, fragmentShader));
+        GLCHECK(glLinkProgram(shaderProgramId));
+
         GLCHECK(glDeleteShader(vertexShader));
         GLCHECK(glDeleteShader(fragmentShader));
-        return;
+
+        if (!CheckShaderProgramLinkStatus(shaderProgramId))
+        {
+            GLCHECK(glDeleteProgram(shaderProgramId));
+            return;
+        }
+
+        m_programId = shaderProgramId;
     }
 
-    unsigned int shaderProgramId = glCreateProgram();
-    if (shaderProgramId == 0)
+    int ShaderProgram::GetAttribLocation(const std::string& attribName) const
     {
-        Debug::Logger::LogError("Unable to create shader program {0}.", m_debugIdentifier);
-        Debug::GLCheckErrors();
-        return;
+        const int location = glGetAttribLocation(m_programId, attribName.c_str());
+        if (location < 0)
+        {
+            Debug::Logger::LogError("Unable to retrieve attribute location for '{0}'.", attribName);
+            DEBUG_BREAK();
+            return -1;
+        }
+        return location;
     }
 
-    GLCHECK(glAttachShader(shaderProgramId, vertexShader));
-    GLCHECK(glAttachShader(shaderProgramId, fragmentShader));
-    GLCHECK(glLinkProgram(shaderProgramId));
-
-    GLCHECK(glDeleteShader(vertexShader));
-    GLCHECK(glDeleteShader(fragmentShader));
-
-    if (!CheckShaderProgramLinkStatus(shaderProgramId))
+    int ShaderProgram::GetUniformLocation(const std::string& uniformName) const
     {
-        GLCHECK(glDeleteProgram(shaderProgramId));
-        return;
+        const int location = glGetUniformLocation(m_programId, uniformName.c_str());
+        if (location < 0)
+        {
+            Debug::Logger::LogError("Unable to retrieve attribute location for '{0}'.", uniformName);
+            DEBUG_BREAK();
+            return -1;
+        }
+        return location;
     }
 
-    m_programId = shaderProgramId;
-}
-
-int ShaderProgram::GetAttribLocation(const std::string& attribName)
-{
-    int location = glGetAttribLocation(m_programId, attribName.c_str());
-    if (location < 0)
+    void ShaderProgram::SetUniformMatrix4(const std::string& uniformName, const glm::mat4& mat, const bool transpose) const
     {
-        Debug::Logger::LogError("Unable to retrieve attribute location for '{0}'.", attribName);
-        DEBUG_BREAK();
-        return -1;
-    }
-    return location;
-}
+        const int uniformLocation = GetUniformLocation(uniformName);
+        if (uniformLocation < 0)
+            return;
 
-int ShaderProgram::GetUniformLocation(const std::string& uniformName)
-{
-    int location = glGetUniformLocation(m_programId, uniformName.c_str());
-    if (location < 0)
+        Use();
+        GLCHECK(glUniformMatrix4fv(uniformLocation, 1, transpose, glm::value_ptr(mat)));
+    }
+
+    void ShaderProgram::SetUniformVector3(const std::string& uniformName, const glm::vec3& vec) const
     {
-        Debug::Logger::LogError("Unable to retrieve attribute location for '{0}'.", uniformName);
-        DEBUG_BREAK();
-        return -1;
+        const int uniformLocation = GetUniformLocation(uniformName);
+        if (uniformLocation < 0)
+            return;
+
+        Use();
+        GLCHECK(glUniform3fv(uniformLocation, 1, glm::value_ptr(vec)));
     }
-    return location;
-}
 
-void ShaderProgram::SetUniformMatrix4(const std::string& uniformName, const glm::mat4& mat, bool transpose)
-{
-    int uniformLocation = GetUniformLocation(uniformName);
-    if (uniformLocation < 0)
-        return;
+    void ShaderProgram::SetUniformVector4(const std::string& uniformName, const glm::vec4& vec) const
+    {
+        const int uniformLocation = GetUniformLocation(uniformName);
+        if (uniformLocation < 0)
+            return;
 
-    Use();
-    GLCHECK(glUniformMatrix4fv(uniformLocation, 1, transpose, glm::value_ptr(mat)));
-}
+        Use();
+        GLCHECK(glUniform4fv(uniformLocation, 1, glm::value_ptr(vec)));
+    }
 
-void ShaderProgram::SetUniformVector3(const std::string& uniformName, const glm::vec3& vec)
-{
-    int uniformLocation = GetUniformLocation(uniformName);
-    if (uniformLocation < 0)
-        return;
+    void ShaderProgram::Use() const
+    {
+        GLCHECK(glUseProgram(m_programId));
+    }
 
-    Use();
-    GLCHECK(glUniform3fv(uniformLocation, 1, glm::value_ptr(vec)));
-}
-void ShaderProgram::SetUniformVector4(const std::string& uniformName, const glm::vec4& vec)
-{
-    int uniformLocation = GetUniformLocation(uniformName);
-    if (uniformLocation < 0)
-        return;
-
-    Use();
-    GLCHECK(glUniform4fv(uniformLocation, 1, glm::value_ptr(vec)));
-}
-
-void ShaderProgram::Use() const
-{
-    GLCHECK(glUseProgram(m_programId));
-}
-
-void ShaderProgram::Unuse() const
-{
-    GLCHECK(glUseProgram(0));
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    void ShaderProgram::Unuse() const
+    {
+        GLCHECK(glUseProgram(0));
+    }
 }

@@ -4,38 +4,35 @@
 #include "Drawables/DrawableMesh.hpp"
 #include "Drawables/DrawableTimeDependentFemMesh.hpp"
 #include <Geometry/MeshGenerator.hpp>
-#include <Geometry/RefinedDelaunay.hpp>
 #include <Geometry/Structures/Rectangle.hpp>
 #include <Render/Drawable/ObjectScene.hpp>
 #include <algorithm>
-#include <type_traits>
 
 template <typename T, typename... _Args>
-std::unique_ptr<ObjectScene> CreateFemScene(_Args&&... __args)
+std::unique_ptr<Render::ObjectScene> CreateFemScene(_Args&&... __args)
 {
     using namespace Geometry;
     Rectangle bounds(-0.75f, 0.75f, -0.75f, 0.75f);
-    Mesh2D mesh = Geometry::CreateRectangularMesh(bounds, 10, 10);
+    Mesh2D mesh = CreateRectangularMesh(bounds, 10, 10);
     T fem(bounds, mesh, std::forward<_Args>(__args)...);
-    ColumnVector<float> solution = fem.Solve();
+    LinearAlgebra::ColumnVector<float> solution = fem.Solve();
 
-    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(true);
+    auto scene = std::make_unique<Render::ObjectScene>(true);
     scene->AddObject(std::make_unique<DrawableMesh>(mesh, solution));
     scene->AddObject(std::make_unique<Axis>());
     return scene;
 }
 
 template <typename T, typename... _Args>
-std::unique_ptr<ObjectScene> CreateTimeFemScene(_Args&&... __args)
+std::unique_ptr<Render::ObjectScene> CreateTimeFemScene(_Args&&... __args)
 {
     using namespace Geometry;
 
-    Rectangle bounds(-0.75f, 0.75f, -0.75f, 0.75f);
-    Mesh2D mesh = Geometry::CreateRectangularMesh(bounds, 25, 25);
-    // Mesh2D mesh = Geometry::CreateCircularMesh(0, 0, 0.75f, 0.1);
+    const Rectangle bounds(-0.75f, 0.75f, -0.75f, 0.75f);
+    Mesh2D mesh = CreateRectangularMesh(bounds, 25, 25);
     T fem(mesh, std::forward<_Args>(__args)...);
-    std::unique_ptr<ObjectScene> scene = std::make_unique<ObjectScene>(true);
-    std::unique_ptr<DrawableTimeDependentFemMesh> drawableFem = std::make_unique<DrawableTimeDependentFemMesh>(fem);
+    auto scene = std::make_unique<Render::ObjectScene>(true);
+    auto drawableFem = std::make_unique<DrawableTimeDependentFemMesh>(fem);
     scene->AddObject(std::move(drawableFem));
     scene->AddObject(std::make_unique<Axis>());
     return scene;

@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace VertexColorShader
+namespace Render::VertexColorShader
 {
     const std::string GLSL_SHADER_VERTEX = R"(
         #version 330 core

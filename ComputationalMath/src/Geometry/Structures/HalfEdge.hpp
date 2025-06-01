@@ -16,7 +16,7 @@ namespace Geometry
         {
         }
 
-        HalfEdge(unsigned int v1, unsigned int v2, unsigned int prevEdge, unsigned int nextEdge, unsigned int twinEdge, unsigned int elementIndex)
+        HalfEdge(const unsigned int v1, const unsigned int v2, const unsigned int prevEdge, const unsigned int nextEdge, const unsigned int twinEdge, const unsigned int elementIndex)
             : V1(v1), V2(v2), PrevEdge(prevEdge), NextEdge(nextEdge), TwinEdge(twinEdge), ElementIndex(elementIndex)
         {
         }

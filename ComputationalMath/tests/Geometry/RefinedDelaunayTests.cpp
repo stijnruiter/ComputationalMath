@@ -3,6 +3,8 @@
 
 #include "TestHelper.hpp"
 
+#include <math.h>
+
 namespace Geometry
 {
     TEST(RefinedDelaunayTests, CreateTriangulation_WhenGraphHasLessThen3Vertices_ShouldThrowException)

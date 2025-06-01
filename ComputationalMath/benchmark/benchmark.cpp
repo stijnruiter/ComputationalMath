@@ -1,15 +1,16 @@
-#include <memory>
-#include <benchmark/benchmark.h>
+#include <LinearAlgebra/FactorizationLU.hpp>
 #include <LinearAlgebra/Matrix.hpp>
+#include <benchmark/benchmark.h>
+#include <memory>
 
 static void BM_MatrixSum(benchmark::State& state)
 {
     for (auto stat : state)
     {
         state.PauseTiming();
-        size_t size = state.range(); 
-        Matrix<int> mat1(size, size); // TODO: properly initialize
-        Matrix<int> mat2(size, size);
+        const size_t size = state.range();
+        LinearAlgebra::Matrix<int> mat1(size, size);
+        LinearAlgebra::Matrix<int> mat2(size, size);
         mat1.Fill(5);
         mat1.Fill(3);
         state.ResumeTiming();

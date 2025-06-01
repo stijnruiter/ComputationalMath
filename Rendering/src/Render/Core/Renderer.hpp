@@ -5,61 +5,64 @@
 #include "ShaderProgram.hpp"
 #include "VertexArrayObject.hpp"
 
-class Renderer
+namespace Render
 {
-private:
-    ShaderProgram m_solidColorShader;
-    ShaderProgram m_vertexColorShader;
-    ShaderProgram m_scalarColorShader;
+    class Renderer
+    {
+    private:
+        ShaderProgram m_solidColorShader;
+        ShaderProgram m_vertexColorShader;
+        ShaderProgram m_scalarColorShader;
 
-public:
-    Renderer();
-    ~Renderer();
-    void SetClearColor(float r, float g, float b, float a = 1.0f);
-    void Clear();
+    public:
+        Renderer();
+        ~Renderer();
+        void SetClearColor(float r, float g, float b, float a = 1.0f);
+        void Clear();
 
-    void SetLineWidth(float width);
-    void EnableLinearAlphaBlend();
-    void DisableAlphaBlend();
+        void SetLineWidth(float width);
+        void EnableLinearAlphaBlend();
+        void DisableAlphaBlend();
 
-    void EnableDepth();
-    void DisableDepth();
+        void EnableDepth();
+        void DisableDepth();
 
-    void UseSolidColor(float r, float g, float b, float a = 1.0f);
-    void UseVertexColor();
-    void UseScalarColor();
+        void UseSolidColor(float r, float g, float b, float a = 1.0f);
+        void UseVertexColor();
+        void UseScalarColor();
+
+        template <typename T>
+        void Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program);
+
+        template <typename T>
+        void DrawLines(const IndexBuffer<T>& elements);
+
+        template <typename T>
+        void DrawElements(const IndexBuffer<T>& elements);
+
+        void UpdateCamera(const CameraTransformation& transformation);
+    };
 
     template <typename T>
-    void Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program);
+    void Renderer::Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program)
+    {
+        program.Use();
+        vao.Bind();
+
+        GLCHECK(glDrawElements(GL_TRIANGLES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
+    }
 
     template <typename T>
-    void DrawLines(const IndexBuffer<T>& elements);
+    inline void Renderer::DrawLines(const IndexBuffer<T>& elements)
+    {
+        elements.Bind();
+        GLCHECK(glDrawElements(GL_LINES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
+    }
 
     template <typename T>
-    void DrawElements(const IndexBuffer<T>& elements);
-
-    void UpdateCamera(const CameraTransformation& transformation);
-};
-
-template <typename T>
-inline void Renderer::Draw(const VertexArrayObject& vao, const IndexBuffer<T>& elements, const ShaderProgram& program)
-{
-    program.Use();
-    vao.Bind();
-
-    GLCHECK(glDrawElements(GL_TRIANGLES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
-}
-
-template <typename T>
-inline void Renderer::DrawLines(const IndexBuffer<T>& elements)
-{
-    elements.Bind();
-    GLCHECK(glDrawElements(GL_LINES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
-}
-
-template <typename T>
-inline void Renderer::DrawElements(const IndexBuffer<T>& elements)
-{
-    elements.Bind();
-    GLCHECK(glDrawElements(GL_TRIANGLES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
+    inline void Renderer::DrawElements(const IndexBuffer<T>& elements)
+    {
+        elements.Bind();
+        GLCHECK(glDrawElements(GL_TRIANGLES, elements.GetPrimitiveSize(), GL_UNSIGNED_INT, NULL));
+    }
 }

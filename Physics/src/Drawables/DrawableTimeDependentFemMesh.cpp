@@ -12,9 +12,10 @@ void DrawableTimeDependentFemMesh::Update(float deltaTime)
     UpdateValues();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void DrawableTimeDependentFemMesh::UpdateValues()
 {
-    std::vector<Geometry::Vertex3F> vertices = ToVertex3F(m_femProblem.GetGraph().Vertices, m_femProblem.CurrentSolution().Data());
+    const std::vector<Geometry::Vertex3F> vertices = ToVertex3F(m_femProblem.GetGraph().Vertices, m_femProblem.CurrentSolution().Data());
 
     m_valuesBuffer->SetData(m_femProblem.CurrentSolution().Data(), m_femProblem.CurrentSolution().GetLength() * sizeof(float));
     m_vertexBuffer->SetData(&vertices[0], vertices.size() * sizeof(Geometry::Vertex3F));

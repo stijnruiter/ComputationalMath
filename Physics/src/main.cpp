@@ -7,18 +7,18 @@
 
 int main()
 {
-    Window window(800, 600, "Physics");
+    Render::Window window(800, 600, "Physics");
     window.SetMouseCursor(true);
 
     window.AddScene(CreateDelaunayScene());
     window.AddScene(CreateCircularScene());
     window.AddScene(CreateFemScene<HelmholtzEquationWithSourceFEM>(1));
     window.AddScene(CreateFemScene<LaplaceFem>());
-    window.AddScene(CreateTimeFemScene<HeatEquationWithoutSource>(0.05f, 1e-3f, [](Geometry::Vertex2F vertex)
+    window.AddScene(CreateTimeFemScene<HeatEquationWithoutSource>(0.05f, 1e-3f, [](const Geometry::Vertex2F vertex)
                                                                   { return (vertex.Length() <= 0.25) ? 1.0f : 0.0f; }));
 
     size_t sceneIndex = 0;
-    window.SetCallbackOnKey([&sceneIndex, &window](const KeyEvent& eventArgs)
+    window.SetCallbackOnKey([&sceneIndex, &window](const Render::KeyEvent& eventArgs)
                             {
             if (eventArgs.Action == GLFW_PRESS && eventArgs.Key == GLFW_KEY_1)
             {

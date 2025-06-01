@@ -7,7 +7,7 @@ namespace Geometry
     {
     }
 
-    LineElement::LineElement(unsigned int i, unsigned int j)
+    LineElement::LineElement(const unsigned int i, const unsigned int j)
         : I(i), J(j)
     {
     }
@@ -31,7 +31,7 @@ namespace Geometry
     {
     }
 
-    TriangleElement::TriangleElement(unsigned int i, unsigned int j, unsigned int k)
+    TriangleElement::TriangleElement(const unsigned int i, const unsigned int j, const unsigned int k)
         : I(i), J(j), K(k)
     {
     }
@@ -49,5 +49,5 @@ namespace Geometry
     std::ostream& operator<<(std::ostream& os, const TriangleElement& triangle)
     {
         return os << "(" << triangle.I << ", " << triangle.J << ", " << triangle.K << ")";
-    };
+    }
 }

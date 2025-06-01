@@ -4,6 +4,17 @@ Finite Element Method using C++ and visualization with OpenGL. This repository i
 
 For educational purposes, I will implement all numerical methods myself, and only use the GLFW/GLAD libraries of OpenGL binding and Google Test and Benchmark for testing.
 
+## Installation
+The project uses CMake, and has various build targets for unit and benchmark tests. To install and
+run the main program, the following commands can be used:
+
+```
+git clone --recurse-submodules git@github.com:stijnruiter/ComputationalMath.git
+cmake -DCMAKE_BUILD_TYPE=[Debug|Release] -Bout -S.
+cmake --build out --target Physics
+debug\bin\Physics.exe
+```
+
 ## Current state
 The main entry point of this repository is located in the Physics directory, which solves and renders various numerical problems (see below), which can be toggled by pressing _1_. Rotating is possible with the arrow keys. 
 

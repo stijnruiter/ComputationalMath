@@ -9,7 +9,7 @@ namespace Geometry
     {
     }
 
-    Rectangle::Rectangle(float left, float right, float bottom, float top)
+    Rectangle::Rectangle(const float left, const float right, const float bottom, const float top)
     {
         Left = left;
         Right = right;
@@ -30,7 +30,7 @@ namespace Geometry
 #define MIN_FLOAT std::numeric_limits<float>::lowest()
 #define MAX_FLOAT std::numeric_limits<float>::max()
 
-    Rectangle Rectangle::BoundingBox(const std::vector<Vertex2F>& vertices, float dilate)
+    Rectangle Rectangle::BoundingBox(const std::vector<Vertex2F>& vertices, const float dilate)
     {
         Rectangle rect(MAX_FLOAT, MIN_FLOAT, MAX_FLOAT, MIN_FLOAT);
 

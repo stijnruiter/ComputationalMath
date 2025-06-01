@@ -13,9 +13,9 @@ namespace Geometry
 
         void AddLineSegment(Vertex2F start, Vertex2F end);
 
-        void AddLineSegments(std::vector<Vertex2F> polygon);
+        void AddLineSegments(const std::vector<Vertex2F>& polygon);
 
-        void AddClosedLineSegments(std::vector<Vertex2F> polygon);
+        void AddClosedLineSegments(const std::vector<Vertex2F>& polygon);
 
         void RemoveLineSegment(unsigned int lineSegmentIndex);
 

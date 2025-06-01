@@ -2,7 +2,7 @@
 #include "FemAssembler.hpp"
 #include <LinearAlgebra/FactorizationLU.hpp>
 
-HeatEquationWithoutSource::HeatEquationWithoutSource(const Geometry::Mesh2D& mesh, float k, float dt, FemAssembler::VertexValueFunc initialValues)
+HeatEquationWithoutSource::HeatEquationWithoutSource(const Geometry::Mesh2D& mesh, const float k, const float dt, const FemAssembler::VertexValueFunc& initialValues)
     : m_mesh(mesh), m_k(k), m_dt(dt), m_time(0),
       m_massMatrix(FemAssembler::InitializeMatrix(mesh)),
       m_stiffnessMatrix(FemAssembler::InitializeMatrix(mesh)),

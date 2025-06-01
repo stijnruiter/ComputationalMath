@@ -4,9 +4,6 @@
 #include "Structures/PlanarStraightLineGraph.hpp"
 #include "Structures/Triangle.hpp"
 
-#include <math.h>
-#include <stdexcept>
-
 namespace Geometry
 {
     /**
@@ -19,7 +16,7 @@ namespace Geometry
         PlanarStraightLineGraph graph;
 
     private:
-        RefinedDelaunay(const PlanarStraightLineGraph& graph, Triangle boundingElement, int nVertexCapacity)
+        RefinedDelaunay(const PlanarStraightLineGraph& graph, const Triangle& boundingElement, const int nVertexCapacity)
             : Delaunay(boundingElement, nVertexCapacity), graph(graph)
         {
         }

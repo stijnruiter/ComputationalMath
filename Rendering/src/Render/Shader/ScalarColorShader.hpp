@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace ScalarColorShader
+namespace Render::ScalarColorShader
 {
     const std::string GLSL_SHADER_VERTEX = R"(
         #version 330 core

@@ -9,7 +9,7 @@ namespace Geometry
         return Triangle(m_vertices[element.I], m_vertices[element.J], m_vertices[element.K]);
     }
 
-    Delaunay::Delaunay(Triangle boundingTriangle, int nVertexCapacity)
+    Delaunay::Delaunay(const Triangle& boundingTriangle, const int nVertexCapacity)
         : m_vertices(0),
           m_triangulation(2 * nVertexCapacity + 7) // 2 * nTriangles + 1 = 2 * (nVertexCapacity + 3) + 1
     {
@@ -167,7 +167,10 @@ namespace Geometry
         float bLengthSquared = b.LengthSquared();
         float cLengthSquared = c.LengthSquared();
         float dLengthSquared = d.LengthSquared();
-        return a.X * Matrix<float>::Determinant(b.Y, bLengthSquared, 1, c.Y, cLengthSquared, 1, d.Y, dLengthSquared, 1) - a.Y * Matrix<float>::Determinant(b.X, bLengthSquared, 1, c.X, cLengthSquared, 1, d.X, dLengthSquared, 1) + aLengthSquared * Matrix<float>::Determinant(b.X, b.Y, 1, c.X, c.Y, 1, d.X, d.Y, 1) - Matrix<float>::Determinant(b.X, b.Y, bLengthSquared, c.X, c.Y, cLengthSquared, d.X, d.Y, dLengthSquared);
+        return a.X * LinearAlgebra::Matrix<float>::Determinant(b.Y, bLengthSquared, 1, c.Y, cLengthSquared, 1, d.Y, dLengthSquared, 1)
+             - a.Y * LinearAlgebra::Matrix<float>::Determinant(b.X, bLengthSquared, 1, c.X, cLengthSquared, 1, d.X, dLengthSquared, 1)
+             + aLengthSquared * LinearAlgebra::Matrix<float>::Determinant(b.X, b.Y, 1, c.X, c.Y, 1, d.X, d.Y, 1)
+             - LinearAlgebra::Matrix<float>::Determinant(b.X, b.Y, bLengthSquared, c.X, c.Y, cLengthSquared, d.X, d.Y, dLengthSquared);
     }
 
 }
